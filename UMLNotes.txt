@@ -1,0 +1,102 @@
+UML notes:
+- private
++ public
+~ package
+
+* arrows point to super class/interface
+* diamonds point to the containing class
+
+Association(solid line)
+inheritance(is-a), hollow arrow solid line
+realization, solid arrow, dotted line
+dependency, dotted line, open&hollow arrow(- - - -> )
+aggregation(has-a/uses-a), hollow diamond, solid line
+    implies contained objs may outlive container, or prematurely die
+composition(has-a/uses-a), solid diamond, solid line
+    implies lifetime of contained obj is bound to lifetime of the container obj.
+
+cardinality expressed in terms of:
+    one-to-one
+    one-to-many
+    many-to-many
+
+quantities: 1(exactly 1), (0..1)zero-or-one, *(0 or more), "1..*"(one or more), {ordered}
+
+------
+DungeonAdventure
+    main() main game logic
+
+    DungeonAdventureModel
+        saveGame()
+        loadGame()
+        
+        Dungeon
+        DungeonAdventureView
+    DungeonAdventureView
+        // should we have a character selection screen?
+        passModel(DungeonAdventureModel)
+        DungeonAdventureModel
+
+Dungeon
+    maze of Rooms
+    Adventurer
+    generateMaze()
+        must ensure maze is traversable.
+        populate maze randomly with Monsters, items
+    
+DungeonCharacter(Abstract)
+    constructor
+    name
+    HP
+    heal()
+    takeDmg()
+    
+    attack damage range(min, max)
+    attackspeed(minimum 1)
+    chanceToHit
+    boolean attack(DungeonCharacter other)
+        if a character hits, rolls and applies damage to other.
+        returns true if hits, otherwise false.
+
+    toString()
+
+Hero(abstract) is-a DungeonCharacter
+    toString()
+    move()
+    totalHealingPotions, setters/getters
+    totalVisionPotions. setters/getters
+    Special()   
+
+Warrior is-a Hero
+Priestess is-a Hero
+Thief is-a Hero
+
+Monster(abstract?) is-a DungeonCharacter
+    heal()
+        monster tries to heal, based on chanceToHeal, etc
+    chanceToHeal
+    minimumHeal
+    maximumHeal
+
+
+Ogre is-a Monster
+Gremlin is-a Monster
+Skeleton is-a Monster
+
+
+
+Room
+    has? entrance(if true, has nothing else)
+    has? exit(if true, has nothing else)
+    has? pit
+    has? items (healing potion, vision potion)
+    has? item Pillar of OO
+    Doors:  N,S,E,W
+    
+    toString()
+
+Item: healing potion, vision potion, Pillar of OO(A,E,I,P)
+    additional potion/consumable types?
+        armor, damage, portal, attackspeed, +maxHP, +min/max damage
+        
+	
