@@ -22,7 +22,7 @@
         <mxCell id="nbmygcf86C2PuPvqUZod-44" value="+ tryToHeal(): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="nbmygcf86C2PuPvqUZod-41" vertex="1">
           <mxGeometry y="112" width="160" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="nbmygcf86C2PuPvqUZod-45" value="DungeonCharacter&lt;abstract&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
+        <mxCell id="nbmygcf86C2PuPvqUZod-45" value="DungeonAdventure.DungeonCharacter&lt;abstract&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
           <mxGeometry x="-1560" y="-380" width="230" height="240" as="geometry" />
         </mxCell>
         <mxCell id="nbmygcf86C2PuPvqUZod-46" value="+ name: String&#xa;+ HP: int&#xa;- attackSpeed: int&#xa;- hitChance: double&#xa;- blockChance: double&#xa;- minDamage: int&#xa;- maxDamage: int&#xa;&#xa; " style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="nbmygcf86C2PuPvqUZod-45" vertex="1">
@@ -31,10 +31,10 @@
         <mxCell id="nbmygcf86C2PuPvqUZod-47" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="nbmygcf86C2PuPvqUZod-45" vertex="1">
           <mxGeometry y="134" width="230" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="nbmygcf86C2PuPvqUZod-48" value="+ attack(DungeonCharacter): boolean&#xa;+ block(int): boolean&#xa;+ Special(DungeonCharacter): void&#xa;+ toString(): String&#xa;+ setHP(int): void&#xa;+ getHP(): int&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="nbmygcf86C2PuPvqUZod-45" vertex="1">
+        <mxCell id="nbmygcf86C2PuPvqUZod-48" value="+ attack(DungeonAdventure.DungeonCharacter): boolean&#xa;+ block(int): boolean&#xa;+ Special(DungeonAdventure.DungeonCharacter): void&#xa;+ toString(): String&#xa;+ setHP(int): void&#xa;+ getHP(): int&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="nbmygcf86C2PuPvqUZod-45" vertex="1">
           <mxGeometry y="142" width="230" height="98" as="geometry" />
         </mxCell>
-        <mxCell id="nbmygcf86C2PuPvqUZod-49" value="Hero" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
+        <mxCell id="nbmygcf86C2PuPvqUZod-49" value="DungeonAdventure.Hero" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
           <mxGeometry x="-1060" y="-440" width="160" height="180" as="geometry" />
         </mxCell>
         <mxCell id="nbmygcf86C2PuPvqUZod-50" value="- healingPots: int&#xa;- visionPots: int&#xa;- pillars: List&lt;String&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="nbmygcf86C2PuPvqUZod-49" vertex="1">
@@ -108,7 +108,7 @@
         <mxCell id="_CLEvV_QXawagUquFoCz-20" value="- heroLocation: int[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="nbmygcf86C2PuPvqUZod-65">
           <mxGeometry y="52" width="180" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="_CLEvV_QXawagUquFoCz-21" value="- hero: Hero" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="nbmygcf86C2PuPvqUZod-65">
+        <mxCell id="_CLEvV_QXawagUquFoCz-21" value="- hero: DungeonAdventure.Hero" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="nbmygcf86C2PuPvqUZod-65">
           <mxGeometry y="78" width="180" height="26" as="geometry" />
         </mxCell>
         <mxCell id="nbmygcf86C2PuPvqUZod-67" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="nbmygcf86C2PuPvqUZod-65" vertex="1">
@@ -126,10 +126,10 @@
         <mxCell id="_CLEvV_QXawagUquFoCz-22" value="+getHeroLocation: int[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="nbmygcf86C2PuPvqUZod-65">
           <mxGeometry y="208" width="180" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="_CLEvV_QXawagUquFoCz-23" value="+getHero(): Hero" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="nbmygcf86C2PuPvqUZod-65">
+        <mxCell id="_CLEvV_QXawagUquFoCz-23" value="+getHero(): DungeonAdventure.Hero" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="nbmygcf86C2PuPvqUZod-65">
           <mxGeometry y="236" width="180" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="_CLEvV_QXawagUquFoCz-47" value="+setHero(Hero): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="nbmygcf86C2PuPvqUZod-65">
+        <mxCell id="_CLEvV_QXawagUquFoCz-47" value="+setHero(DungeonAdventure.Hero): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="nbmygcf86C2PuPvqUZod-65">
           <mxGeometry y="264" width="180" height="28" as="geometry" />
         </mxCell>
         <mxCell id="_CLEvV_QXawagUquFoCz-63" value="+getRoomDoors(): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="nbmygcf86C2PuPvqUZod-65">
@@ -228,31 +228,31 @@
         <mxCell id="nbmygcf86C2PuPvqUZod-93" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endArrow=diamondThin;endFill=0;" parent="1" source="nbmygcf86C2PuPvqUZod-74" target="nbmygcf86C2PuPvqUZod-57" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="mgGbDgRRdJfgmlNicx-C-1" value="Priestess" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
+        <mxCell id="mgGbDgRRdJfgmlNicx-C-1" value="DungeonAdventure.Priestess" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
           <mxGeometry x="-1300" y="-179" width="160" height="64" as="geometry" />
         </mxCell>
         <mxCell id="mgGbDgRRdJfgmlNicx-C-3" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="mgGbDgRRdJfgmlNicx-C-1" vertex="1">
           <mxGeometry y="30" width="160" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="mgGbDgRRdJfgmlNicx-C-4" value="+ Special(DungeonCharacter): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="mgGbDgRRdJfgmlNicx-C-1" vertex="1">
+        <mxCell id="mgGbDgRRdJfgmlNicx-C-4" value="+ Special(DungeonAdventure.DungeonCharacter): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="mgGbDgRRdJfgmlNicx-C-1" vertex="1">
           <mxGeometry y="38" width="160" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="mgGbDgRRdJfgmlNicx-C-5" value="Warrior" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
+        <mxCell id="mgGbDgRRdJfgmlNicx-C-5" value="DungeonAdventure.Warrior" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
           <mxGeometry x="-1080" y="-175" width="200" height="60" as="geometry" />
         </mxCell>
         <mxCell id="mgGbDgRRdJfgmlNicx-C-7" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="mgGbDgRRdJfgmlNicx-C-5" vertex="1">
           <mxGeometry y="26" width="200" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="mgGbDgRRdJfgmlNicx-C-8" value="+ Special(DungeonCharacter): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="mgGbDgRRdJfgmlNicx-C-5" vertex="1">
+        <mxCell id="mgGbDgRRdJfgmlNicx-C-8" value="+ Special(DungeonAdventure.DungeonCharacter): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="mgGbDgRRdJfgmlNicx-C-5" vertex="1">
           <mxGeometry y="34" width="200" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="mgGbDgRRdJfgmlNicx-C-9" value="Thief" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
+        <mxCell id="mgGbDgRRdJfgmlNicx-C-9" value="DungeonAdventure.Thief" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
           <mxGeometry x="-830" y="-175" width="210" height="60" as="geometry" />
         </mxCell>
         <mxCell id="mgGbDgRRdJfgmlNicx-C-11" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="mgGbDgRRdJfgmlNicx-C-9" vertex="1">
           <mxGeometry y="26" width="210" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="mgGbDgRRdJfgmlNicx-C-12" value="+ Special(DungeonCharacter): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="mgGbDgRRdJfgmlNicx-C-9" vertex="1">
+        <mxCell id="mgGbDgRRdJfgmlNicx-C-12" value="+ Special(DungeonAdventure.DungeonCharacter): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="mgGbDgRRdJfgmlNicx-C-9" vertex="1">
           <mxGeometry y="34" width="210" height="26" as="geometry" />
         </mxCell>
         <mxCell id="mgGbDgRRdJfgmlNicx-C-13" value="Extends" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="mgGbDgRRdJfgmlNicx-C-1" edge="1">
