@@ -19,6 +19,8 @@ public abstract class Hero extends DungeonCharacter {
         setMyDodgeChance(theDodgeChance);
     }
 
+    public abstract String specialSkill(final DungeonCharacter theTarget);
+
     /**
      * Adds a new pillar to the hero's inventory
      * @param thePillar The pillar to be added.

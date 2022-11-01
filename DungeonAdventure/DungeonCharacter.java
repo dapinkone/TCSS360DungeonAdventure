@@ -28,7 +28,7 @@ public abstract class DungeonCharacter {
         myMaxDmg = theMaxDmg;
     }
 
-    public abstract String specialSkill(final DungeonCharacter theTarget);
+
 
     /**
      * Attack method, rolls a chance to hit, and another chance for that hit to be blocked.
