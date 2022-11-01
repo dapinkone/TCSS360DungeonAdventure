@@ -1,5 +1,7 @@
 package DungeonAdventure;
 
+import java.util.Objects;
+
 public class Pair implements Comparable{
     /***
      * serves as an immutable container for (row, column) pairs.
@@ -47,12 +49,29 @@ public class Pair implements Comparable{
     @Override
     public int compareTo(final Object o) {
         if(o == null) throw new NullPointerException();
-        if(o instanceof Pair) {
-            final Pair other = (Pair) o;
+        if(o instanceof final Pair other) {
             final int rowComparison = this.row.compareTo(other.row);
             if (rowComparison != 0) return rowComparison;
             return this.column.compareTo(other.column);
+        } else {
+            throw new ClassCastException();
         }
-        return -1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Pair pair = (Pair) o;
+        return row.equals(pair.row) && column.equals(pair.column);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column);
     }
 }
