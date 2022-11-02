@@ -34,26 +34,22 @@ public abstract class DungeonCharacter {
      * Attack method, rolls a chance to hit, and another chance for that hit to be blocked.
      * Then rolls the damage within the character's damage range.
      * @param theTarget the target to attack
-     * @return String of the combat log
+     * @return The damage, or 0 if missed or -1 if dodged by a hero.
      */
-    String attack(final DungeonCharacter theTarget) {
-        StringBuilder result = new StringBuilder(getMyName() + " attacks " + theTarget.getMyName() + "...\n");
-
+    int attack(final DungeonCharacter theTarget) {
         if (RANDOM.nextDouble() <= myHitChance) {
 
             if (RANDOM.nextDouble() <= theTarget.getMyDodgeChance()) {
-                result.append("But " + theTarget.getMyName() + " blocks it!\n");
+                return -1; //DODGED
             } else {
                 int damage = RANDOM.nextInt(myMinDmg, myMaxDmg + 1);
                 theTarget.setMyHealth(theTarget.getMyHealth() - damage);
-                result.append(theTarget.getMyName() + " takes " + damage + " damage.\n");
+                return damage; //HIT
             }
 
         } else {
-            result.append("But the attack misses!\n");
+            return 0; //MISSED
         }
-
-        return String.valueOf(result);
     }
 
 

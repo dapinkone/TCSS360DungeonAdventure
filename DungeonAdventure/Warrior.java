@@ -13,20 +13,18 @@ public class Warrior extends Hero {
      * DungeonAdventure.Warrior special skill is Crushing Blow, which does big dmg at a random chance to hit.
      * Currently hits at a 50% chance
      * @param theTarget The enemy to get hit
-     * @return The combat log.
+     * @return The damage or 0 if missed.
      */
     @Override
-    public String specialSkill(DungeonCharacter theTarget) {
-        StringBuilder string = new StringBuilder(getMyName() + " attempts to crush " + theTarget.getMyName() + "...");
+    public int specialSkill(DungeonCharacter theTarget) {
         Random random = new Random();
         if (random.nextDouble() <= .5) {
             //Successful roll
             int damage = random.nextInt(60, 150) + 1;
-            string.append("\n" + theTarget.getMyName() + " is brutalized for " + damage + " damage!");
+            return damage;
         } else {
             //Miss roll
-            string.append("\nBut they miss!");
+            return 0;
         }
-        return String.valueOf(string);
     }
 }

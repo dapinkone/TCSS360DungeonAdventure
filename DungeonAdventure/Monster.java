@@ -20,27 +20,4 @@ public class Monster extends DungeonCharacter {
         myMinHeal = theMinHeal;
         myMaxHeal = theMaxHeal;
     }
-//
-//    class Ogre extends Monster {
-//        public Ogre() {
-//            super("Ogre", 200, 2,.6, 30,60
-//                    ,.1,30,60);
-//        }
-//
-//    }
-//    class Gremlin extends Monster {
-//
-//        public Gremlin() {
-//            super("Gremlin", 70, 5, .8, 15, 30,
-//                    .4, 20, 40);
-//        }
-//
-//    }
-//    class Skeleton extends Monster {
-//        public Skeleton() {
-//            super("Skeleton", 100, 3, .8, 30, 50,
-//                    .3, 30,50);
-//        }
-//
-//    }
 }
