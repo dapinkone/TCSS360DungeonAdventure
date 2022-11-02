@@ -1,5 +1,7 @@
 package DungeonAdventure;
 
+import java.util.Random;
+
 public class Monster extends DungeonCharacter {
     private double myHealChance;
     private int myMinHeal;
@@ -19,5 +21,12 @@ public class Monster extends DungeonCharacter {
         myHealChance = theHealChance;
         myMinHeal = theMinHeal;
         myMaxHeal = theMaxHeal;
+    }
+
+    public int tryToHeal() {
+        Random random = new Random();
+        if (random.nextDouble() <= myHealChance) {
+            return random.nextInt(myMinHeal + myMaxHeal) + 1;
+        } else return 0;
     }
 }
