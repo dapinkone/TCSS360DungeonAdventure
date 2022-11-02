@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2022-11-01T20:42:25.991Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36" etag="hR2JsI9DsWaTq1M0D-ZW" version="20.5.1" type="github">
+<mxfile host="app.diagrams.net" modified="2022-11-02T20:11:11.991Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36" etag="CVDULUNkY2sYFY9_zPa3" version="20.5.1" type="github">
   <diagram id="z6mJwRc4O_LnGbL8Kmjg" name="Page-1">
-    <mxGraphModel dx="2958" dy="1843" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+    <mxGraphModel dx="2980" dy="1945" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -43,7 +43,7 @@
         <mxCell id="nbmygcf86C2PuPvqUZod-51" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="nbmygcf86C2PuPvqUZod-49" vertex="1">
           <mxGeometry y="90" width="160" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="nbmygcf86C2PuPvqUZod-52" value="+ useItem(Item): void&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="nbmygcf86C2PuPvqUZod-49" vertex="1">
+        <mxCell id="nbmygcf86C2PuPvqUZod-52" value="+useHealingPot(): int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="nbmygcf86C2PuPvqUZod-49" vertex="1">
           <mxGeometry y="98" width="160" height="20" as="geometry" />
         </mxCell>
         <mxCell id="_CLEvV_QXawagUquFoCz-10" value="+getHealingPots(): int&#xa;&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="nbmygcf86C2PuPvqUZod-49" vertex="1">
