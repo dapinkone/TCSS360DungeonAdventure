@@ -36,7 +36,7 @@ public abstract class DungeonCharacter {
      * @param theTarget the target to attack
      * @return The damage, or 0 if missed or -1 if dodged by a hero.
      */
-    int attack(final DungeonCharacter theTarget) {
+    public int attack(final DungeonCharacter theTarget) {
         if (RANDOM.nextDouble() <= myHitChance) {
 
             if (RANDOM.nextDouble() <= theTarget.getMyDodgeChance()) {
@@ -95,4 +95,5 @@ public abstract class DungeonCharacter {
         if (myDodgeChance > 0) string.append("\nBlock Chance: " + myDodgeChance * 100 + "%");
         return String.valueOf(string);
     }
+
 }

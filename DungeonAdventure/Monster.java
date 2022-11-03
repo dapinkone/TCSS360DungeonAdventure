@@ -23,6 +23,10 @@ public class Monster extends DungeonCharacter {
         myMaxHeal = theMaxHeal;
     }
 
+    /**
+     * Calls method if monster for the monster to roll to heal.
+     * @return int 0 if they fail to heal, otherwise return heal amount.
+     */
     public int tryToHeal() {
         Random random = new Random();
         if (random.nextDouble() <= myHealChance) {
