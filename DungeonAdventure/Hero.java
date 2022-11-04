@@ -31,6 +31,7 @@ public abstract class Hero extends DungeonCharacter {
      * @return
      */
     public int useHealingPot() {
+        if (getHealingPots() == 0) return 0;
         int healing = 40;
         if (getMyHealth() + healing > getMyMaxHealth()) {
             setMyHealth(getMyMaxHealth());
@@ -38,6 +39,12 @@ public abstract class Hero extends DungeonCharacter {
             setMyHealth(getMyMaxHealth() + healing);
         }
         return healing;
+    }
+
+    public int useVisionPot() {
+        if (getVisionPots() == 0) return 0;
+        //How would this be implemented, if not in the driver?
+        return 1;
     }
 
     /**

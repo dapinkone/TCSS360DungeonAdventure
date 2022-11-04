@@ -25,4 +25,14 @@ public class HeroTest {
         int result = test1.attack(test2);
         Assertions.assertEquals(-1, result);
     }
+
+    @Test
+    public void testHealingPotsOverflow() {
+        MockHero test1 = new MockHero("test1", 1, 0);
+        MockHero test2 = new MockHero("test2", 1, 1);
+        test1.setHealingPots(1);
+        test2.attack(test1);
+        test1.useHealingPot();
+        Assertions.assertEquals(test1.getMyMaxHealth(), test1.getMyHealth());
+    }
 }
