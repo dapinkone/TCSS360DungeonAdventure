@@ -19,7 +19,33 @@ public abstract class Hero extends DungeonCharacter {
         setMyDodgeChance(theDodgeChance);
     }
 
-    public abstract String specialSkill(final DungeonCharacter theTarget);
+    /**
+     * Class's special skill to be initialized in child classes.
+     * @param theTarget Target for the skill.
+     * @return int indicating the success.
+     */
+    public abstract int specialSkill(final DungeonCharacter theTarget);
+
+    /**
+     * Use a "Healing Tonic," restores 40 health but value can be changed.
+     * @return
+     */
+    public int useHealingPot() {
+        if (getHealingPots() == 0) return 0;
+        int healing = 40;
+        if (getMyHealth() + healing > getMyMaxHealth()) {
+            setMyHealth(getMyMaxHealth());
+        } else {
+            setMyHealth(getMyMaxHealth() + healing);
+        }
+        return healing;
+    }
+
+    public int useVisionPot() {
+        if (getVisionPots() == 0) return 0;
+        //How would this be implemented, if not in the driver?
+        return 1;
+    }
 
     /**
      * Adds a new pillar to the hero's inventory
@@ -31,14 +57,6 @@ public abstract class Hero extends DungeonCharacter {
 
     public List<String> getPillars() {
         return pillars;
-    }
-    public String useHealing() {
-        if (getMyHealth() + 30 > getMyMaxHealth()) {
-            setMyHealth(getMyMaxHealth());
-        } else {
-            setMyHealth(getMyMaxHealth() + 30);
-        }
-        return getMyName() + " downs a healing tonic.";
     }
 
     public int getHealingPots() {

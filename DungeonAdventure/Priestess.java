@@ -13,11 +13,10 @@ public class Priestess extends Hero {
      * The priestess special is to heal. Currently coded to only heal themselves, but if in the future
      * multiple party members are added to the functionality then the code should be changed.
      * @param theTarget Does not matter, so null.
-     * @return String of the combat log.
+     * @return The amount of healing
      */
     @Override
-    public String specialSkill(DungeonCharacter theTarget) {
-        StringBuilder string = new StringBuilder(getMyName() + " treats their wounds...");
+    public int specialSkill(DungeonCharacter theTarget) {
         Random random = new Random();
         int healing = random.nextInt(10, 50) + 1;
         if (getMyHealth() + healing > getMyMaxHealth()) {
@@ -25,7 +24,6 @@ public class Priestess extends Hero {
         } else {
             setMyHealth(getMyHealth() + healing);
         }
-        string.append("\nThey recover " + healing + " health.");
-        return String.valueOf(string);
+        return healing;
     }
 }
