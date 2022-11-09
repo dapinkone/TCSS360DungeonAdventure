@@ -9,6 +9,11 @@ public class Pair implements Comparable{
     public final Integer row;
     public final Integer column;
 
+    @Override
+    public String toString() {
+        return "Pair{row=" + row + ", column=" + column +'}';
+    }
+
     public Pair(int row, int column) {
         this.row = row;
         this.column = column;
