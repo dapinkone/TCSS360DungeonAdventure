@@ -1,0 +1,23 @@
+[screen] <option> *action*
+
+1. [start/title page]
+2. [intro] text(set the scene? do we have/need story text on intro? do we have story?)
+    <new game> -> [character select] -> 3.
+    <load game> -> *load* -> 3.
+    <help / instructions>
+3. [Dungeon Display]
+    Move in direction: <North> <South> <East> <West> -> 3, 5[combat] or 6[Victory] if conditions met 
+    <Show Inventory> -> [Inventory]
+4. [Inventory]
+    <use item> for each item in Inventory -> (show text indicating item effect?)
+    <cancel>
+5. [combat]
+    ???
+    *win* -> 3.
+    *loss* -> 6.
+6. [game over]
+    <play again?>
+    <Load game>
+    <Exit game>
+7. [Victory]
+
