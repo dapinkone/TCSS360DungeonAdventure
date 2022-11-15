@@ -7,7 +7,8 @@ public class DungeonCharacterTest {
 
     public class MockCharacter extends DungeonCharacter {
         public MockCharacter(String theName, double theHitChance) {
-            super(theName,50, 1, theHitChance, 10, 20);
+            super(theName,50, 1,
+                    theHitChance, 10, 20);
         }
     }
 
