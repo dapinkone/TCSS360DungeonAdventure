@@ -2,23 +2,10 @@ package DungeonAdventure;
 
 import java.util.Objects;
 
-public class Pair implements Comparable{
+public record Pair(Integer getRow, Integer getColumn)  implements Comparable{
     /***
      * serves as an immutable container for (row, column) pairs.
      */
-    public final Integer row;
-    public final Integer column;
-
-    @Override
-    public String toString() {
-        return "Pair{row=" + row + ", column=" + column +'}';
-    }
-
-    public Pair(int row, int column) {
-        this.row = row;
-        this.column = column;
-    }
-
     /**
      * Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
@@ -55,28 +42,11 @@ public class Pair implements Comparable{
     public int compareTo(final Object o) {
         if(o == null) throw new NullPointerException();
         if(o instanceof final Pair other) {
-            final int rowComparison = this.row.compareTo(other.row);
+            final int rowComparison = this.getColumn().compareTo(other.getRow());
             if (rowComparison != 0) return rowComparison;
-            return this.column.compareTo(other.column);
+            return this.getColumn().compareTo(other.getColumn());
         } else {
             throw new ClassCastException();
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Pair pair = (Pair) o;
-        return row.equals(pair.row) && column.equals(pair.column);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(row, column);
     }
 }
