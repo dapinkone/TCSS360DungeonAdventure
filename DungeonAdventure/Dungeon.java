@@ -62,8 +62,8 @@ public class Dungeon {
     private record ChoicePair(Pair destination, Direction door) {
     }
     private ArrayList<ChoicePair> borderCoords(Pair p) {
-        int row = p.row;
-        int col = p.column;
+        int row = p.getRow();
+        int col = p.getColumn();
         ArrayList<ChoicePair> choices = new ArrayList<>();
         // TODO: refactor?
         choices.add(new ChoicePair(new Pair(row - 1, col), Direction.NORTH));
@@ -85,8 +85,8 @@ public class Dungeon {
         // start walking through the maze with a modified DFS
         while(visited.size() != allCoords.size()) {
             visited.add(current);
-            row = current.row;
-            col = current.column;
+            row = current.getRow();
+            col = current.getColumn();
 
             if(lastDoor != null) {
                 // the door we entered the room from
