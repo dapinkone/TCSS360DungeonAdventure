@@ -1,7 +1,7 @@
 [screen] <option> *action*
 
 1. [start/title page]
-2. [intro] text(set the scene? do we have/need story text on intro? do we have story?)
+2. [intro] text(I have an idea for an intro text, once its set i'll write it out, but think of it in the style of a mission brief.) 
     <new game> -> [character select] -> 3.
     <load game> -> *load* -> 3.
     <help / instructions>
@@ -12,7 +12,9 @@
     <use item> for each item in Inventory -> (show text indicating item effect?)
     <cancel>
 5. [combat]
-    ???
+    Driver method will dictate whose turn it is to attack.
+    <attack> allows user to pick a target, and roll to attack them
+    <specialSkill> pick a target if eligible and use special skill related to their class.
     *win* -> 3.
     *loss* -> 6.
 6. [game over]
