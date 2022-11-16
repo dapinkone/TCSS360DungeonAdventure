@@ -114,6 +114,10 @@ public class Combat {
                 //TODO: DISPLAY MONSTER DEATH
                 System.out.println(target.getMyName() + " falls to the dirt");
             }
+        } else if (option == 2) {
+            //TODO: SPECIAL SKILL
+        } else if (option == 3) {
+            //TODO: USE ITEM
         }
     }
 
