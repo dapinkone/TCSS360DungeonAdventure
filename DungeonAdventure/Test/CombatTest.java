@@ -9,12 +9,12 @@ import java.util.List;
 public class CombatTest {
 
     public static void main(String[] theArgs) {
-//        testSingleCombat();
-        testMultiCombat();
+        testSingleCombat();
+//        testMultiCombat();
     }
 
     private static void testSingleCombat() {
-        Hero hero = new Warrior("Hero");
+        Hero hero = new Priestess("Hero");
         MonsterFactory monsterFactory = new MonsterFactory();
         List<Monster> monsters = new ArrayList<>();
         monsters.add(monsterFactory.generateMonster("skeleton"));
@@ -30,6 +30,8 @@ public class CombatTest {
         Combat c = new Combat(monsters, hero);
         System.out.println(c.doCombat());
     }
+
+
 
 
 }

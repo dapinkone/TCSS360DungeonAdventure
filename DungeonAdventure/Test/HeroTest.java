@@ -14,7 +14,7 @@ public class HeroTest {
         }
 
         @Override
-        public int specialSkill(DungeonCharacter theTarget) {
+        public int specialSkill() {
             return 0;
         }
     }

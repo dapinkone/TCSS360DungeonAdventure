@@ -43,13 +43,13 @@ public class MonsterFactory {
         }
 
         String query1 = "INSERT INTO monsters VALUES" +
-                "('Skitter', 70, 5, .8, 15, 30, .4, 20, 40)";
+                "('Skitter', 70, 5, .8, 10, 20, .4, 10, 20)";
         String query2 = "INSERT INTO monsters VALUES" +
-                "('Crawler', 100, 3, .8, 30, 50, .3, 30,50)";
+                "('Crawler', 100, 3, .8, 15, 30, .3, 15 ,30)";
         String query3 = "INSERT INTO monsters VALUES" +
-                "('Predator', 200, 2, .6, 30, 60, .1, 30, 60)";
+                "('Predator', 200, 2, .6, 20, 40, .1, 20, 40)";
         String query4 = "INSERT INTO monsters VALUES" +
-                "('Awoken Horror', 330, 3, .6, 40, 60, .1, 30, 60)";
+                "('Awoken Horror', 330, 2, .6, 30, 40, .1, 30, 40)";
 
         try {
             Connection conn = ds.getConnection();

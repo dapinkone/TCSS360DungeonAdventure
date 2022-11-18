@@ -30,7 +30,9 @@ public class Monster extends DungeonCharacter {
     public int tryToHeal() {
         Random random = new Random();
         if (random.nextDouble() <= myHealChance) {
-            return random.nextInt(myMinHeal + myMaxHeal) + 1;
+            int result = random.nextInt(myMinHeal + myMaxHeal) + 1;
+            setMyHealth(getMyHealth() + result);
+            return result;
         } else return 0;
     }
 }

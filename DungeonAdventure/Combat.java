@@ -1,6 +1,8 @@
 package DungeonAdventure;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Combat {
@@ -32,6 +34,13 @@ public class Combat {
 
         int count = 0;
         int heroSpeed = hero.getMyAttackSpeed();
+
+        //TODO: FIX TURN ORDER IMPLEMENTATION: POLL FASTEST AND SUBTRACT WITH SECOND FASTEST AND READD.
+        PriorityQueue<Integer> turnOrder = new PriorityQueue<>(Collections.reverseOrder());
+        turnOrder.add(heroSpeed);
+        for (Monster monster : monsters) {
+            turnOrder.add(monster.getMyAttackSpeed());
+        }
 
         //combat loop
         while(hero.getMyHealth() > 0 && !monsters.isEmpty()) {
@@ -82,32 +91,45 @@ public class Combat {
     }
 
     /**
-     * Driver for the player to choose the options for the hero to perform on it's turn.
+     * Should be called everytime a monster takes damage, checks to see if it died and also
+     * if it successfully attempts to heal itself.
+     * @param targetIndex the index of the monster
      */
-    private void heroTurn() {
-        int option = getHeroOption();
-        int targetIndex = 0;
-
-        if (option == 1) {
-            targetIndex = heroAttack();
-        } else if (option == 2) {
-            //TODO: SPECIAL SKILL
-        } else if (option == 3) {
-            //TODO: USE ITEM
-        }
+    private void monsterHurt(int targetIndex) {
         Monster target = monsters.get(targetIndex);
         if (target.getMyHealth() <= 0) {
             monsters.remove(targetIndex);
             //TODO: DISPLAY MONSTER DEATH
             System.out.println(target.getMyName() + " falls to the dirt");
+        } else { //Monster survives and tries to heal
+            int result = target.tryToHeal();
+            if (result != 0) {
+                System.out.println(target.getMyName() + " heals itself for " + result + " health.");
+            }
+        }
+    }
+
+    /**
+     * Driver for the player to choose the options for the hero to perform on their turn.
+     */
+    private void heroTurn() {
+        int option = getHeroOption();
+        if (option == 1) {
+            heroAttack();
+        } else if (option == 2) {
+            heroSpecial();
+        } else if (option == 3) {
+            if (hero.getHealingPots() > 0) {
+                int heal = hero.useHealingPot();
+                System.out.println(hero.getMyName() + " drinks a potion and heals " + heal + " health.");
+            }
         }
     }
 
     /**
      * Hero chooses which target to attack if applicable and attacks them.
-     * @return The index of the target to attack.
      */
-    private int heroAttack() {
+    private void heroAttack() {
         //CHOOSE TARGET IF MULTIPLE
         int targetIndex = getTargetIndex();
         Monster target = monsters.get(targetIndex);
@@ -119,9 +141,49 @@ public class Combat {
             System.out.println("Missed!");
         } else {
             System.out.println("Dealt " + result + " damage");
+            monsterHurt(targetIndex);
         }
         System.out.println();
-        return targetIndex;
+    }
+
+    /**
+     * Hero performs their special move, with values given from the hero's specialSkill method.
+     */
+    private void heroSpecial() {
+        int result = hero.specialSkill();
+        String heroClass = hero.getMyClass();
+
+        if (heroClass.equals("Bruiser")) {
+            int targetIndex = getTargetIndex();
+            Monster target = monsters.get(targetIndex);
+            System.out.println(hero.getMyName() + " readies their weapon...");
+            if (result == 0) {
+                System.out.println("They missed!");
+            } else {
+                System.out.println("Crushes " + target.getMyName() + " for " + result + " damage");
+                target.setMyHealth(target.getMyHealth() - result);
+                monsterHurt(targetIndex);
+            }
+            System.out.println();
+        }
+
+        if (heroClass.equals("Scout")) {
+            System.out.println(hero.getMyName() + " prepares to flank...");
+            if (result == 0) {
+                System.out.println("They fail!");
+            } if (result == 1) {
+                heroAttack();
+            } if (result == 2) {
+                heroAttack();
+                System.out.println("One more!");
+                heroAttack();
+            }
+        }
+
+        if (heroClass.equals("Survivalist")) {
+            System.out.println(hero.getMyName() + " treats their wounds...");
+            System.out.println("They heal for " + result + "health.");
+        }
     }
 
     /**

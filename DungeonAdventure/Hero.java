@@ -21,10 +21,9 @@ public abstract class Hero extends DungeonCharacter {
 
     /**
      * Class's special skill to be initialized in child classes.
-     * @param theTarget Target for the skill.
      * @return int indicating the success.
      */
-    public abstract int specialSkill(final DungeonCharacter theTarget);
+    public abstract int specialSkill();
 
     /**
      * Use a "Healing Tonic," restores 40 health but value can be changed.
