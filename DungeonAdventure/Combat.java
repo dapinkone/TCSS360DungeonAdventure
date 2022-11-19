@@ -1,9 +1,6 @@
 package DungeonAdventure;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.util.*;
 
 public class Combat {
     static final Scanner SCANNER = new Scanner(System.in);
@@ -35,29 +32,64 @@ public class Combat {
         int count = 0;
         int heroSpeed = hero.getMyAttackSpeed();
 
-        //TODO: FIX TURN ORDER IMPLEMENTATION: POLL FASTEST AND SUBTRACT WITH SECOND FASTEST AND READD.
-        PriorityQueue<Integer> turnOrder = new PriorityQueue<>(Collections.reverseOrder());
-        turnOrder.add(heroSpeed);
-        for (Monster monster : monsters) {
-            turnOrder.add(monster.getMyAttackSpeed());
+        class SpeedNode implements Comparable<SpeedNode> {
+            int index = 0;
+            int speed = 0;
+
+            private SpeedNode(final int theIndex, final int theSpeed) {
+                index = theIndex;
+                speed = theSpeed;
+            }
+
+            @Override
+            public int compareTo(SpeedNode o) {
+                return o.speed - this.speed;
+            }
         }
 
+        //TODO: FIX TURN ORDER IMPLEMENTATION: POLL FASTEST AND SUBTRACT WITH SECOND FASTEST AND READD.
+        List<SpeedNode> turnOrder = new LinkedList<>();
+        turnOrder.add(new SpeedNode(0, heroSpeed));
+        int index = 1;
+        for (Monster monster : monsters) {
+            turnOrder.add(new SpeedNode(index, monster.getMyAttackSpeed()));
+            index++;
+        }
+        Collections.sort(turnOrder);
+        List<SpeedNode> copy = new LinkedList<>();
+        for (SpeedNode sn : turnOrder) {
+            copy.add(new SpeedNode(sn.index, sn.speed));
+        }
         //combat loop
+        int min = turnOrder.get(turnOrder.size() - 1).speed;
         while(hero.getMyHealth() > 0 && !monsters.isEmpty()) {
-            count++;
-            //Hero's turn
-            if (count % heroSpeed == 0) {
-                heroTurn();
-                System.out.println(combatStatus());
-            }
-            //Monster's turn
-            for (Monster monster : monsters) {
-                if (count % monster.getMyAttackSpeed() == 0) {
-                    monsterTurn(monster);
+
+            for (SpeedNode sn : copy) {
+
+                if (sn.speed > 0) {
+                    if (sn.index == 0) {
+                        heroTurn();
+                    } else {
+                        if (monsters.size() >= sn.index) {
+                            monsterTurn(monsters.get(sn.index - 1));
+                        }
+                    }
                     System.out.println(combatStatus());
+                    if (hero.getMyHealth() <= 0 || monsters.isEmpty()) {
+                        break;
+                    }
+                    sn.speed = sn.speed - min;
+                }
+            }
+            Collections.sort(copy);
+            if (copy.get(0).speed < min) {
+                copy.clear();
+                for (SpeedNode sn : turnOrder) {
+                    copy.add(new SpeedNode(sn.index, sn.speed));
                 }
             }
         }
+
         if (hero.getMyHealth() <= 0) {
             //TODO: DISPLAY GAME OVER
             System.out.println("You lose.");
