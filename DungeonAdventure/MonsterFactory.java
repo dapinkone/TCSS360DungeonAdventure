@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 
 public class MonsterFactory {
     SQLiteDataSource ds = null;
@@ -102,6 +103,22 @@ public class MonsterFactory {
             System.exit( 0 );
         }
         return null;
+    }
+
+    /**
+     * Generates a random monster from the non-boss monsters.
+     * @return The random monster.
+     */
+    public Monster generateRandom() {
+        Random rand = new Random();
+        int num = rand.nextInt(3) + 1;
+        String name = "";
+        switch (num) {
+            case(1)-> name = "gremlin";
+            case(2)-> name = "skeleton";
+            case(3)-> name = "ogre";
+        }
+        return generateMonster(name);
     }
 
 }

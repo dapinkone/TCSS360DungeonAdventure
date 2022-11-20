@@ -15,6 +15,7 @@
     Driver method will dictate whose turn it is to attack.
     <attack> allows user to pick a target, and roll to attack them
     <specialSkill> pick a target if eligible and use special skill related to their class.
+    <items> pick an item to use during combat.
     *win* -> 3.
     *loss* -> 6.
 6. [game over]
