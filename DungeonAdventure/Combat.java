@@ -18,6 +18,23 @@ public class Combat {
     }
 
     /**
+     * SpeedNode object for use in the doCombat method to determine turn orders.
+     */
+    class SpeedNode implements Comparable<SpeedNode> {
+        int index = 0;
+        int speed = 0;
+
+        private SpeedNode(final int theIndex, final int theSpeed) {
+            index = theIndex;
+            speed = theSpeed;
+        }
+
+        @Override
+        public int compareTo(SpeedNode o) {
+            return o.speed - this.speed;
+        }
+    }
+    /**
      * Driver method for combat.
      * @return Boolean of whether the Hero won or not.
      */
@@ -29,25 +46,7 @@ public class Combat {
         System.out.println();
         System.out.println(combatStatus());
 
-        int count = 0;
         int heroSpeed = hero.getMyAttackSpeed();
-
-        class SpeedNode implements Comparable<SpeedNode> {
-            int index = 0;
-            int speed = 0;
-
-            private SpeedNode(final int theIndex, final int theSpeed) {
-                index = theIndex;
-                speed = theSpeed;
-            }
-
-            @Override
-            public int compareTo(SpeedNode o) {
-                return o.speed - this.speed;
-            }
-        }
-
-        //TODO: FIX TURN ORDER IMPLEMENTATION: POLL FASTEST AND SUBTRACT WITH SECOND FASTEST AND READD.
         List<SpeedNode> turnOrder = new LinkedList<>();
         turnOrder.add(new SpeedNode(0, heroSpeed));
         int index = 1;
@@ -230,6 +229,11 @@ public class Combat {
                 //TODO: PROMPT USER FOR WHICH MONSTER TO ATTACK (1, 2, 3)
                 //Read input from user
                 System.out.println("Choose target: ");
+                int i = 1;
+                for (Monster monster : monsters) {
+                    System.out.println("[" + i + "] " + monster.getMyName() + " health: " + monster.getMyHealth());
+                    i++;
+                }
                 System.out.print("> ");
                 targetIndex = SCANNER.nextInt();
                 System.out.println("-----------------");
@@ -273,8 +277,10 @@ public class Combat {
     private String combatStatus() {
         StringBuilder result = new StringBuilder();
         result.append("Your health: " + hero.getMyHealth() + "\n");
+        int i = 1;
         for (Monster monster : monsters) {
-            result.append(monster.getMyName() + " health: " + monster.getMyHealth() + "\n");
+            result.append("[" + i + "] " + monster.getMyName() + " health: " + monster.getMyHealth() + "\n");
+            i++;
         }
         return (result.toString());
     }
