@@ -7,7 +7,7 @@ public class Dungeon {
     private Room[][] myRooms;
     final private  int rows;
     final private int columns;
-    private static final Random RANDOM = new Random();
+    public static final Random RANDOM = new Random();
     final private HashSet<Pair> allCoords = new HashSet<>();
     private Hero myHero;
 

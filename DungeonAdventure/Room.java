@@ -13,6 +13,7 @@ public class Room {
         myDoors = new HashMap<>();
     }
     public Boolean getDoor(Direction d) {
+        // returns true if a door is open/present. otherwise it's a locked door/wall.
         return myDoors.getOrDefault(d, false);
     }
     public Item[] getMyItems() {
