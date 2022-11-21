@@ -1,6 +1,10 @@
 package DungeonAdventure;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import java.util.Scanner;
 
 public class Combat {
     static final Scanner SCANNER = new Scanner(System.in);
@@ -34,6 +38,7 @@ public class Combat {
             return o.speed - this.speed;
         }
     }
+
     /**
      * Driver method for combat.
      * @return Boolean of whether the Hero won or not.
@@ -88,7 +93,6 @@ public class Combat {
                 }
             }
         }
-
         if (hero.getMyHealth() <= 0) {
             //TODO: DISPLAY GAME OVER
             System.out.println("You lose.");
@@ -229,11 +233,6 @@ public class Combat {
                 //TODO: PROMPT USER FOR WHICH MONSTER TO ATTACK (1, 2, 3)
                 //Read input from user
                 System.out.println("Choose target: ");
-                int i = 1;
-                for (Monster monster : monsters) {
-                    System.out.println("[" + i + "] " + monster.getMyName() + " health: " + monster.getMyHealth());
-                    i++;
-                }
                 System.out.print("> ");
                 targetIndex = SCANNER.nextInt();
                 System.out.println("-----------------");
@@ -277,10 +276,8 @@ public class Combat {
     private String combatStatus() {
         StringBuilder result = new StringBuilder();
         result.append("Your health: " + hero.getMyHealth() + "\n");
-        int i = 1;
         for (Monster monster : monsters) {
-            result.append("[" + i + "] " + monster.getMyName() + " health: " + monster.getMyHealth() + "\n");
-            i++;
+            result.append(monster.getMyName() + " health: " + monster.getMyHealth() + "\n");
         }
         return (result.toString());
     }
