@@ -1,6 +1,6 @@
 package DungeonAdventure;
 
-public class CLIView implements DungeonView {
+public class CLIView implements GameView {
     final Dungeon myDungeon;
 
     public CLIView(Dungeon myDungeon) {
@@ -42,7 +42,7 @@ public class CLIView implements DungeonView {
         return sb.toString();
     }
     @Override
-    public void setModel(DungeonModel myModel) {
+    public void setModel(GameModel myModel) {
 
     }
 

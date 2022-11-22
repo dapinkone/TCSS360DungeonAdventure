@@ -1,6 +1,6 @@
 package DungeonAdventure;
 
-public class DefaultModel implements DungeonModel {
+public class DefaultModel implements GameModel {
     private Dungeon myDungeon;
     public DefaultModel() {
         // TODO: I need a Hero() https://www.youtube.com/watch?v=bWcASV2sey0

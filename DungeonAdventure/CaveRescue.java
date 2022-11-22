@@ -1,8 +1,8 @@
 package DungeonAdventure;
 // main program entrypoint
 public class CaveRescue {
-    private DungeonModel myDungeonModel;
-    private DungeonView myDungeonView;
+    private GameModel myGameModel;
+    private GameView myGameView;
     public static void main() {
 
     }
