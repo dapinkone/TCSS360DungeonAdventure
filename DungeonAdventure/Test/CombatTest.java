@@ -1,7 +1,6 @@
 package DungeonAdventure.Test;
 
 import DungeonAdventure.*;
-import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ public class CombatTest {
         MonsterFactory monsterFactory = new MonsterFactory();
         List<Monster> monsters = new ArrayList<>();
         monsters.add(monsterFactory.generateMonster("ogre"));
-        Combat c = new Combat(monsters, hero);
+        TestCombat c = new TestCombat(monsters, hero);
         System.out.println(c.doCombat());
     }
     private static void testMultiCombat() {
@@ -27,7 +26,7 @@ public class CombatTest {
         List<Monster> monsters = new ArrayList<>();
         monsters.add(monsterFactory.generateMonster("gremlin"));
         monsters.add(monsterFactory.generateMonster("skeleton"));
-        Combat c = new Combat(monsters, hero);
+        TestCombat c = new TestCombat(monsters, hero);
         System.out.println(c.doCombat());
     }
 
