@@ -7,10 +7,10 @@ public class MonsterFactoryTest {
 
 
     @Test public void MonsterFactoryCreateTest() {
-        MonsterFactory monsterFactory = new MonsterFactory();
+        MonsterFactory monsterFactory = MonsterFactory.getInstance();
     }
     @Test public void CreateMonsterTest() {
-        MonsterFactory monsterFactory = new MonsterFactory();
+        MonsterFactory monsterFactory = MonsterFactory.getInstance();
         Monster test3 = monsterFactory.generateMonster("ogre");
         System.out.println(test3.getStats() + "\n");
         Monster test1 = monsterFactory.generateMonster("gremlin");

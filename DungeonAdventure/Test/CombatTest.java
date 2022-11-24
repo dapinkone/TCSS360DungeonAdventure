@@ -14,7 +14,7 @@ public class CombatTest {
 
     private static void testSingleCombat() {
         Hero hero = new Priestess("Hero");
-        MonsterFactory monsterFactory = new MonsterFactory();
+        MonsterFactory monsterFactory = MonsterFactory.getInstance();
         List<Monster> monsters = new ArrayList<>();
         monsters.add(monsterFactory.generateMonster("ogre"));
         TestCombat c = new TestCombat(monsters, hero);
@@ -22,7 +22,7 @@ public class CombatTest {
     }
     private static void testMultiCombat() {
         Hero hero = new Warrior("Hero");
-        MonsterFactory monsterFactory = new MonsterFactory();
+        MonsterFactory monsterFactory = MonsterFactory.getInstance();
         List<Monster> monsters = new ArrayList<>();
         monsters.add(monsterFactory.generateMonster("gremlin"));
         monsters.add(monsterFactory.generateMonster("skeleton"));

@@ -9,8 +9,19 @@ import java.sql.Statement;
 import java.util.Random;
 
 public class MonsterFactory {
+    private static MonsterFactory instance = new MonsterFactory();
+
     SQLiteDataSource ds = null;
-    public MonsterFactory() {
+
+    /**
+     * Access point for the Singleton MonsterFactory class.
+     * @return the global instance of MonsterFactory.
+     */
+    public static MonsterFactory getInstance() {
+        return instance;
+    }
+
+    private MonsterFactory() {
 
         //establish connection (creates db file if it does not exist :-)
         try {

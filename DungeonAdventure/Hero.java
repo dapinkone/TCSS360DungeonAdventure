@@ -30,13 +30,14 @@ public abstract class Hero extends DungeonCharacter {
      * @return
      */
     public int useHealingPot() {
-        if (getHealingPots() == 0) return 0;
+        if (healingPots == 0) return 0;
         int healing = 40;
         if (getMyHealth() + healing > getMyMaxHealth()) {
             setMyHealth(getMyMaxHealth());
         } else {
             setMyHealth(getMyMaxHealth() + healing);
         }
+        healingPots--;
         return healing;
     }
 

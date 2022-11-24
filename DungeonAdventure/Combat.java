@@ -8,6 +8,7 @@ public class Combat {
     private List<Monster> myMonsters;
     private Hero myHero;
     private List<Integer> myTurnOrder;
+    private int nextTurn = 0;
 
     public Combat(List<Monster> theMonsters, Hero theHero) {
         myMonsters = theMonsters;
@@ -15,6 +16,10 @@ public class Combat {
         myTurnOrder = turnOrdering();
     }
 
+    /**
+     * Calculates the order in which turns should be taken.
+     * @return List of the turns in order, represented by their index
+     */
     private List<Integer> turnOrdering() {
         class SpeedNode implements Comparable<SpeedNode> {
             int index = 0;
@@ -55,26 +60,59 @@ public class Combat {
         }
         return turnOrderIndexes;
     }
-    public DungeonCharacter getTurn(int theIndex) {
-        if (theIndex == 0) {
-            return myHero;
-        } else {
-            return myMonsters.get(theIndex);
+
+    /**
+     * Returns the index of the character whose turn is next that isn't dead.
+     * @return The index of the character whose turn is next.
+     */
+    public int getNextTurn() {
+        int result = myTurnOrder.get(nextTurn);
+        while (myMonsters.get(result - 1).isDead()) { //Don't need to check hero.
+            nextTurn++;
+            if (nextTurn >= myTurnOrder.size()) {
+                nextTurn = 0;
+            }
+            result = myTurnOrder.get(nextTurn);
         }
+        nextTurn++;
+        if (nextTurn >= myTurnOrder.size()) {
+            nextTurn = 0;
+        }
+        return result;
     }
 
+    /**
+     * Monster attacks the hero.
+     * @param theMonster Monster whose turn it is.
+     * @return result of the turn.
+     */
+    public int monsterTurn(Monster theMonster) {
+        return theMonster.attack(myHero);
+    }
+
+    /**
+     * The method for calculating the Hero's turn.
+     * @param theOption Which option the hero chooses on it's turn.
+     * @param theTargetIndex The character to be targeted by the hero.
+     * @return int representing the result.
+     */
     public int heroTurn(int theOption, int theTargetIndex) {
         int result = 0;
         if (theOption == 1) { //ATTACK
             result = myHero.attack(myMonsters.get(theTargetIndex));
         } else if (theOption == 2) { //SPECIAL SKILL
-
+            result = heroSpecial(theTargetIndex);
         } else if (theOption == 3) { //USE ITEMS
-
+            result = myHero.useHealingPot();
         }
         return result;
     }
 
+    /**
+     * Method that performs each hero's special move.
+     * @param theTargetIndex the target of the special move should there be one
+     * @return int containing the result of the move.
+     */
     private int heroSpecial(int theTargetIndex) {
         int result = myHero.specialSkill();
         String heroClass = myHero.getMyClass();
@@ -84,16 +122,41 @@ public class Combat {
             target.setMyHealth(target.getMyHealth() - result);
         }
         if (heroClass.equals("Scout")) {
-            if (result == 0) { //fail
-
-            } if (result == 1) { //normal
-
+            Monster target = myMonsters.get(theTargetIndex);
+            if (result == 1) { //normal
+                result = myHero.attack(target);
             } if (result == 2) { //crit
-
+                result = myHero.attack(target);
+                result += myHero.attack(target);
             }
         }
-
         return result;
+    }
+
+    /**
+     * Should be called whenever a monster is hurt. Monster tries to heal, or dies
+     * if they are below 0 health.
+     * @return int of how much they heal.
+     */
+    public int monsterHurt(Monster theMonster) {
+        if (!theMonster.isDead()) {
+            return theMonster.tryToHeal();
+        } else return 0;
+    }
+
+    /**
+     * Checks whether the combat is over.
+     * @return boolean of if the combat is over.
+     */
+    public boolean isOver() {
+        if (myHero.isDead()) return true;
+        boolean allDead = true;
+        for (Monster monster : myMonsters) {
+            if (!monster.isDead()) {
+                allDead = false;
+            }
+        }
+        return allDead;
     }
 
     public List<Monster> getMonsters() {
