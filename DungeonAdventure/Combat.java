@@ -45,9 +45,11 @@ public class Combat {
         }
         Collections.sort(speeds);
         List<Integer> turnOrderIndexes = new LinkedList<>();
-        //combat loop
         int min = speeds.get(speeds.size() - 1).speed;
-        while (speeds.get(0).speed > 0) {
+
+        //combat loop
+        int max = speeds.get(0).speed;
+        while (max > 0) {
             for (SpeedNode sn : speeds) {
 
                 if (sn.speed > 0) {
@@ -56,24 +58,17 @@ public class Combat {
                 }
             }
             Collections.sort(speeds);
-            min = speeds.get(speeds.size() - 1).speed;
+            max = speeds.get(0).speed;
         }
         return turnOrderIndexes;
     }
 
     /**
-     * Returns the index of the character whose turn is next that isn't dead.
+     * Returns the index of the character whose turn is next.
      * @return The index of the character whose turn is next.
      */
     public int getNextTurn() {
         int result = myTurnOrder.get(nextTurn);
-        while (myMonsters.get(result - 1).isDead()) { //Don't need to check hero.
-            nextTurn++;
-            if (nextTurn >= myTurnOrder.size()) {
-                nextTurn = 0;
-            }
-            result = myTurnOrder.get(nextTurn);
-        }
         nextTurn++;
         if (nextTurn >= myTurnOrder.size()) {
             nextTurn = 0;
