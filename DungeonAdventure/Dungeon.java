@@ -4,6 +4,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Dungeon {
+    /***
+     * Data structure that holds information about the dungeon, or the "board" on which we play the game
+     */
     private Room[][] myRooms;
     final private  int rows;
     final private int columns;
