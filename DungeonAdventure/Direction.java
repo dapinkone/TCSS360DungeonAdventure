@@ -1,7 +1,8 @@
 package DungeonAdventure;
+import java.io.Serializable;
 import java.util.Map;
 
-public enum Direction {
+public enum Direction implements Serializable {
     NORTH, SOUTH, EAST, WEST;
     private static final Map<Direction, Direction> invertMap = Map.of(
             NORTH, SOUTH,

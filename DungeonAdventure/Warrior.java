@@ -1,8 +1,9 @@
 package DungeonAdventure;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Warrior extends Hero {
+public class Warrior extends Hero implements Serializable {
 
     public Warrior(String theName) {
         super("Bruiser",
