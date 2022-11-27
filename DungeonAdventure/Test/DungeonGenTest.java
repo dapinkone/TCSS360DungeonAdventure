@@ -22,8 +22,6 @@ public class DungeonGenTest {
     public void testOpenDoors2By2() {
         Dungeon.RANDOM.setSeed(0L); // tests need to be non-random.
         Dungeon d = new Dungeon(2,2);
-        CLIView v = new CLIView(d);
-        v.showDungeon();
 
         final Room[][] theRooms = d.getRooms();
         final Room topLeft = theRooms[0][0];
