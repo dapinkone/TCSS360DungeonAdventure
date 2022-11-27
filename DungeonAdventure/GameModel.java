@@ -1,7 +1,6 @@
 package DungeonAdventure;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 public interface GameModel {
     /***
@@ -17,7 +16,7 @@ public interface GameModel {
     Hero getHero();
     Pair getHeroLocation(); // hero's position in the dungeon maze.
     Item[] getRoomItems(Pair p); // view needs to see items to know how to display
-    Direction[] getRoomDoors(Pair p); // view needs to see doors/openings to display, and for player options
+    Set<Direction> getRoomDoors(Pair p); // view needs to see doors/openings to display, and for player options
 
     // player actions:
     boolean pickupItem(Item theItem); // pickup an item in the current room, return success/failure.
