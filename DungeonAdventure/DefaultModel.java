@@ -6,6 +6,11 @@ public class DefaultModel implements GameModel {
 
     }
 
+    @Override
+    public void newDungeon(int rows, int cols) {
+        myDungeon = new Dungeon(rows, cols);
+    }
+
     public void saveGame() {
 
     }
@@ -16,27 +21,27 @@ public class DefaultModel implements GameModel {
 
     @Override
     public void setHero(Hero theHero) {
-
+        myDungeon.setHero(theHero);
     }
 
     @Override
     public Hero getHero() {
-        return null;
+        return myDungeon.getHero();
     }
 
     @Override
     public Pair getHeroLocation() {
-        return null;
+        return myDungeon.getMyHeroLocation();
     }
 
     @Override
     public Item[] getRoomItems(Pair p) {
-        return new Item[0];
+        return myDungeon.getCurrentRoomItems();
     }
 
     @Override
     public Direction[] getRoomDoors(Pair p) {
-        return new Direction[0];
+        return myDungeon.getCurrentRoomDoors();
     }
 
     @Override
@@ -51,6 +56,15 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean move(Direction theDirection) {
+        if(checkCombat()) {
+           return false; // currently in combat. can't move.
+        }
+        for(var otherDirection : myDungeon.getCurrentRoomDoors()) {
+            if(theDirection == otherDirection) {
+                return true;
+            }
+        }
+        // current room does not have an open door/hall in that direction.
         return false;
     }
 
@@ -59,11 +73,8 @@ public class DefaultModel implements GameModel {
         return false;
     }
 
-    public String getCurrentRoom() {
-        return null;
-    }
-
-    public String showDungeon() {
-        return null;
+    @Override
+    public Room[][] getRooms() {
+        return myDungeon.getRooms();
     }
 }

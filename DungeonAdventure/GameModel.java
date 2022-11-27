@@ -1,16 +1,18 @@
 package DungeonAdventure;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface GameModel {
     /***
      * encapsulates all the functionality/interactions required to play the game.
      */
+    void newDungeon(int rows, int cols);
     void saveGame();
     void loadGame();
 
     // data that the view needs access to display/play the game
-    // String getCurrentRoom(); // Rooms are mutable. we should try to avoid passing stateful objects around.
+
     void setHero(Hero theHero); // needed so we can do a hero select screen
     Hero getHero();
     Pair getHeroLocation(); // hero's position in the dungeon maze.
@@ -22,4 +24,6 @@ public interface GameModel {
     boolean useItem(Item theItem); // use an item that's in the hero's inventory.
     boolean move(Direction theDirection); // move the hero in a given direction. returns success/failure.
     boolean checkCombat(); // returns true if we've run into a combat encounter in the current room?
+
+    Room[][] getRooms(); // TODO: Rooms are mutable. better solution?
 }
