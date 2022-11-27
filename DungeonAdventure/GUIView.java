@@ -59,9 +59,9 @@ public class GUIView {
                 e.printStackTrace();
             }
             g.drawImage(bg, 0,0, this);
-//            g.drawImage(gremlin, ENEMY1.x,ENEMY1.y, this);
-//            g.drawImage(skeleton, ENEMY2.x,ENEMY2.y, this);
-//            g.drawImage(ogre, ENEMY3.x,ENEMY3.y, this);
+            g.drawImage(gremlin, POS1.x,POS1.y, this);
+            g.drawImage(skeleton, POS2.x,POS2.y, this);
+            g.drawImage(ogre, POS3.x,POS3.y, this);
 
         }
     }
