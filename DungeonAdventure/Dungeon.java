@@ -14,16 +14,26 @@ public class Dungeon {
     final private HashSet<Pair> allCoords = new HashSet<>();
     private Hero myHero;
 
+    public int getColumns() {
+        return columns;
+    }
+    public int getRows() {
+        return rows;
+    }
+
     public Pair getMyHeroLocation() {
         return myHeroLocation;
     }
 
-    public void setMyHeroLocation(Pair myHeroLocation) {
-        // TODO: data validation
-        this.myHeroLocation = myHeroLocation;
+    public void setMyHeroLocation(Pair theHeroLocation) {
+        // if coordinate is valid
+        if(allCoords.contains(theHeroLocation)) {
+            myHeroLocation = theHeroLocation;
+        }
     }
 
-    private Pair myHeroLocation;
+    // TODO: put hero at entrance when entrance placed.
+    private Pair myHeroLocation = new Pair(0,0);
 
     public Dungeon(int rows, int columns) {
         this.rows = rows;
@@ -31,6 +41,7 @@ public class Dungeon {
         makeRooms();
         generateMaze();
     }
+
     private void makeRooms() {
         // we need to generate the Rooms, coordinates, etc
         myRooms = new Room[rows][];
@@ -58,8 +69,12 @@ public class Dungeon {
     public Item[] getCurrentRoomItems() {
         return null;
     }
-    public String getCurrentRoomDoors() {
-        return null;
+    public Set<Direction> getCurrentRoomDoors() {
+        return getRoomDoors(myHeroLocation);
+    }
+
+    public Set<Direction> getRoomDoors(Pair p) {
+        return myRooms[p.getRow()][p.getColumn()].getDoors();
     }
 
     private record ChoicePair(Pair destination, Direction door) {
