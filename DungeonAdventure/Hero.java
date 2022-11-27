@@ -1,9 +1,10 @@
 package DungeonAdventure;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Hero extends DungeonCharacter {
+public abstract class Hero extends DungeonCharacter implements Serializable {
     private int healingPots;
     private int visionPots;
     private final String myClass;

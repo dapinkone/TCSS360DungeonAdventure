@@ -1,8 +1,9 @@
 package DungeonAdventure;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public abstract class DungeonCharacter {
+public abstract class DungeonCharacter implements Serializable {
     private static final Random RANDOM = new Random();
     private String myName;
     private int myHealth;

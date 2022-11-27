@@ -1,5 +1,6 @@
 package DungeonAdventure;
 
+
 import java.util.Random;
 
 public class Monster extends DungeonCharacter {

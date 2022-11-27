@@ -1,8 +1,9 @@
 package DungeonAdventure;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Priestess extends Hero {
+public class Priestess extends Hero implements Serializable {
 
     public Priestess(String theName) {
         super("Survivalist",

@@ -1,9 +1,10 @@
 package DungeonAdventure;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Room {
+public class Room implements Serializable {
     private List<Item> myItems = new ArrayList<>();
     private final Map<Direction, Boolean> myDoors;
     private final Pair myLocation;

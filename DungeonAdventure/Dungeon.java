@@ -1,9 +1,10 @@
 package DungeonAdventure;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Dungeon {
+public class Dungeon implements Serializable {
     /***
      * Data structure that holds information about the dungeon, or the "board" on which we play the game
      */

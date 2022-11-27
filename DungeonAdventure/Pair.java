@@ -1,8 +1,8 @@
 package DungeonAdventure;
 
-import java.util.Objects;
+import java.io.Serializable;
 
-public record Pair(Integer getRow, Integer getColumn)  implements Comparable{
+public record Pair(Integer getRow, Integer getColumn)  implements Comparable, Serializable {
     /***
      * serves as an immutable container for (row, column) pairs.
      */
