@@ -6,10 +6,10 @@ public enum Item {
      */
     HealingPotion,
     VisionPotion,
-    PillarA, // TODO: fix names
-    PillarB,
-    PillarC,
-    PillarD,
+    PillarAbstraction,
+    PillarEncapsulation,
+    PillarInheritance,
+    PillarPolymorphism,
     Entrance,
     Exit,
     Pit
