@@ -1,5 +1,7 @@
 package DungeonAdventure;
 
+import java.util.Set;
+
 public class DefaultModel implements GameModel {
     private Dungeon myDungeon;
     public DefaultModel() {
@@ -40,8 +42,8 @@ public class DefaultModel implements GameModel {
     }
 
     @Override
-    public Direction[] getRoomDoors(Pair p) {
-        return myDungeon.getCurrentRoomDoors();
+    public Set<Direction> getRoomDoors(Pair p) {
+        return myDungeon.getRoomDoors(p);
     }
 
     @Override
