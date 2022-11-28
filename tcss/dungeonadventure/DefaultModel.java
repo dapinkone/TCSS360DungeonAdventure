@@ -1,16 +1,16 @@
-package DungeonAdventure;
+package tcss.dungeonadventure;
 
 import java.util.Set;
 
-public class DefaultModel implements GameModel {
+public final class DefaultModel implements GameModel {
     private Dungeon myDungeon;
     public DefaultModel() {
 
     }
 
     @Override
-    public void newDungeon(int rows, int cols) {
-        myDungeon = new Dungeon(rows, cols);
+    public void newDungeon(final int theRows, final int theColumns) {
+        myDungeon = new Dungeon(theRows, theColumns);
     }
 
     public void saveGame() {
@@ -22,7 +22,7 @@ public class DefaultModel implements GameModel {
     }
 
     @Override
-    public void setHero(Hero theHero) {
+    public void setHero(final Hero theHero) {
         myDungeon.setHero(theHero);
     }
 
@@ -37,32 +37,33 @@ public class DefaultModel implements GameModel {
     }
 
     @Override
-    public Item[] getRoomItems(Pair p) {
-        return myDungeon.getCurrentRoomItems();
+    public Item[] getRoomItems(final Pair theRoomLocation) {
+        //return myDungeon.getCurrentRoomItems();
+        return null;
     }
 
     @Override
-    public Set<Direction> getRoomDoors(Pair p) {
-        return myDungeon.getRoomDoors(p);
+    public Set<Direction> getRoomDoors(final Pair theRoomLocation) {
+        return myDungeon.getRoomDoors(theRoomLocation);
     }
 
     @Override
-    public boolean pickupItem(Item theItem) {
+    public boolean pickupItem(final Item theItem) {
         return false;
     }
 
     @Override
-    public boolean useItem(Item theItem) {
+    public boolean useItem(final Item theItem) {
         return false;
     }
 
     @Override
-    public boolean move(Direction theDirection) {
-        if(checkCombat()) {
-           return false; // currently in combat. can't move.
+    public boolean move(final Direction theDirection) {
+        if (checkCombat()) {
+            return false; // currently in combat. can't move.
         }
-        for(var otherDirection : myDungeon.getCurrentRoomDoors()) {
-            if(theDirection == otherDirection) {
+        for (var otherDirection : myDungeon.getCurrentRoomDoors()) {
+            if (theDirection == otherDirection) {
                 return true;
             }
         }

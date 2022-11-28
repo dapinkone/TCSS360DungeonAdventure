@@ -1,8 +1,8 @@
-package DungeonAdventure;
+package tcss.dungeonadventure;
 
 import java.io.Serializable;
 
-public record Pair(Integer getRow, Integer getColumn)  implements Comparable, Serializable {
+public record Pair(Integer getRow, Integer getColumn) implements Comparable, Serializable {
     /***
      * serves as an immutable container for (row, column) pairs.
      */
@@ -40,8 +40,8 @@ public record Pair(Integer getRow, Integer getColumn)  implements Comparable, Se
      */
     @Override
     public int compareTo(final Object o) {
-        if(o == null) throw new NullPointerException();
-        if(o instanceof final Pair other) {
+        if (o == null) throw new NullPointerException();
+        if (o instanceof final Pair other) {
             final int rowComparison = this.getColumn().compareTo(other.getRow());
             if (rowComparison != 0) return rowComparison;
             return this.getColumn().compareTo(other.getColumn());

@@ -1,4 +1,4 @@
-package DungeonAdventure;
+package tcss.dungeonadventure;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -154,7 +154,7 @@ public class TestCombat {
         } else if (option == 2) {
             heroSpecial();
         } else if (option == 3) {
-            if (hero.getHealingPots() > 0) {
+            if (hero.getMyHealingPots() > 0) {
                 int heal = hero.useHealingPot();
                 System.out.println(hero.getMyName() + " drinks a potion and heals " + heal + " health.");
             }

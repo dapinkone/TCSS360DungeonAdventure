@@ -1,4 +1,4 @@
-package DungeonAdventure;
+package tcss.dungeonadventure;
 
 import org.sqlite.SQLiteDataSource;
 
@@ -9,17 +9,9 @@ import java.sql.Statement;
 import java.util.Random;
 
 public class MonsterFactory {
-    private static MonsterFactory instance = new MonsterFactory();
+    private static final MonsterFactory instance = new MonsterFactory();
 
     SQLiteDataSource ds = null;
-
-    /**
-     * Access point for the Singleton MonsterFactory class.
-     * @return the global instance of MonsterFactory.
-     */
-    public static MonsterFactory getInstance() {
-        return instance;
-    }
 
     private MonsterFactory() {
 
@@ -27,7 +19,7 @@ public class MonsterFactory {
         try {
             ds = new SQLiteDataSource();
             ds.setUrl("jdbc:sqlite:monsters.db");
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(0);
         }
@@ -47,11 +39,11 @@ public class MonsterFactory {
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
             stmt.executeUpdate("drop table if exists monsters");
-            stmt.executeUpdate( query );
+            stmt.executeUpdate(query);
 
-        } catch ( SQLException e ) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            System.exit( 0 );
+            System.exit(0);
         }
 
         String query1 = "INSERT INTO monsters VALUES" +
@@ -66,31 +58,41 @@ public class MonsterFactory {
         try {
             Connection conn = ds.getConnection();
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate( query1 );
-            stmt.executeUpdate( query2 );
-            stmt.executeUpdate( query3 );
-            stmt.executeUpdate( query4 );
+            stmt.executeUpdate(query1);
+            stmt.executeUpdate(query2);
+            stmt.executeUpdate(query3);
+            stmt.executeUpdate(query4);
 
-        } catch ( SQLException e ) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            System.exit( 0 );
+            System.exit(0);
         }
 
     }
 
     /**
+     * Access point for the Singleton MonsterFactory class.
+     *
+     * @return the global instance of MonsterFactory.
+     */
+    public static MonsterFactory getInstance() {
+        return instance;
+    }
+
+    /**
      * Generates a monster when given the name of the monster. Translates the name into
      * the in-game alias.
+     *
      * @param theName The name in the project specification to generate.
      * @return the Monster object.
      */
     public Monster generateMonster(String theName) {
         int rowID = 0;
         switch (theName) {
-            case("gremlin") -> rowID = 1;
-            case("skeleton") -> rowID = 2;
-            case("ogre") -> rowID = 3;
-            case("boss") -> rowID = 4;
+            case ("gremlin") -> rowID = 1;
+            case ("skeleton") -> rowID = 2;
+            case ("ogre") -> rowID = 3;
+            case ("boss") -> rowID = 4;
         }
         String query = "SELECT * FROM monsters WHERE rowid = " + rowID;
 
@@ -109,15 +111,16 @@ public class MonsterFactory {
                     rs.getInt("minheal"),
                     rs.getInt("maxheal")
             );
-        } catch ( SQLException e ) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            System.exit( 0 );
+            System.exit(0);
         }
         return null;
     }
 
     /**
      * Generates a random monster from the non-boss monsters.
+     *
      * @return The random monster.
      */
     public Monster generateRandom() {
@@ -125,9 +128,9 @@ public class MonsterFactory {
         int num = rand.nextInt(3) + 1;
         String name = "";
         switch (num) {
-            case(1)-> name = "gremlin";
-            case(2)-> name = "skeleton";
-            case(3)-> name = "ogre";
+            case (1) -> name = "gremlin";
+            case (2) -> name = "skeleton";
+            case (3) -> name = "ogre";
         }
         return generateMonster(name);
     }

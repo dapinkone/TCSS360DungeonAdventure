@@ -1,23 +1,11 @@
-package DungeonAdventure.Test;
+package tcss.dungeonadventure.test;
 
-import DungeonAdventure.DungeonCharacter;
-import org.junit.jupiter.api.*;
-import DungeonAdventure.Hero;
+import tcss.dungeonadventure.Hero;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class HeroTest {
 
-    class MockHero extends Hero{
-        MockHero(String theName, double theHitChance, double theDodgeChance) {
-            super("test",theName,50, 1,
-                    theHitChance, 10, 20, theDodgeChance);
-
-        }
-
-        @Override
-        public int specialSkill() {
-            return 0;
-        }
-    }
     @Test
     public void testDodge() {
         MockHero test1 = new MockHero("test1", 1, 1);
@@ -30,9 +18,22 @@ public class HeroTest {
     public void testHealingPotsOverflow() {
         MockHero test1 = new MockHero("test1", 1, 0);
         MockHero test2 = new MockHero("test2", 1, 1);
-        test1.setHealingPots(1);
+        test1.setMyHealingPots(1);
         test2.attack(test1);
         test1.useHealingPot();
         Assertions.assertEquals(test1.getMyMaxHealth(), test1.getMyHealth());
+    }
+
+    class MockHero extends Hero {
+        MockHero(String theName, double theHitChance, double theDodgeChance) {
+            super("test", theName, 50, 1,
+                    theHitChance, 10, 20, theDodgeChance);
+
+        }
+
+        @Override
+        public int specialSkill() {
+            return 0;
+        }
     }
 }

@@ -1,18 +1,18 @@
-package DungeonAdventure;
+package tcss.dungeonadventure;
 
 import java.io.Serializable;
 import java.util.Random;
 
 public abstract class DungeonCharacter implements Serializable {
     private static final Random RANDOM = new Random();
+    private final int myMaxHealth;
     private String myName;
     private int myHealth;
-    private final int myMaxHealth;
-    private int myAttackSpeed;
-    private double myHitChance;
-    private double myDodgeChance = 0;
-    private int myMinDmg;
-    private int myMaxDmg;
+    private final int myAttackSpeed;
+    private final double myHitChance;
+    private double myDodgeChance;
+    private final int myMinDmg;
+    private final int myMaxDmg;
 
     public DungeonCharacter(final String theName,
                             final int theHealth,
@@ -30,10 +30,10 @@ public abstract class DungeonCharacter implements Serializable {
     }
 
 
-
     /**
      * Attack method, rolls a chance to hit, and another chance for that hit to be blocked.
      * Then rolls the damage within the character's damage range.
+     *
      * @param theTarget the target to attack
      * @return The damage, or 0 if missed or -1 if dodged by a hero.
      */
@@ -43,7 +43,7 @@ public abstract class DungeonCharacter implements Serializable {
             if (RANDOM.nextDouble() <= theTarget.getMyDodgeChance()) {
                 return -1; //DODGED
             } else {
-                int damage = RANDOM.nextInt(myMinDmg, myMaxDmg + 1);
+                final int damage = RANDOM.nextInt(myMinDmg, myMaxDmg + 1);
                 theTarget.setMyHealth(theTarget.getMyHealth() - damage);
                 return damage; //HIT
             }
@@ -61,17 +61,18 @@ public abstract class DungeonCharacter implements Serializable {
         return myName;
     }
 
-    public void setMyName(String myName) {
-        this.myName = myName;
+    public void setMyName(final String theName) {
+        this.myName = theName;
     }
 
     public int getMyHealth() {
         return myHealth;
     }
 
-    public void setMyHealth(int myHealth) {
-        this.myHealth = myHealth;
+    public void setMyHealth(final int theHealth) {
+        myHealth = theHealth;
     }
+
 
     public int getMyMaxHealth() {
         return myMaxHealth;
@@ -85,18 +86,20 @@ public abstract class DungeonCharacter implements Serializable {
         return myDodgeChance;
     }
 
-    public void setMyDodgeChance(double myBlockChance) {
-        this.myDodgeChance = myBlockChance;
+    public void setMyDodgeChance(final double theBlockChance) {
+        myDodgeChance = theBlockChance;
     }
 
     public String getStats() {
-        StringBuilder string = new StringBuilder();
+        final StringBuilder string = new StringBuilder();
         string.append("Name: " + myName);
         string.append("\nHealth: " + myHealth + "/" + myMaxHealth);
         string.append("\nSpeed: " + myAttackSpeed);
         string.append("\nHit Chance: " + myHitChance * 100 + "%");
-        string.append("\nDamage: " + myMinDmg + "-" +myMaxDmg);
-        if (myDodgeChance > 0) string.append("\nBlock Chance: " + myDodgeChance * 100 + "%");
+        string.append("\nDamage: " + myMinDmg + "-" + myMaxDmg);
+        if (myDodgeChance > 0) {
+            string.append("\nBlock Chance: " + myDodgeChance * 100 + "%");
+        }
         return String.valueOf(string);
     }
 

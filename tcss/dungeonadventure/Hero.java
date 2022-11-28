@@ -1,18 +1,25 @@
-package DungeonAdventure;
+package tcss.dungeonadventure;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Hero extends DungeonCharacter implements Serializable {
-    private int healingPots;
-    private int visionPots;
     private final String myClass;
-    private List<String> pillars = new LinkedList<>();
+    private int myHealingPots;
+    private int myVisionPots;
+    private final List<String> myPillars = new LinkedList<>();
 
-    public Hero(String theClass, String theName, int theHealth, int theAttackSpeed, double theHitChance,
-                int theMinDmg, int theMaxDmg,
-                double theDodgeChance) {
+    public Hero(
+            final String theClass,
+            final String theName,
+            final int theHealth,
+            final int theAttackSpeed,
+            final double theHitChance,
+            final int theMinDmg,
+            final int theMaxDmg,
+            final double theDodgeChance
+    ) {
 
         super(theName, theHealth, theAttackSpeed, theHitChance, theMinDmg, theMaxDmg);
         myClass = theClass;
@@ -22,58 +29,63 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
 
     /**
      * Class's special skill to be initialized in child classes.
+     *
      * @return int indicating the success.
      */
     public abstract int specialSkill();
 
     /**
      * Use a "Healing Tonic," restores 40 health but value can be changed.
-     * @return
+     *
+     * @return returns the quantity of healing done
      */
     public int useHealingPot() {
-        if (healingPots == 0) return 0;
-        int healing = 40;
+        if (myHealingPots == 0) { return 0; }
+        final int healing = 40;
         if (getMyHealth() + healing > getMyMaxHealth()) {
             setMyHealth(getMyMaxHealth());
         } else {
             setMyHealth(getMyMaxHealth() + healing);
         }
-        healingPots--;
+        myHealingPots--;
         return healing;
     }
 
     public int useVisionPot() {
-        if (getVisionPots() == 0) return 0;
+        if (getMyVisionPots() == 0) {
+            return 0;
+        }
         //How would this be implemented, if not in the driver?
         return 1;
     }
 
     /**
      * Adds a new pillar to the hero's inventory
+     *
      * @param thePillar The pillar to be added.
      */
-    public void addNewPillar(String thePillar) {
-        pillars.add(thePillar);
+    public void addNewPillar(final String thePillar) {
+        myPillars.add(thePillar);
     }
 
-    public List<String> getPillars() {
-        return pillars;
+    public List<String> getMyPillars() {
+        return myPillars;
     }
 
-    public int getHealingPots() {
-        return healingPots;
+    public int getMyHealingPots() {
+        return myHealingPots;
     }
 
-    public void setHealingPots(int healingPots) {
-        this.healingPots = healingPots;
+    public void setMyHealingPots(final int theHealingPots) {
+        myHealingPots = theHealingPots;
     }
 
-    public int getVisionPots() {
-        return visionPots;
+    public int getMyVisionPots() {
+        return myVisionPots;
     }
 
-    public void setVisionPots(int visionPots) {
-        this.visionPots = visionPots;
+    public void setMyVisionPots(final int theVisionPots) {
+        this.myVisionPots = theVisionPots;
     }
 
     public String getMyClass() {
@@ -81,13 +93,13 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
     }
 
     public String toString() {
-        StringBuilder string = new StringBuilder();
+        final StringBuilder string = new StringBuilder();
         string.append("Name: " + getMyName() + " the " + getMyClass());
         string.append("\nHealth: " + getMyHealth() + "/" + getMyMaxHealth());
-        string.append("\nHealing Tonics: " + getHealingPots());
-        string.append("\nSonar Devices: " + getVisionPots());
+        string.append("\nHealing Tonics: " + getMyHealingPots());
+        string.append("\nSonar Devices: " + getMyVisionPots());
         string.append("\nParts found: ");
-        for (String s : pillars) {
+        for (String s : myPillars) {
             string.append(s + " ");
         }
         return String.valueOf(string);

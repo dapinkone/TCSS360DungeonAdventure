@@ -1,15 +1,19 @@
-package DungeonAdventure.Test;
-import DungeonAdventure.Monster;
-import DungeonAdventure.MonsterFactory;
-import org.junit.jupiter.api.*;
+package tcss.dungeonadventure.test;
+
+import tcss.dungeonadventure.Monster;
+import tcss.dungeonadventure.MonsterFactory;
+import org.junit.jupiter.api.Test;
 
 public class MonsterFactoryTest {
 
 
-    @Test public void MonsterFactoryCreateTest() {
+    @Test
+    public void MonsterFactoryCreateTest() {
         MonsterFactory monsterFactory = MonsterFactory.getInstance();
     }
-    @Test public void CreateMonsterTest() {
+
+    @Test
+    public void CreateMonsterTest() {
         MonsterFactory monsterFactory = MonsterFactory.getInstance();
         Monster test3 = monsterFactory.generateMonster("ogre");
         System.out.println(test3.getStats() + "\n");

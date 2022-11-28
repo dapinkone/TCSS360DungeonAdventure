@@ -1,4 +1,4 @@
-package DungeonAdventure;
+package tcss.dungeonadventure;
 
 public interface GameView {
 

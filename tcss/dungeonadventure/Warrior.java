@@ -1,4 +1,4 @@
-package DungeonAdventure;
+package tcss.dungeonadventure;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -11,7 +11,7 @@ public class Warrior extends Hero implements Serializable {
     }
 
     /**
-     * DungeonAdventure.Warrior special skill is Crushing Blow, which does big dmg at a random chance to hit.
+     * tcss.dungeonadventure.Warrior special skill is Crushing Blow, which does big dmg at a random chance to hit.
      * Currently hits at a 50% chance
      * @return The damage or 0 if missed.
      */
@@ -20,8 +20,7 @@ public class Warrior extends Hero implements Serializable {
         Random random = new Random();
         if (random.nextDouble() <= .5) {
             //Successful roll
-            int damage = random.nextInt(60, 150) + 1;
-            return damage;
+            return random.nextInt(60, 150) + 1;
         } else {
             //Miss roll
             return 0;

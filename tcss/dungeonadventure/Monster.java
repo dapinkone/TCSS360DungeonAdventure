@@ -1,12 +1,12 @@
-package DungeonAdventure;
+package tcss.dungeonadventure;
 
 
 import java.util.Random;
 
 public class Monster extends DungeonCharacter {
-    private double myHealChance;
-    private int myMinHeal;
-    private int myMaxHeal;
+    private final double myHealChance;
+    private final int myMinHeal;
+    private final int myMaxHeal;
 
     public Monster(final String theName,
                    final int theHealth,
@@ -17,7 +17,7 @@ public class Monster extends DungeonCharacter {
                    final double theHealChance,
                    final int theMinHeal,
                    final int theMaxHeal) {
-        super(theName,theHealth,theAttackSpeed,theHitChance,theMinDmg,theMaxDmg);
+        super(theName, theHealth, theAttackSpeed, theHitChance, theMinDmg, theMaxDmg);
 
         myHealChance = theHealChance;
         myMinHeal = theMinHeal;
@@ -26,6 +26,7 @@ public class Monster extends DungeonCharacter {
 
     /**
      * Calls method if monster for the monster to roll to heal.
+     *
      * @return int 0 if they fail to heal, otherwise return heal amount.
      */
     public int tryToHeal() {

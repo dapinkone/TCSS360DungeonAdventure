@@ -1,4 +1,4 @@
-package DungeonAdventure;
+package tcss.dungeonadventure;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -11,8 +11,9 @@ public class Thief extends Hero implements Serializable {
     }
 
     /**
-     * DungeonAdventure.Thief's skill which lets them surprise attack an enemy, with 40% chance to attack twice, another 40% to attack
+     * tcss.dungeonadventure.Thief's skill which lets them surprise attack an enemy, with 40% chance to attack twice, another 40% to attack
      * regularly, and 20% to miss.
+     *
      * @return 2 for critical success (2 attacks), 1 for normal attack, and 0 for miss.
      */
     @Override
