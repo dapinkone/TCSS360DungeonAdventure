@@ -2,8 +2,9 @@ package tcss.dungeonadventure.test;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import tcss.dungeonadventure.DungeonCharacter;
-public class DungeonCharacterTest {
+import tcss.dungeonadventure.AbstractDungeonCharacter;
+
+public class AbstractDungeonCharacterTest {
 
     @Test
     public void attackTestSuccess() {
@@ -21,7 +22,7 @@ public class DungeonCharacterTest {
         Assertions.assertEquals(0, damage);
     }
 
-    public class MockCharacter extends DungeonCharacter {
+    public class MockCharacter extends AbstractDungeonCharacter {
         public MockCharacter(final String theName, final double theHitChance) {
             super(theName, 50, 1,
                     theHitChance, 10, 20);

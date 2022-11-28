@@ -3,7 +3,7 @@ package tcss.dungeonadventure;
 
 import java.util.Random;
 
-public class Monster extends DungeonCharacter {
+public class Monster extends AbstractDungeonCharacter {
     private final double myHealChance;
     private final int myMinHeal;
     private final int myMaxHeal;

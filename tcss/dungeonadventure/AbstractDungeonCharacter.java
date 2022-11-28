@@ -3,7 +3,7 @@ package tcss.dungeonadventure;
 import java.io.Serializable;
 import java.util.Random;
 
-public abstract class DungeonCharacter implements Serializable {
+public abstract class AbstractDungeonCharacter implements Serializable {
     private static final Random RANDOM = new Random();
     private final int myMaxHealth;
     private String myName;
@@ -14,12 +14,12 @@ public abstract class DungeonCharacter implements Serializable {
     private final int myMinDmg;
     private final int myMaxDmg;
 
-    public DungeonCharacter(final String theName,
-                            final int theHealth,
-                            final int theAttackSpeed,
-                            final double theHitChance,
-                            final int theMinDmg,
-                            final int theMaxDmg) {
+    public AbstractDungeonCharacter(final String theName,
+                                    final int theHealth,
+                                    final int theAttackSpeed,
+                                    final double theHitChance,
+                                    final int theMinDmg,
+                                    final int theMaxDmg) {
         myName = theName;
         myHealth = theHealth;
         myMaxHealth = theHealth;
@@ -37,7 +37,7 @@ public abstract class DungeonCharacter implements Serializable {
      * @param theTarget the target to attack
      * @return The damage, or 0 if missed or -1 if dodged by a hero.
      */
-    public int attack(final DungeonCharacter theTarget) {
+    public int attack(final AbstractDungeonCharacter theTarget) {
         if (RANDOM.nextDouble() <= myHitChance) {
 
             if (RANDOM.nextDouble() <= theTarget.getMyDodgeChance()) {

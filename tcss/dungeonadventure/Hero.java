@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Hero extends DungeonCharacter implements Serializable {
+public abstract class Hero extends AbstractDungeonCharacter implements Serializable {
     private final String myClass;
     private int myHealingPots;
     private int myVisionPots;
