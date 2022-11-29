@@ -143,9 +143,11 @@ public final class Dungeon implements Serializable {
     @Override
     public String toString() {
         return "Dungeon{" + "myRooms="
-                + Arrays.stream(myRooms).map(Arrays::toString).collect(Collectors.joining("\n"))
+                + Arrays.stream(myRooms).map(Arrays::toString).collect(
+                        Collectors.joining("\n"))
                 + ", rows=" + myRows + ", columns=" + myColumns
-                + ", myHero=" + myHero + ", myHeroLocation=" + myHeroLocation + '}';
+                + ", myHero=" + myHero + ", myHeroLocation="
+                + myHeroLocation + '}';
     }
 
     private record ChoicePair(Pair destination, Direction door) {
