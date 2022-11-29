@@ -3,23 +3,25 @@ package DungeonAdventure;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class GUIView {
+    private static final Map MY_MAP = new Map(4,4);
+    private static final Textlog MY_TEXTLOG = new Textlog();
+    private static final POV MY_POV = new POV();
+    private static final Optionlog MY_OPTIONLOG = new Optionlog();
 
     public static void main(String[] args) {
         JFrame window = new JFrame("Cave Rescue");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        window.add(new POV());
-        window.add(new Map());
-        window.add(new Textlog());
-        window.add(new Optionlog());
+        window.add(MY_POV);
+        window.add(MY_MAP);
+        window.add(MY_TEXTLOG);
+        window.add(MY_OPTIONLOG);
         window.setLayout(new GridLayout(2,2));
-        window.setBackground(new Color(20,20,20));
         window.setResizable(false);
         window.setVisible(true);
         window.pack();
@@ -51,7 +53,6 @@ public class GUIView {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
         @Override
@@ -71,8 +72,6 @@ public class GUIView {
         }
     }
     private static class Textlog extends JPanel{
-        private static final int WIDTH = 700;
-        private static final int HEIGHT = 300;
         private static final JTextArea TEXT_AREA = getTextArea(20,60);;
         private static JLabel HUD;
 
@@ -107,6 +106,9 @@ public class GUIView {
             JTextField field = new JTextField(60);
             field.addActionListener(e -> {
                 appendTextlog(field.getText());
+                if (field.getText().equals("2 1")) {
+                    MY_MAP.exploreRoom(2,1);
+                }
                 field.setText("");
             });
             return field;
@@ -114,26 +116,74 @@ public class GUIView {
 
     }
     private static class Map extends JPanel{
-        private static final int WIDTH = 400;
-        private static final int HEIGHT = 400;
-//        private static final Room[][] myDungeon;
-        private static char[][] myMap;
+        //        private static final Room[][] myDungeon;
+        private static int[][] exploredRooms;
+        private static int myWidth;
+        private static int myHeight;
+        private static final int TILE_SIZE = 100;
+        private static final Rectangle VERT_DOOR = new Rectangle(20,5);
+        private static final Rectangle HORI_DOOR = new Rectangle(5,20);
+        private static final Point UP = new Point(40,0);
+        private static final Point DOWN = new Point(40,TILE_SIZE - VERT_DOOR.height);
+        private static final Point LEFT = new Point(0,40);
+        private static final Point RIGHT = new Point(TILE_SIZE - HORI_DOOR.width,40);
+        private static Image explored;
+        private static Image tile;
 
-        private Map() {
-            setPreferredSize(new Dimension(WIDTH, HEIGHT));
-            setBackground(new Color(2, 51, 22));
 
+        private Map(int x, int y) {
+            try {
+                explored = ImageIO.read(new File("explored.png"));
+                tile = ImageIO.read(new File("tile.png"));
+            } catch (IOException e) {
+                System.out.println("Missing sprites");
+            }
+            setBackground(new Color(40, 40, 40));
+            myWidth = x;
+            myHeight = y;
+            exploredRooms = new int[x][y];
+            for (int i = 0; i < x; i++) {
+                for (int j = 0; j < y; j++) {
+                    exploredRooms[i][j] = 0;
+                }
+            }
+        }
+
+        public void exploreRoom(int x, int y) {
+            exploredRooms[x][y] = 1;
+            repaint();
+        }
+
+        private void drawDoor(int theX, int theY, char direction, Graphics g) {
+            int x = theX * TILE_SIZE;
+            int y = theY * TILE_SIZE;
+            g.setColor(Color.WHITE);
+            switch (direction) {
+                case 'N' -> g.fillRect(x + UP.x, y + UP.y, HORI_DOOR.x, HORI_DOOR.y);
+                case 'S' -> g.fillRect(x + DOWN.x, y + DOWN.y, HORI_DOOR.x, HORI_DOOR.y);
+                case 'E' -> g.fillRect(x + RIGHT.x, y + RIGHT.y, VERT_DOOR.x, VERT_DOOR.y);
+                case 'W' -> g.fillRect(x + LEFT.x, y + LEFT.y, VERT_DOOR.x, VERT_DOOR.y);
+            }
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-
+            for (int x = 0; x < myWidth; x++) {
+                for (int y = 0; y < myHeight; y++) {
+                    g.drawImage(tile, x * TILE_SIZE, y * TILE_SIZE, this);
+                    if (exploredRooms[x][y] != 0) {
+                        g.drawImage(explored,x * TILE_SIZE, y * TILE_SIZE, this);
+                        drawDoor(x,y,'N',g);
+                        drawDoor(x,y,'W',g);
+                        drawDoor(x,y,'E',g);
+                        drawDoor(x,y,'S',g);
+                    }
+                }
+            }
         }
     }
     private static class Optionlog extends JPanel{
-        private static final int WIDTH = 400;
-        private static final int HEIGHT = 400;
 
         private Optionlog() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
