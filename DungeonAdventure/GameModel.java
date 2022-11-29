@@ -1,5 +1,6 @@
 package DungeonAdventure;
 
+import java.util.List;
 import java.util.Set;
 
 public interface GameModel {
@@ -15,7 +16,7 @@ public interface GameModel {
     void setHero(Hero theHero); // needed so we can do a hero select screen
     Hero getHero();
     Pair getHeroLocation(); // hero's position in the dungeon maze.
-    Item[] getRoomItems(Pair p); // view needs to see items to know how to display
+    List<Item> getRoomItems(Pair p); // view needs to see items to know how to display
     Set<Direction> getRoomDoors(Pair p); // view needs to see doors/openings to display, and for player options
 
     // player actions:
@@ -25,4 +26,6 @@ public interface GameModel {
     boolean checkCombat(); // returns true if we've run into a combat encounter in the current room?
 
     Room[][] getRooms(); // TODO: Rooms are mutable. better solution?
+
+    boolean gameover();
 }

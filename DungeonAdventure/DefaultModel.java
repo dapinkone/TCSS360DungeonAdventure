@@ -1,5 +1,6 @@
 package DungeonAdventure;
 
+import java.util.List;
 import java.util.Set;
 
 public class DefaultModel implements GameModel {
@@ -37,7 +38,7 @@ public class DefaultModel implements GameModel {
     }
 
     @Override
-    public Item[] getRoomItems(Pair p) {
+    public List<Item> getRoomItems(Pair p) {
         return myDungeon.getCurrentRoomItems();
     }
 
@@ -61,8 +62,16 @@ public class DefaultModel implements GameModel {
         if(checkCombat()) {
            return false; // currently in combat. can't move.
         }
+        final var location = getHeroLocation();
         for(var otherDirection : myDungeon.getCurrentRoomDoors()) {
-            if(theDirection == otherDirection) {
+            if(theDirection == otherDirection) { // door is open. proceed.
+                myDungeon.setMyHeroLocation(
+                        switch (theDirection) {
+                        case WEST -> new Pair(location.getRow(), location.getColumn()-1);
+                        case EAST -> new Pair(location.getRow(), location.getColumn()+1);
+                        case NORTH -> new Pair(location.getRow()-1, location.getColumn());
+                        case SOUTH -> new Pair(location.getRow()+1, location.getColumn());
+                });
                 return true;
             }
         }
@@ -78,5 +87,16 @@ public class DefaultModel implements GameModel {
     @Override
     public Room[][] getRooms() {
         return myDungeon.getRooms();
+    }
+
+    @Override
+    public boolean gameover() {
+        // test if character dead or victory condition
+        if(getHero().isDead()) return true;
+        final var localItems = getRoomItems(getHeroLocation());
+        if(localItems == null || localItems.isEmpty()) return false; // have to be on the exit.
+        return (
+                localItems.get(0) == Item.Exit
+                        && getHero().getPillars().size() == 4);
     }
 }
