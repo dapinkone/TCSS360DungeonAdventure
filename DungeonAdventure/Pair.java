@@ -42,7 +42,7 @@ public record Pair(Integer getRow, Integer getColumn)  implements Comparable, Se
     public int compareTo(final Object o) {
         if(o == null) throw new NullPointerException();
         if(o instanceof final Pair other) {
-            final int rowComparison = this.getColumn().compareTo(other.getRow());
+            final int rowComparison = this.getRow().compareTo(other.getRow());
             if (rowComparison != 0) return rowComparison;
             return this.getColumn().compareTo(other.getColumn());
         } else {
