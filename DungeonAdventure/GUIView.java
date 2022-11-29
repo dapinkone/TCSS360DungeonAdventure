@@ -24,6 +24,11 @@ public class GUIView {
         window.setVisible(true);
         window.pack();
     }
+    public static void appendTextlog(String theText) {
+        Textlog.TEXT_AREA.append(" >" + theText + "\n");
+        Textlog.TEXT_AREA.setCaretPosition(
+                Textlog.TEXT_AREA.getDocument().getLength());
+    }
 
     private static class POV extends JPanel{
         private static final int WIDTH = 700;
@@ -75,10 +80,11 @@ public class GUIView {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
             add(getHUD(0,0,0,0));
-            TEXT_AREA.setEditable(false);
             TEXT_AREA.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
             TEXT_AREA.append("\n");
-            add(TEXT_AREA);
+            JScrollPane scroll = new JScrollPane(TEXT_AREA);
+            scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+            add(scroll);
             add(getTextField());
         }
 
@@ -87,6 +93,7 @@ public class GUIView {
             textArea.setBackground(new Color(20,20,20));
             textArea.setForeground(Color.GREEN);
             textArea.setLineWrap(true);
+            textArea.setEditable(false);
             return textArea;
         }
         private static JLabel getHUD(int health, int pillars, int hpots, int vpots) {
@@ -99,7 +106,7 @@ public class GUIView {
         private static JTextField getTextField() {
             JTextField field = new JTextField(60);
             field.addActionListener(e -> {
-                TEXT_AREA.append(" >" + field.getText() + "\n");
+                appendTextlog(field.getText());
                 field.setText("");
             });
             return field;
