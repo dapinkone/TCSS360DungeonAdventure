@@ -1,5 +1,6 @@
 package DungeonAdventure;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CLIView implements GameView {
@@ -16,8 +17,27 @@ public class CLIView implements GameView {
         showSizeSelect(); // how large is the dungeon?
         // difficulty? (might adjust spawn rates?)
         showHeroSelect();
-        showDungeon();
+        while(!myModel.gameover()) {
+            showDungeon();
+            System.out.println(myModel.getHeroLocation());
+            myModel.move(movementMenu());
+        }
+    }
 
+    private Direction movementMenu() {
+        final var options = new ArrayList<>(myModel.getRoomDoors(myModel.getHeroLocation()));
+        System.out.println("What would you like to do? (1-" + options.size());
+        int i = 1;
+        for(Direction direction : options) {
+            System.out.println(i++ + ". Move " + direction.name().toLowerCase());
+        }
+        int choiceIndex;
+        do {
+            choiceIndex = scanner.nextInt();
+        } while(choiceIndex < 1 || choiceIndex > options.size());
+        final Direction choice = options.get(choiceIndex-1);
+        myModel.move(choice);
+        return choice;
     }
 
     private void showSizeSelect() {
@@ -52,7 +72,11 @@ public class CLIView implements GameView {
 
     @Override
     public void showHeroInventory() {
-        // TODO: need an inventory listing from hero/model
+        final var hero = myModel.getHero();
+        System.out.println("Our hero has these items:"); // this should be generalized. pots aren't special.
+        System.out.println("Healing pots" + hero.getHealingPots());
+        System.out.println("Healing pots" + hero.getVisionPots());
+        System.out.println("Pillars: " + hero.getPillars());
     }
 
     @Override
@@ -85,8 +109,10 @@ public class CLIView implements GameView {
         // TODO: should we be able to see monsters here?
         // append specific item representations / hero to center of room
         if(myModel.getHeroLocation().compareTo(theRoom.getMyLocation()) == 0) {
+            System.out.println(theRoom.getMyLocation());
+            System.out.println(myModel.getHeroLocation());
             sb.append('%');
-        } else if(theRoom.getMyItems().size() >= 1) {
+        } else if(theRoom.getMyItems().size() > 1) {
             sb.append("M");
         } else if(theRoom.getMyItems().size() == 1) {
             var theItem = theRoom.getMyItems().get(0);

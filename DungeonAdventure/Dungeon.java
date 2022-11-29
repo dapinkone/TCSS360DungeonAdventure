@@ -5,19 +5,29 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Dungeon implements Serializable {
+    public static final Random RANDOM = new Random();
+    final private  int rows;
+    final private int columns;
+    final private HashSet<Pair> allCoords = new HashSet<>();
     /***
      * Data structure that holds information about the dungeon, or the "board" on which we play the game
      */
     private Room[][] myRooms;
-    final private  int rows;
-    final private int columns;
-    public static final Random RANDOM = new Random();
-    final private HashSet<Pair> allCoords = new HashSet<>();
     private Hero myHero;
+    // TODO: put hero at entrance when entrance placed.
+    private Pair myHeroLocation = new Pair(0,0);
+    public Dungeon(int rows, int columns) {
+        this.rows = rows;
+        this.columns = columns;
+        makeRooms();
+        generateMaze();
+        spawnItems();
+    }
 
     public int getColumns() {
         return columns;
     }
+
     public int getRows() {
         return rows;
     }
@@ -31,16 +41,6 @@ public class Dungeon implements Serializable {
         if(allCoords.contains(theHeroLocation)) {
             myHeroLocation = theHeroLocation;
         }
-    }
-
-    // TODO: put hero at entrance when entrance placed.
-    private Pair myHeroLocation = new Pair(0,0);
-
-    public Dungeon(int rows, int columns) {
-        this.rows = rows;
-        this.columns = columns;
-        makeRooms();
-        generateMaze();
     }
 
     private void makeRooms() {
@@ -57,18 +57,47 @@ public class Dungeon implements Serializable {
             myRooms[row] = rowArr;
         }
     }
+    public Room getRoom(Pair theLocation) {
+        return myRooms[theLocation.getRow()][theLocation.getColumn()];
+    }
+    private void spawnItems() {
+        final var shuffledCoords = new ArrayList<>(allCoords);
+        Collections.shuffle(shuffledCoords);
+        int choiceIndex = 0;
+        Room choice;
+        for(Item i : Item.values()) {
+            choice = getRoom(shuffledCoords.get(choiceIndex++));
+            // entrance and exit exist alone in the room, with no other items.
+            while((choice.getMyItems().contains(Item.Entrance)
+                    || choice.getMyItems().contains(Item.Exit)
+            ) && choiceIndex >= shuffledCoords.size()) {
+                choice = getRoom(shuffledCoords.get(choiceIndex++));
+            }
+            if(choiceIndex > shuffledCoords.size()) { // maze not big enough?
+                throw new IllegalArgumentException("Maze size not large enough for items.");
+            }
+            if(i == Item.Entrance) {
+                setMyHeroLocation(choice.getMyLocation());
+            }
+            choice.addToMyItems(i);
+            System.out.println(i + " in " + choice.getMyLocation());
+        }
+    }
 
     public Room[][] getRooms() {
         return myRooms;
     }
-    public void setHero(final Hero theHero) {
-        this.myHero = theHero;
-    }
+
     public Hero getHero() {
         return myHero;
     }
-    public Item[] getCurrentRoomItems() {
-        return null;
+
+    public void setHero(final Hero theHero) {
+        this.myHero = theHero;
+    }
+
+    public List<Item> getCurrentRoomItems() {
+        return getRoom(myHeroLocation).getMyItems();
     }
     public Set<Direction> getCurrentRoomDoors() {
         return getRoomDoors(myHeroLocation);
@@ -78,8 +107,6 @@ public class Dungeon implements Serializable {
         return myRooms[p.getRow()][p.getColumn()].getDoors();
     }
 
-    private record ChoicePair(Pair destination, Direction door) {
-    }
     private ArrayList<ChoicePair> borderCoords(Pair p) {
         int row = p.getRow();
         int col = p.getColumn();
@@ -94,6 +121,7 @@ public class Dungeon implements Serializable {
                 .filter(c -> allCoords.contains(c.destination))
                 .collect(Collectors.toList());
     }
+
     private void generateMaze() {
         HashSet<Pair> visited = new HashSet<>(); // visited rooms
         Pair current = new Pair(0,0); // starting position
@@ -148,5 +176,8 @@ public class Dungeon implements Serializable {
         sb.append(", myHeroLocation=").append(myHeroLocation);
         sb.append('}');
         return sb.toString();
+    }
+
+    private record ChoicePair(Pair destination, Direction door) {
     }
 }
