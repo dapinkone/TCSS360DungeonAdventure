@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class GUIView {
     private static final Map MY_MAP = new Map(4,4);
@@ -47,9 +46,9 @@ public class GUIView {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
             try {
-                gremlin = ImageIO.read(new File("Skitter.png"));
-                skeleton = ImageIO.read(new File("Crawler.png"));
-                ogre = ImageIO.read(new File("predator.png"));
+                gremlin = ImageIO.read(new File("sprites/Skitter.png"));
+                skeleton = ImageIO.read(new File("sprites/Crawler.png"));
+                ogre = ImageIO.read(new File("sprites/predator.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -60,7 +59,7 @@ public class GUIView {
             super.paintComponent(g);
             Image bg = null;
             try {
-                bg = ImageIO.read(new File("Background.png"));
+                bg = ImageIO.read(new File("sprites/Background.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -118,8 +117,8 @@ public class GUIView {
     private static class Map extends JPanel{
         //        private static final Room[][] myDungeon;
         private static int[][] exploredRooms;
-        private static int myWidth;
-        private static int myHeight;
+        private static int myRows;
+        private static int myCols;
         private static final int TILE_SIZE = 100;
         private static final Rectangle VERT_DOOR = new Rectangle(20,5);
         private static final Rectangle HORI_DOOR = new Rectangle(5,20);
@@ -127,20 +126,13 @@ public class GUIView {
         private static final Point DOWN = new Point(40,TILE_SIZE - VERT_DOOR.height);
         private static final Point LEFT = new Point(0,40);
         private static final Point RIGHT = new Point(TILE_SIZE - HORI_DOOR.width,40);
-        private static Image explored;
-        private static Image tile;
-
 
         private Map(int x, int y) {
-            try {
-                explored = ImageIO.read(new File("explored.png"));
-                tile = ImageIO.read(new File("tile.png"));
-            } catch (IOException e) {
-                System.out.println("Missing sprites");
-            }
+
             setBackground(new Color(40, 40, 40));
-            myWidth = x;
-            myHeight = y;
+            setAlignmentX(CENTER_ALIGNMENT);
+            myRows = x;
+            myCols = y;
             exploredRooms = new int[x][y];
             for (int i = 0; i < x; i++) {
                 for (int j = 0; j < y; j++) {
@@ -154,32 +146,43 @@ public class GUIView {
             repaint();
         }
 
-        private void drawDoor(int theX, int theY, char direction, Graphics g) {
-            int x = theX * TILE_SIZE;
-            int y = theY * TILE_SIZE;
-            g.setColor(Color.WHITE);
-            switch (direction) {
-                case 'N' -> g.fillRect(x + UP.x, y + UP.y, HORI_DOOR.x, HORI_DOOR.y);
-                case 'S' -> g.fillRect(x + DOWN.x, y + DOWN.y, HORI_DOOR.x, HORI_DOOR.y);
-                case 'E' -> g.fillRect(x + RIGHT.x, y + RIGHT.y, VERT_DOOR.x, VERT_DOOR.y);
-                case 'W' -> g.fillRect(x + LEFT.x, y + LEFT.y, VERT_DOOR.x, VERT_DOOR.y);
+        private void drawDoor(int theRow, int theCol, char direction, Graphics g) {
+            try {
+                Image hori_door = ImageIO.read(new File("sprites/hori_door.png"));
+                Image vert_door = ImageIO.read(new File("sprites/vert_door.png"));
+                int row = theRow * TILE_SIZE;
+                int col = theCol * TILE_SIZE;
+                switch (direction) {
+                    case 'N' -> g.drawImage(hori_door, row + UP.x, col + UP.y, this);
+                    case 'S' -> g.drawImage(hori_door, row + DOWN.x, col + DOWN.y, this);
+                    case 'E' -> g.drawImage(vert_door, row + RIGHT.x, col + RIGHT.y, this);
+                    case 'W' -> g.drawImage(vert_door, row + LEFT.x, col + LEFT.y, this);
+                }
+            } catch (IOException e) {
+                System.out.println("Missing sprites");
             }
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            for (int x = 0; x < myWidth; x++) {
-                for (int y = 0; y < myHeight; y++) {
-                    g.drawImage(tile, x * TILE_SIZE, y * TILE_SIZE, this);
-                    if (exploredRooms[x][y] != 0) {
-                        g.drawImage(explored,x * TILE_SIZE, y * TILE_SIZE, this);
-                        drawDoor(x,y,'N',g);
-                        drawDoor(x,y,'W',g);
-                        drawDoor(x,y,'E',g);
-                        drawDoor(x,y,'S',g);
+            try {
+                Image explored = ImageIO.read(new File("sprites/explored.png"));
+                Image tile = ImageIO.read(new File("sprites/tile.png"));
+                for (int i = 0; i < myRows; i++) {
+                    for (int j = 0; j < myCols; j++) {
+                        g.drawImage(tile, i * TILE_SIZE, j * TILE_SIZE, this);
+                        if (exploredRooms[i][j] != 0) {
+                            g.drawImage(explored,i * TILE_SIZE, j * TILE_SIZE, this);
+                            drawDoor(i,j,'N',g);
+                            drawDoor(i,j,'W',g);
+                            drawDoor(i,j,'E',g);
+                            drawDoor(i,j,'S',g);
+                        }
                     }
                 }
+            } catch (IOException e) {
+                System.out.println("Missing sprites");
             }
         }
     }
@@ -189,6 +192,5 @@ public class GUIView {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
         }
-
     }
 }
