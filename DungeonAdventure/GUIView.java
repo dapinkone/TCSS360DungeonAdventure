@@ -96,7 +96,7 @@ public class GUIView {
         }
         private static JLabel getHUD(int health, int pillars, int hpots, int vpots) {
             JLabel label = new JLabel("Health: " + health + " Pillars: " + pillars +
-                    " H.Pots: " + hpots + " V.Pots: " + vpots);
+                    "/4 H.Pots: " + hpots + " V.Pots: " + vpots);
             label.setFont(Font.getFont(Font.MONOSPACED));
             label.setForeground(Color.GREEN);
             return label;
@@ -169,11 +169,13 @@ public class GUIView {
             try {
                 Image explored = ImageIO.read(new File("sprites/explored.png"));
                 Image tile = ImageIO.read(new File("sprites/tile.png"));
+                Image player = ImageIO.read(new File("sprites/player.png"));
                 for (int i = 0; i < myRows; i++) {
                     for (int j = 0; j < myCols; j++) {
                         g.drawImage(tile, i * TILE_SIZE, j * TILE_SIZE, this);
                         if (exploredRooms[i][j] != 0) {
                             g.drawImage(explored,i * TILE_SIZE, j * TILE_SIZE, this);
+                            g.drawImage(player,i * TILE_SIZE, j * TILE_SIZE, this);
                             drawDoor(i,j,'N',g);
                             drawDoor(i,j,'W',g);
                             drawDoor(i,j,'E',g);
