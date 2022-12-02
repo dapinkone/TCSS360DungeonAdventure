@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class GUIView {
+    //private static final Room[][] MY_DUNGEON;
+    private static Room myCurrentRoom;
     private static final Map MY_MAP = new Map(4,4);
     private static final Textlog MY_TEXTLOG = new Textlog();
     private static final POV MY_POV = new POV();
@@ -30,6 +32,9 @@ public class GUIView {
         Textlog.TEXT_AREA.setCaretPosition(
                 Textlog.TEXT_AREA.getDocument().getLength());
     }
+    public static void setMyCurrentRoom(Room theRoom) {
+        myCurrentRoom = theRoom;
+    }
 
     private static class POV extends JPanel{
         private static final int WIDTH = 700;
@@ -37,29 +42,26 @@ public class GUIView {
         private static final Point POS1 = new Point(520,200);
         private static final Point POS2 = new Point(400,180);
         private static final Point POS3 = new Point(280,160);
-        private static Image skeleton;
-        private static Image gremlin;
-        private static Image ogre;
-
 
         private POV() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
-            try {
-                gremlin = ImageIO.read(new File("sprites/Skitter.png"));
-                skeleton = ImageIO.read(new File("sprites/Crawler.png"));
-                ogre = ImageIO.read(new File("sprites/predator.png"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Image bg = null;
+            Image vpot = null, hpot = null, pillar = null;
+            Image gremlin = null, skeleton = null, ogre = null;
             try {
                 bg = ImageIO.read(new File("sprites/Background.png"));
+                gremlin = ImageIO.read(new File("sprites/Skitter.png"));
+                skeleton = ImageIO.read(new File("sprites/Crawler.png"));
+                ogre = ImageIO.read(new File("sprites/predator.png"));
+                hpot = ImageIO.read(new File("sprites/healpot.png"));
+                vpot = ImageIO.read(new File("sprites/visionpot.png"));
+                pillar = ImageIO.read(new File("sprites/pillar.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -71,7 +73,7 @@ public class GUIView {
         }
     }
     private static class Textlog extends JPanel{
-        private static final JTextArea TEXT_AREA = getTextArea(20,60);;
+        private static final JTextArea TEXT_AREA = getTextArea(12,60);;
         private static JLabel HUD;
 
         private Textlog() {
@@ -90,6 +92,7 @@ public class GUIView {
             JTextArea textArea = new JTextArea(rows, col);
             textArea.setBackground(new Color(20,20,20));
             textArea.setForeground(Color.GREEN);
+            textArea.setFont(new Font("Monospaced",Font.PLAIN ,18));
             textArea.setLineWrap(true);
             textArea.setEditable(false);
             return textArea;
@@ -97,7 +100,7 @@ public class GUIView {
         private static JLabel getHUD(int health, int pillars, int hpots, int vpots) {
             JLabel label = new JLabel("Health: " + health + " Pillars: " + pillars +
                     "/4 H.Pots: " + hpots + " V.Pots: " + vpots);
-            label.setFont(Font.getFont(Font.MONOSPACED));
+            label.setFont(new Font("Monospaced",Font.PLAIN ,24));
             label.setForeground(Color.GREEN);
             return label;
         }
@@ -115,17 +118,17 @@ public class GUIView {
 
     }
     private static class Map extends JPanel{
-        //        private static final Room[][] myDungeon;
+
         private static int[][] exploredRooms;
         private static int myRows;
         private static int myCols;
         private static final int TILE_SIZE = 100;
         private static final Rectangle VERT_DOOR = new Rectangle(20,5);
         private static final Rectangle HORI_DOOR = new Rectangle(5,20);
-        private static final Point UP = new Point(40,0);
-        private static final Point DOWN = new Point(40,TILE_SIZE - VERT_DOOR.height);
-        private static final Point LEFT = new Point(0,40);
-        private static final Point RIGHT = new Point(TILE_SIZE - HORI_DOOR.width,40);
+        private static final Point NORTH_DOOR = new Point(40,0);
+        private static final Point SOUTH_DOOR = new Point(40,TILE_SIZE - VERT_DOOR.height);
+        private static final Point WEST_DOOR = new Point(0,40);
+        private static final Point EAST_DOOR = new Point(TILE_SIZE - HORI_DOOR.width,40);
 
         private Map(int x, int y) {
 
@@ -146,21 +149,58 @@ public class GUIView {
             repaint();
         }
 
-        private void drawDoor(int theRow, int theCol, char direction, Graphics g) {
+        private void drawDoor(int theRow, int theCol, Direction theDirection, Graphics g) {
             try {
                 Image hori_door = ImageIO.read(new File("sprites/hori_door.png"));
                 Image vert_door = ImageIO.read(new File("sprites/vert_door.png"));
                 int row = theRow * TILE_SIZE;
                 int col = theCol * TILE_SIZE;
-                switch (direction) {
-                    case 'N' -> g.drawImage(hori_door, row + UP.x, col + UP.y, this);
-                    case 'S' -> g.drawImage(hori_door, row + DOWN.x, col + DOWN.y, this);
-                    case 'E' -> g.drawImage(vert_door, row + RIGHT.x, col + RIGHT.y, this);
-                    case 'W' -> g.drawImage(vert_door, row + LEFT.x, col + LEFT.y, this);
+                switch (theDirection) {
+                    case NORTH -> g.drawImage(hori_door, row + NORTH_DOOR.x, col + NORTH_DOOR.y, this);
+                    case SOUTH -> g.drawImage(hori_door, row + SOUTH_DOOR.x, col + SOUTH_DOOR.y, this);
+                    case EAST -> g.drawImage(vert_door, row + EAST_DOOR.x, col + EAST_DOOR.y, this);
+                    case WEST -> g.drawImage(vert_door, row + WEST_DOOR.x, col + WEST_DOOR.y, this);
                 }
             } catch (IOException e) {
                 System.out.println("Missing sprites");
             }
+        }
+
+        private void drawRoom(Room theRoom, Graphics g) {
+            int row = theRoom.getMyLocation().getRow();
+            int col = theRoom.getMyLocation().getColumn();
+            Image explored = null;
+            Image tile = null;
+            Image player = null;
+            Image exit = null;
+            try {
+                explored = ImageIO.read(new File("sprites/explored.png"));
+                tile = ImageIO.read(new File("sprites/tile.png"));
+                player = ImageIO.read(new File("sprites/player.png"));
+                exit = ImageIO.read(new File("sprites/exit.png"));
+            } catch (IOException e) {
+                System.out.println("Missing sprites");
+            }
+
+            g.drawImage(tile,row * TILE_SIZE, col * TILE_SIZE, this);
+            if (exploredRooms[row][col] != 0) {
+                g.drawImage(explored,row * TILE_SIZE, col * TILE_SIZE, this);
+                for (Direction d: theRoom.getDoors()) {
+                    if (theRoom.getDoor(d)) {
+                        drawDoor(row, col, d, g);
+                    }
+                }
+                if (myCurrentRoom == theRoom) {
+                    g.drawImage(player,row * TILE_SIZE, col * TILE_SIZE, this);
+                } else if (myCurrentRoom.getMyItems().contains(Item.Exit)) {
+                    g.drawImage(exit,row * TILE_SIZE, col * TILE_SIZE, this);
+                } else if (myCurrentRoom.getMyItems().contains(Item.HealingPotion)) {
+
+                } else if (myCurrentRoom.getMyItems().contains(Item.VisionPotion)) {
+
+                }
+            }
+
         }
 
         @Override
@@ -172,15 +212,17 @@ public class GUIView {
                 Image player = ImageIO.read(new File("sprites/player.png"));
                 for (int i = 0; i < myRows; i++) {
                     for (int j = 0; j < myCols; j++) {
+
                         g.drawImage(tile, i * TILE_SIZE, j * TILE_SIZE, this);
                         if (exploredRooms[i][j] != 0) {
                             g.drawImage(explored,i * TILE_SIZE, j * TILE_SIZE, this);
                             g.drawImage(player,i * TILE_SIZE, j * TILE_SIZE, this);
-                            drawDoor(i,j,'N',g);
-                            drawDoor(i,j,'W',g);
-                            drawDoor(i,j,'E',g);
-                            drawDoor(i,j,'S',g);
+                            drawDoor(i,j,Direction.NORTH,g);
+                            drawDoor(i,j,Direction.SOUTH,g);
+                            drawDoor(i,j,Direction.EAST,g);
+                            drawDoor(i,j,Direction.WEST,g);
                         }
+
                     }
                 }
             } catch (IOException e) {
