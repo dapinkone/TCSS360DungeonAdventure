@@ -6,34 +6,35 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class GUIView {
-    //private static final Room[][] MY_DUNGEON;
-    private static Room myCurrentRoom;
+public class GUIView extends JFrame {
+    private static Dungeon myDungeon;
     private static final Map MY_MAP = new Map(4,4);
     private static final Textlog MY_TEXTLOG = new Textlog();
     private static final POV MY_POV = new POV();
     private static final Optionlog MY_OPTIONLOG = new Optionlog();
 
-    public static void main(String[] args) {
-        JFrame window = new JFrame("Cave Rescue");
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        window.add(MY_POV);
-        window.add(MY_MAP);
-        window.add(MY_TEXTLOG);
-        window.add(MY_OPTIONLOG);
-        window.setLayout(new GridLayout(2,2));
-        window.setResizable(false);
-        window.setVisible(true);
-        window.pack();
+    public GUIView(Dungeon theDungeon) {
+        myDungeon = theDungeon;
+        setTitle("Cave Rescue");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        add(MY_POV);
+        add(MY_MAP);
+        add(MY_TEXTLOG);
+        add(MY_OPTIONLOG);
+        setLayout(new GridLayout(2,2));
+        setResizable(false);
+        setVisible(true);
+        pack();
     }
+
+    public static void main(String[] args) {
+        GUIView guiView = new GUIView(null);
+    }
+
     public static void appendTextlog(String theText) {
         Textlog.TEXT_AREA.append(" >" + theText + "\n");
         Textlog.TEXT_AREA.setCaretPosition(
                 Textlog.TEXT_AREA.getDocument().getLength());
-    }
-    public static void setMyCurrentRoom(Room theRoom) {
-        myCurrentRoom = theRoom;
     }
 
     private static class POV extends JPanel{
@@ -169,6 +170,9 @@ public class GUIView {
         private void drawRoom(Room theRoom, Graphics g) {
             int row = theRoom.getMyLocation().getRow();
             int col = theRoom.getMyLocation().getColumn();
+            Room heroRoom = myDungeon.getRooms()
+                    [myDungeon.getMyHeroLocation().getRow()]
+                    [myDungeon.getMyHeroLocation().getColumn()];
             Image explored = null;
             Image tile = null;
             Image player = null;
@@ -183,6 +187,7 @@ public class GUIView {
             }
 
             g.drawImage(tile,row * TILE_SIZE, col * TILE_SIZE, this);
+
             if (exploredRooms[row][col] != 0) {
                 g.drawImage(explored,row * TILE_SIZE, col * TILE_SIZE, this);
                 for (Direction d: theRoom.getDoors()) {
@@ -190,13 +195,13 @@ public class GUIView {
                         drawDoor(row, col, d, g);
                     }
                 }
-                if (myCurrentRoom == theRoom) {
+                if (heroRoom == theRoom) {
                     g.drawImage(player,row * TILE_SIZE, col * TILE_SIZE, this);
-                } else if (myCurrentRoom.getMyItems().contains(Item.Exit)) {
+                } else if (theRoom.getMyItems().contains(Item.Exit)) {
                     g.drawImage(exit,row * TILE_SIZE, col * TILE_SIZE, this);
-                } else if (myCurrentRoom.getMyItems().contains(Item.HealingPotion)) {
+                } else if (theRoom.getMyItems().contains(Item.HealingPotion)) {
 
-                } else if (myCurrentRoom.getMyItems().contains(Item.VisionPotion)) {
+                } else if (theRoom.getMyItems().contains(Item.VisionPotion)) {
 
                 }
             }
