@@ -219,27 +219,47 @@ public class GUIView extends JFrame {
                     for (int j = 0; j < myCols; j++) {
 
                         g.drawImage(tile, i * TILE_SIZE, j * TILE_SIZE, this);
-                        if (exploredRooms[i][j] != 0) {
+//                        if (exploredRooms[i][j] != 0) {
                             g.drawImage(explored,i * TILE_SIZE, j * TILE_SIZE, this);
-                            g.drawImage(player,i * TILE_SIZE, j * TILE_SIZE, this);
                             drawDoor(i,j,Direction.NORTH,g);
-                            drawDoor(i,j,Direction.SOUTH,g);
-                            drawDoor(i,j,Direction.EAST,g);
-                            drawDoor(i,j,Direction.WEST,g);
-                        }
+                        drawDoor(i,j,Direction.SOUTH,g);
+                        drawDoor(i,j,Direction.EAST,g);
+                        drawDoor(i,j,Direction.WEST,g);
+//                            g.drawImage(player,i * TILE_SIZE, j * TILE_SIZE, this);
+//                        }
 
                     }
                 }
+                g.drawImage(player, 0, 0, this);
             } catch (IOException e) {
                 System.out.println("Missing sprites");
             }
         }
     }
-    private static class Optionlog extends JPanel{
+    private static class Optionlog extends JPanel {
+        private static JButton[] myButtons = new JButton[5];
 
         private Optionlog() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
+            setLayout(new GridLayout(10, 1));
+            myButtons[0] = makeButton("ATTACK");
+            myButtons[1] = makeButton("MOVE");
+            myButtons[2] = makeButton("USE ITEM");
+            myButtons[3] = makeButton("HELP");
+            myButtons[4] = makeButton("<- RETURN");
+            for (JButton button : myButtons) {
+                add(button);
+            }
+
+        }
+
+        private static JButton makeButton(String theText) {
+            JButton button = new JButton(theText);
+            button.setBackground(Color.black);
+            button.setForeground(Color.green);
+            button.setFont(new Font("Monospaced",Font.PLAIN ,24));
+            return button;
         }
     }
 }
