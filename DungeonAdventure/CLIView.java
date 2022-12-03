@@ -1,6 +1,8 @@
 package DungeonAdventure;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class CLIView implements GameView {
@@ -19,25 +21,13 @@ public class CLIView implements GameView {
         showHeroSelect();
         while(!myModel.gameover()) {
             showDungeon();
-            System.out.println(myModel.getHeroLocation());
             myModel.move(movementMenu());
         }
     }
 
     private Direction movementMenu() {
         final var options = new ArrayList<>(myModel.getRoomDoors(myModel.getHeroLocation()));
-        System.out.println("What would you like to do? (1-" + options.size());
-        int i = 1;
-        for(Direction direction : options) {
-            System.out.println(i++ + ". Move " + direction.name().toLowerCase());
-        }
-        int choiceIndex;
-        do {
-            choiceIndex = scanner.nextInt();
-        } while(choiceIndex < 1 || choiceIndex > options.size());
-        final Direction choice = options.get(choiceIndex-1);
-        myModel.move(choice);
-        return choice;
+        return choiceMenu(options, "What direction would you like to go?");
     }
 
     private void showSizeSelect() {
@@ -109,8 +99,6 @@ public class CLIView implements GameView {
         // TODO: should we be able to see monsters here?
         // append specific item representations / hero to center of room
         if(myModel.getHeroLocation().compareTo(theRoom.getMyLocation()) == 0) {
-            System.out.println(theRoom.getMyLocation());
-            System.out.println(myModel.getHeroLocation());
             sb.append('%');
         } else if(theRoom.getMyItems().size() > 1) {
             sb.append("M");
@@ -160,7 +148,7 @@ public class CLIView implements GameView {
             selection = scanner.nextInt();
         }
         if(selection <= 0 || selection > options.length){ // TODO: fix edge cases such as EOF. test cases?
-            System.out.println("Invalid selection detected. Please enter an integer from 1 to " + options.length);
+            System.out.println("Invalid selection detected. Please enter an integer from 1 to " + options.length + ".");
             showHeroSelect();
             return;
         }
@@ -173,6 +161,21 @@ public class CLIView implements GameView {
                     default -> throw new IllegalStateException("Unexpected value: " + selection);
                 });
         System.out.println("Hero " + options[selection-1] + " selected.");
+    }
+    private <T> T choiceMenu(final List<T> options, final String description) throws NoSuchElementException {
+        if(options == null || options.isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        int choiceIndex;
+        do {
+            System.out.println(description + "(1-" + options.size() + ")");
+            int i = 1;
+            for(T option : options) {
+                System.out.println(i++ + ". " + option.toString());
+            }
+            choiceIndex = scanner.nextInt();
+        } while(choiceIndex < 1 || choiceIndex > options.size());
+        return options.get(choiceIndex-1);
     }
 
     @Override
