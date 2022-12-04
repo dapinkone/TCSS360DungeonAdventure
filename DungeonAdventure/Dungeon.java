@@ -40,6 +40,7 @@ public class Dungeon implements Serializable {
         // if coordinate is valid
         if(allCoords.contains(theHeroLocation)) {
             myHeroLocation = theHeroLocation;
+            getRoom(myHeroLocation).setMyVisitedStatus();
         }
     }
 
