@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class GUIView extends JFrame {
     private static Dungeon myDungeon;
-    private static final Map MY_MAP = new Map(4,4);
+    private static final Map MY_MAP = new Map(6,4);
     private static final Textlog MY_TEXTLOG = new Textlog();
     private static final POV MY_POV = new POV();
     private static final Optionlog MY_OPTIONLOG = new Optionlog();
@@ -133,6 +133,7 @@ public class GUIView extends JFrame {
             label.setForeground(Color.GREEN);
             return label;
         }
+
         private static JTextField getTextField() {
             JTextField field = new JTextField(60);
             field.addActionListener(e -> {
@@ -155,12 +156,12 @@ public class GUIView extends JFrame {
         private static final Point WEST_DOOR = new Point(0,40);
         private static final Point EAST_DOOR = new Point(TILE_SIZE - HORI_DOOR.width,40);
 
-        private Map(int x, int y) {
+        private Map(int theRows, int theCol) {
 
             setBackground(new Color(40, 40, 40));
             setAlignmentX(CENTER_ALIGNMENT);
-            myRows = x;
-            myCols = y;
+            myRows = theRows;
+            myCols = theCol;
 
         }
 
