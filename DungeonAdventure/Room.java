@@ -9,6 +9,7 @@ public class Room implements Serializable {
     private final Map<Direction, Boolean> myDoors;
     private final Pair myLocation;
     private boolean myVisitedStatus = false;
+    private Monster[] myMonsters;
     public Room(Pair theLocation) {
         myLocation = theLocation;
         myDoors = new HashMap<>();
@@ -50,4 +51,11 @@ public class Room implements Serializable {
         myDoors.put(d, true);
     }
 
+    public Monster[] getMyMonsters() {
+        return myMonsters;
+    }
+
+    public void setMyMonsters(Monster[] theMonsters) {
+        myMonsters = theMonsters;
+    }
 }
