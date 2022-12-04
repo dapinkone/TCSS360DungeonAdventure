@@ -8,6 +8,7 @@ public class Room implements Serializable {
     private List<Item> myItems = new ArrayList<>();
     private final Map<Direction, Boolean> myDoors;
     private final Pair myLocation;
+    private boolean myVisitedStatus = false;
     public Room(Pair theLocation) {
         myLocation = theLocation;
         myDoors = new HashMap<>();
@@ -39,7 +40,12 @@ public class Room implements Serializable {
                 ", myLocation=" + myLocation +
                 '}';
     }
-
+    public void setMyVisitedStatus() {
+        myVisitedStatus = true;
+    }
+    public boolean getMyVisitedStatus() {
+        return myVisitedStatus;
+    }
     public void setDoor(Direction d) {
         myDoors.put(d, true);
     }
