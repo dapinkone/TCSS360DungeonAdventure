@@ -40,13 +40,46 @@ public class GUIView extends JFrame {
     private static class POV extends JPanel{
         private static final int WIDTH = 700;
         private static final int HEIGHT = 400;
-        private static final Point POS1 = new Point(520,200);
-        private static final Point POS2 = new Point(400,180);
-        private static final Point POS3 = new Point(280,160);
+        private static final Point POS = new Point(520,200);
+        private static final Point OFFSET = new Point(120,20);
 
         private POV() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
+        }
+
+        private void drawMonsters(Graphics g) {
+            Image gremlin = null, skeleton = null, ogre = null;
+            Room heroRoom = myDungeon.getRooms()
+                    [myDungeon.getMyHeroLocation().getRow()]
+                    [myDungeon.getMyHeroLocation().getColumn()];
+            try {
+                gremlin = ImageIO.read(new File("sprites/Skitter.png"));
+                skeleton = ImageIO.read(new File("sprites/Crawler.png"));
+                ogre = ImageIO.read(new File("sprites/predator.png"));
+            } catch (IOException e) {
+                System.out.println("Missing Sprites");
+            }
+            int count = 0;
+            for (Monster monster : heroRoom.getMyMonsters()) {
+                String name = monster.getMyName();
+                switch (name) {
+                    case "Skitter" -> g.drawImage(gremlin,
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                    case "Crawler" -> g.drawImage(skeleton,
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                    case "Predator" -> g.drawImage(ogre,
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                }
+                count++;
+            }
+            g.drawImage(gremlin, POS.x, POS.y, this);
         }
 
         @Override
@@ -54,12 +87,8 @@ public class GUIView extends JFrame {
             super.paintComponent(g);
             Image bg = null;
             Image vpot = null, hpot = null, pillar = null;
-            Image gremlin = null, skeleton = null, ogre = null;
             try {
                 bg = ImageIO.read(new File("sprites/Background.png"));
-                gremlin = ImageIO.read(new File("sprites/Skitter.png"));
-                skeleton = ImageIO.read(new File("sprites/Crawler.png"));
-                ogre = ImageIO.read(new File("sprites/predator.png"));
                 hpot = ImageIO.read(new File("sprites/healpot.png"));
                 vpot = ImageIO.read(new File("sprites/visionpot.png"));
                 pillar = ImageIO.read(new File("sprites/pillar.png"));
@@ -67,9 +96,7 @@ public class GUIView extends JFrame {
                 e.printStackTrace();
             }
             g.drawImage(bg, 0,0, this);
-            g.drawImage(gremlin, POS1.x,POS1.y, this);
-            g.drawImage(skeleton, POS2.x,POS2.y, this);
-            g.drawImage(ogre, POS3.x,POS3.y, this);
+//            drawMonsters(g);
 
         }
     }
@@ -98,6 +125,7 @@ public class GUIView extends JFrame {
             textArea.setEditable(false);
             return textArea;
         }
+
         private static JLabel getHUD(int health, int pillars, int hpots, int vpots) {
             JLabel label = new JLabel("Health: " + health + " Pillars: " + pillars +
                     "/4 H.Pots: " + hpots + " V.Pots: " + vpots);
@@ -109,9 +137,6 @@ public class GUIView extends JFrame {
             JTextField field = new JTextField(60);
             field.addActionListener(e -> {
                 appendTextlog(field.getText());
-                if (field.getText().equals("2 1")) {
-                    MY_MAP.exploreRoom(2,1);
-                }
                 field.setText("");
             });
             return field;
@@ -120,7 +145,6 @@ public class GUIView extends JFrame {
     }
     private static class Map extends JPanel{
 
-        private static int[][] exploredRooms;
         private static int myRows;
         private static int myCols;
         private static final int TILE_SIZE = 100;
@@ -137,17 +161,7 @@ public class GUIView extends JFrame {
             setAlignmentX(CENTER_ALIGNMENT);
             myRows = x;
             myCols = y;
-            exploredRooms = new int[x][y];
-            for (int i = 0; i < x; i++) {
-                for (int j = 0; j < y; j++) {
-                    exploredRooms[i][j] = 0;
-                }
-            }
-        }
 
-        public void exploreRoom(int x, int y) {
-            exploredRooms[x][y] = 1;
-            repaint();
         }
 
         private void drawDoor(int theRow, int theCol, Direction theDirection, Graphics g) {
@@ -173,22 +187,19 @@ public class GUIView extends JFrame {
             Room heroRoom = myDungeon.getRooms()
                     [myDungeon.getMyHeroLocation().getRow()]
                     [myDungeon.getMyHeroLocation().getColumn()];
-            Image explored = null;
-            Image tile = null;
-            Image player = null;
-            Image exit = null;
+            Image explored = null, tile = null, player = null;
             try {
                 explored = ImageIO.read(new File("sprites/explored.png"));
                 tile = ImageIO.read(new File("sprites/tile.png"));
                 player = ImageIO.read(new File("sprites/player.png"));
-                exit = ImageIO.read(new File("sprites/exit.png"));
+
             } catch (IOException e) {
                 System.out.println("Missing sprites");
             }
 
             g.drawImage(tile,row * TILE_SIZE, col * TILE_SIZE, this);
 
-            if (exploredRooms[row][col] != 0) {
+            if (theRoom.getMyVisitedStatus()) {
                 g.drawImage(explored,row * TILE_SIZE, col * TILE_SIZE, this);
                 for (Direction d: theRoom.getDoors()) {
                     if (theRoom.getDoor(d)) {
@@ -197,15 +208,36 @@ public class GUIView extends JFrame {
                 }
                 if (heroRoom == theRoom) {
                     g.drawImage(player,row * TILE_SIZE, col * TILE_SIZE, this);
-                } else if (theRoom.getMyItems().contains(Item.Exit)) {
-                    g.drawImage(exit,row * TILE_SIZE, col * TILE_SIZE, this);
-                } else if (theRoom.getMyItems().contains(Item.HealingPotion)) {
-
-                } else if (theRoom.getMyItems().contains(Item.VisionPotion)) {
-
+                } else {
+                    drawItems(theRoom, g);
                 }
             }
 
+        }
+
+        private void drawItems(Room theRoom, Graphics g) {
+            Image exit = null, items = null;
+            try {
+                exit = ImageIO.read(new File("sprites/exit.png"));
+                items = ImageIO.read(new File("sprites/items.png"));
+            } catch (IOException e) {
+                System.out.println("Missing Sprites");
+            }
+            int row = theRoom.getMyLocation().getRow();
+            int col = theRoom.getMyLocation().getColumn();
+            if (theRoom.getMyItems().contains(Item.Exit)) {
+                g.drawImage(exit, row * TILE_SIZE, col * TILE_SIZE, this);
+            } else {
+                if (theRoom.getMyItems().size() > 1) {
+                    g.drawImage(items, row * TILE_SIZE, col * TILE_SIZE, this);
+                } else {
+                    if (theRoom.getMyItems().contains(Item.HealingPotion)) {
+
+                    } else if (theRoom.getMyItems().contains(Item.VisionPotion)) {
+
+                    }
+                }
+            }
         }
 
         @Override
