@@ -1,5 +1,8 @@
 package DungeonAdventure;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class CLIView implements GameView {
@@ -16,8 +19,15 @@ public class CLIView implements GameView {
         showSizeSelect(); // how large is the dungeon?
         // difficulty? (might adjust spawn rates?)
         showHeroSelect();
-        showDungeon();
+        while(!myModel.gameover()) {
+            showDungeon();
+            myModel.move(movementMenu());
+        }
+    }
 
+    private Direction movementMenu() {
+        final var options = new ArrayList<>(myModel.getRoomDoors(myModel.getHeroLocation()));
+        return choiceMenu(options, "What direction would you like to go?");
     }
 
     private void showSizeSelect() {
@@ -52,7 +62,11 @@ public class CLIView implements GameView {
 
     @Override
     public void showHeroInventory() {
-        // TODO: need an inventory listing from hero/model
+        final var hero = myModel.getHero();
+        System.out.println("Our hero has these items:"); // this should be generalized. pots aren't special.
+        System.out.println("Healing pots" + hero.getHealingPots());
+        System.out.println("Healing pots" + hero.getVisionPots());
+        System.out.println("Pillars: " + hero.getPillars());
     }
 
     @Override
@@ -86,7 +100,7 @@ public class CLIView implements GameView {
         // append specific item representations / hero to center of room
         if(myModel.getHeroLocation().compareTo(theRoom.getMyLocation()) == 0) {
             sb.append('%');
-        } else if(theRoom.getMyItems().size() >= 1) {
+        } else if(theRoom.getMyItems().size() > 1) {
             sb.append("M");
         } else if(theRoom.getMyItems().size() == 1) {
             var theItem = theRoom.getMyItems().get(0);
@@ -134,7 +148,7 @@ public class CLIView implements GameView {
             selection = scanner.nextInt();
         }
         if(selection <= 0 || selection > options.length){ // TODO: fix edge cases such as EOF. test cases?
-            System.out.println("Invalid selection detected. Please enter an integer from 1 to " + options.length);
+            System.out.println("Invalid selection detected. Please enter an integer from 1 to " + options.length + ".");
             showHeroSelect();
             return;
         }
@@ -147,6 +161,21 @@ public class CLIView implements GameView {
                     default -> throw new IllegalStateException("Unexpected value: " + selection);
                 });
         System.out.println("Hero " + options[selection-1] + " selected.");
+    }
+    private <T> T choiceMenu(final List<T> options, final String description) throws NoSuchElementException {
+        if(options == null || options.isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        int choiceIndex;
+        do {
+            System.out.println(description + "(1-" + options.size() + ")");
+            int i = 1;
+            for(T option : options) {
+                System.out.println(i++ + ". " + option.toString());
+            }
+            choiceIndex = scanner.nextInt();
+        } while(choiceIndex < 1 || choiceIndex > options.size());
+        return options.get(choiceIndex-1);
     }
 
     @Override
