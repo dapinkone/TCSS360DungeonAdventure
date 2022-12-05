@@ -14,7 +14,6 @@ public class Dungeon implements Serializable {
      */
     private Room[][] myRooms;
     private Hero myHero;
-    // TODO: put hero at entrance when entrance placed.
     private Pair myHeroLocation = new Pair(0,0);
     public Dungeon(int rows, int columns) {
         this.rows = rows;
@@ -22,6 +21,34 @@ public class Dungeon implements Serializable {
         makeRooms();
         generateMaze();
         spawnItems();
+        spawnMonsters();
+    }
+
+    private void spawnMonsters() {
+        MonsterFactory mf = MonsterFactory.getInstance();
+
+        // for every room in the maze, maybe add a monster
+        for(var coord : allCoords) {
+            final var room = getRoom(coord);
+            // don't want to start the game in combat.
+            if(room.getMyItems().contains(Item.Entrance)) continue;
+
+            if(RANDOM.nextDouble() > 0.8) { // 20% chance to see a monster at all
+                final var chance = RANDOM.nextDouble();
+                Monster newMonster;
+                if(chance > 0.9) {// ver5y unlucky.
+                    newMonster = mf.generateMonster("Awoken Horror");
+                } else if (chance > 0.7) {
+                    newMonster = mf.generateMonster("predator");
+                } else if (chance > 0.4) {
+                    newMonster =  mf.generateMonster("Crawler");
+                } else {
+                    newMonster = mf.generateMonster("Skitter");
+                }
+                System.out.println("adding " + newMonster.getMyName());
+                getRoom(coord).addMonster(newMonster);
+            }
+        }
     }
 
     public int getColumns() {

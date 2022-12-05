@@ -8,7 +8,7 @@ public class Room implements Serializable {
     private final Map<Direction, Boolean> myDoors;
     private final Pair myLocation;
     private boolean myVisitedStatus = false;
-    private List<Monster> myMonsters;
+    private final List<Monster> myMonsters = new ArrayList<>();
     public Room(Pair theLocation) {
         myLocation = theLocation;
         myDoors = new HashMap<>();
@@ -53,8 +53,7 @@ public class Room implements Serializable {
     public List<Monster> getMyMonsters() {
         return myMonsters;
     }
-
-    public void setMyMonsters(List<Monster> theMonsters) {
-        myMonsters = theMonsters;
+    public void addMonster(Monster theMonster) {
+        myMonsters.add(theMonster);
     }
 }

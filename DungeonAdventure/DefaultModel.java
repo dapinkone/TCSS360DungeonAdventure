@@ -2,6 +2,7 @@ package DungeonAdventure;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DefaultModel implements GameModel {
     private Dungeon myDungeon;
@@ -60,9 +61,9 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean move(Direction theDirection) {
-        if(checkCombat()) {
-           return false; // currently in combat. can't move.
-        }
+        //if(checkCombat()) {
+        //   return false; // currently in combat. can't move.
+        //}
         final var location = getHeroLocation();
         for(var otherDirection : myDungeon.getCurrentRoomDoors()) {
             if(theDirection == otherDirection) { // door is open. proceed.
@@ -75,7 +76,11 @@ public class DefaultModel implements GameModel {
                 });
                 // if the new room has monsters in it, we have a combat encounter on our hands.
                 List<Monster> monsters = myDungeon.getRoom(myDungeon.getMyHeroLocation()).getMyMonsters();
-                if(monsters.size() > 0) {
+                if(monsters != null && monsters.size() > 0) {
+                    System.out.println("Combat encountered: ");
+                    for(var m : monsters) {
+                        System.out.println(m.getStats());
+                    }
                     myCombat = new Combat(monsters, getHero());
                 }
                 return true;

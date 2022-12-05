@@ -99,9 +99,11 @@ public class CLIView implements GameView {
         // TODO: should we be able to see monsters here?
         // append specific item representations / hero to center of room
         if(myModel.getHeroLocation().compareTo(theRoom.getMyLocation()) == 0) {
-            sb.append('%');
+            sb.append('%'); // hero representation
+        } else if(!theRoom.getMyMonsters().isEmpty()) {
+            sb.append("*"); // monsters in CLIView are displayed as *
         } else if(theRoom.getMyItems().size() > 1) {
-            sb.append("M");
+            sb.append("M"); // stack of multiple items is displayed as M
         } else if(theRoom.getMyItems().size() == 1) {
             var theItem = theRoom.getMyItems().get(0);
             sb.append(switch (theItem) {

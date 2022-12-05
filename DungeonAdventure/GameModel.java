@@ -28,4 +28,5 @@ public interface GameModel {
     Room[][] getRooms(); // TODO: Rooms are mutable. better solution?
 
     boolean gameover();
+
 }
