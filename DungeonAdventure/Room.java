@@ -2,14 +2,13 @@ package DungeonAdventure;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Room implements Serializable {
-    private List<Item> myItems = new ArrayList<>();
+    private final List<Item> myItems = new ArrayList<>();
     private final Map<Direction, Boolean> myDoors;
     private final Pair myLocation;
     private boolean myVisitedStatus = false;
-    private Monster[] myMonsters;
+    private List<Monster> myMonsters;
     public Room(Pair theLocation) {
         myLocation = theLocation;
         myDoors = new HashMap<>();
@@ -51,11 +50,11 @@ public class Room implements Serializable {
         myDoors.put(d, true);
     }
 
-    public Monster[] getMyMonsters() {
+    public List<Monster> getMyMonsters() {
         return myMonsters;
     }
 
-    public void setMyMonsters(Monster[] theMonsters) {
+    public void setMyMonsters(List<Monster> theMonsters) {
         myMonsters = theMonsters;
     }
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 
 public class DefaultModel implements GameModel {
     private Dungeon myDungeon;
+    private Combat myCombat;
     public DefaultModel() {
 
     }
@@ -72,6 +73,11 @@ public class DefaultModel implements GameModel {
                         case NORTH -> new Pair(location.getRow()-1, location.getColumn());
                         case SOUTH -> new Pair(location.getRow()+1, location.getColumn());
                 });
+                // if the new room has monsters in it, we have a combat encounter on our hands.
+                List<Monster> monsters = myDungeon.getRoom(myDungeon.getMyHeroLocation()).getMyMonsters();
+                if(monsters.size() > 0) {
+                    myCombat = new Combat(monsters, getHero());
+                }
                 return true;
             }
         }
@@ -81,7 +87,7 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean checkCombat() {
-        return false;
+        return myCombat != null && !myCombat.isOver();
     }
 
     @Override
