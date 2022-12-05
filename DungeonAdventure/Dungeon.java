@@ -9,6 +9,31 @@ public class Dungeon implements Serializable {
     final private  int rows;
     final private int columns;
     final private HashSet<Pair> allCoords = new HashSet<>();
+    private static final class ItemRecord{
+        private final Double myChance;
+        private Integer myMaxOccurrence;
+        ItemRecord(Double theChance, Integer theMaxOccurrence) {
+            myChance = theChance;
+            myMaxOccurrence = theMaxOccurrence;
+        }
+
+        /***
+         * decrements myMaxOccurrence for keeping track of how many more
+         * occurrences of this item we can have.
+         */
+        public void decrement() {
+            myMaxOccurrence--;
+        }
+        public int getMyMaxOccurrence() {
+            return myMaxOccurrence;
+        }
+
+        public Double getMyChance() {
+            return myChance;
+        }
+    }
+
+
     /***
      * Data structure that holds information about the dungeon, or the "board" on which we play the game
      */
@@ -88,27 +113,68 @@ public class Dungeon implements Serializable {
     public Room getRoom(Pair theLocation) {
         return myRooms[theLocation.getRow()][theLocation.getColumn()];
     }
+
+    /***
+     * spawnItems
+     * populates the dungeon Rooms with required Item objects, according
+     * to hard-coded required frequencies, with some hard upper limits.
+     */
     private void spawnItems() {
+        /***
+         * myItemRates determines the chance of each item that should spawn in the
+         * dungeon, as well as any upper bounds on the # that can spawn.
+         */
+        final Map<Item, ItemRecord> myItemRates = new HashMap<>();
+        // is there a cleaner way to do this?
+        // exit, entrance, as well as pillars 100% must spawn,
+        // and must spawn exactly once.
+        myItemRates.put(Item.Exit, new ItemRecord(1.0,1));
+        myItemRates.put(Item.Entrance, new ItemRecord(1.0,1));
+        myItemRates.put(Item.PillarAbstraction, new ItemRecord(1.0,1));
+        myItemRates.put(Item.PillarInheritance, new ItemRecord(1.0,1));
+        myItemRates.put(Item.PillarEncapsulation,new ItemRecord(1.0,1));
+        myItemRates.put(Item.PillarPolymorphism, new ItemRecord(1.0,1));
+        // Healing potions, vision potions and pits are a bit less common.
+        // we'll go 20% chance, with no upper limit.
+        myItemRates.put(Item.HealingPotion, new ItemRecord(0.2, Integer.MAX_VALUE));
+        myItemRates.put(Item.VisionPotion, new ItemRecord(0.1, Integer.MAX_VALUE));
+        myItemRates.put(Item.Pit, new ItemRecord(0.1, Integer.MAX_VALUE));
+        //
+        //
         final var shuffledCoords = new ArrayList<>(allCoords);
         Collections.shuffle(shuffledCoords);
-        int choiceIndex = 0;
+
         Room choice;
+        ROOM: for(var coord : shuffledCoords) {
+            choice = getRoom(coord);
+            for(Item i : Item.values()) {
+                final ItemRecord rec = myItemRates.get(i);
+                if(rec == null) {
+                    throw new NoSuchElementException("Item " + i + "unknown.");
+                }
+                if(rec.myMaxOccurrence == 1 && rec.myChance == 1) {
+                    choice.addToMyItems(i);
+                    rec.decrement();
+                    // hero is placed at start of dungeon automagically:
+                    if(i == Item.Entrance) {
+                        setMyHeroLocation(choice.getMyLocation());
+                    }
+                    // these(entrance/exit/pillars) are only one to a room
+                    continue ROOM;
+                }
+                if(rec.getMyMaxOccurrence() > 0 && RANDOM.nextDouble() <= rec.getMyChance()) {
+                    choice.addToMyItems(i);
+                    rec.decrement();
+                }
+            }
+        }
+        // ensure the required items have been placed.
         for(Item i : Item.values()) {
-            choice = getRoom(shuffledCoords.get(choiceIndex++));
-            // entrance and exit exist alone in the room, with no other items.
-            while((choice.getMyItems().contains(Item.Entrance)
-                    || choice.getMyItems().contains(Item.Exit)
-            ) && choiceIndex >= shuffledCoords.size()) {
-                choice = getRoom(shuffledCoords.get(choiceIndex++));
+            final ItemRecord rec = myItemRates.get(i);
+            if(rec.getMyChance() == 1 && rec.getMyMaxOccurrence() > 0) {
+                throw new IllegalArgumentException(
+                        "Maze size not large enough for items.");
             }
-            if(choiceIndex > shuffledCoords.size()) { // maze not big enough?
-                throw new IllegalArgumentException("Maze size not large enough for items.");
-            }
-            if(i == Item.Entrance) {
-                setMyHeroLocation(choice.getMyLocation());
-            }
-            choice.addToMyItems(i);
-            System.out.println(i + " in " + choice.getMyLocation());
         }
     }
 
