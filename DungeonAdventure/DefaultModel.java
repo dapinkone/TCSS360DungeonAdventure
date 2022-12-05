@@ -1,5 +1,6 @@
 package DungeonAdventure;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,12 +18,21 @@ public class DefaultModel implements GameModel {
         myDungeon = new Dungeon(rows, cols);
     }
 
-    public void saveGame() {
-
+    public void saveGame() throws IOException {
+        try (var fileOut = new FileOutputStream("CaveRescue.save")) {
+            final var objStreamOut = new ObjectOutputStream(fileOut);
+            objStreamOut.writeObject(myDungeon);
+            objStreamOut.flush();
+        }
     }
 
-    public void loadGame() {
-
+    public void loadGame() throws IOException {
+        try (var fileIn = new FileInputStream("CaveRescue.save")) {
+            final var objStreamIn = new ObjectInputStream(fileIn);
+            myDungeon = (Dungeon) objStreamIn.readObject();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

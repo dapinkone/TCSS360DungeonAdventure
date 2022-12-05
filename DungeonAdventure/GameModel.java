@@ -1,5 +1,6 @@
 package DungeonAdventure;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -8,8 +9,8 @@ public interface GameModel {
      * encapsulates all the functionality/interactions required to play the game.
      */
     void newDungeon(int rows, int cols);
-    void saveGame();
-    void loadGame();
+    void saveGame() throws IOException;
+    void loadGame() throws IOException;
 
     // data that the view needs access to display/play the game
 
