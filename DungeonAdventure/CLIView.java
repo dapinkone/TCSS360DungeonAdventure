@@ -64,9 +64,13 @@ public class CLIView implements GameView {
     public void showHeroInventory() {
         final var hero = myModel.getHero();
         System.out.println("Our hero has these items:"); // this should be generalized. pots aren't special.
-        System.out.println("Healing pots" + hero.getHealingPots());
-        System.out.println("Healing pots" + hero.getVisionPots());
-        System.out.println("Pillars: " + hero.getPillars());
+//        System.out.println("Healing pots" + hero.getHealingPots());
+//        System.out.println("Healing pots" + hero.getVisionPots());
+//        System.out.println("Pillars: " + hero.getPillars());
+        final var inv = hero.getMyInventory();
+        for(Item item : inv.keySet()) {
+            System.out.println(item + " " + inv.get(item));
+        }
     }
 
     @Override
