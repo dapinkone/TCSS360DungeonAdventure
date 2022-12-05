@@ -1,12 +1,13 @@
 package DungeonAdventure;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class DefaultModel implements GameModel {
     private Dungeon myDungeon;
     private Combat myCombat;
+    private final boolean cheatCanFleeCombat = true;
     public DefaultModel() {
 
     }
@@ -51,7 +52,20 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean pickupItem(Item theItem) {
-        return false;
+        final var cantPickup = List.of(Item.Entrance, Item.Exit, Item.Pit);
+        final var roomItems = getRoomItems(getHeroLocation());
+
+        if(cantPickup.contains(theItem) || !roomItems.contains(theItem)) {
+            return false;
+        }
+        // for any item, get the # held, and increase by one in inventory.
+        final var inv = getHero().getMyInventory();
+        final var count = inv.getOrDefault(theItem, 0);
+        inv.put(theItem, count + 1);
+        //System.out.println("Picked up: " + theItem); // TODO: remove.
+        roomItems.remove(theItem);
+
+        return true;
     }
 
     @Override
@@ -61,9 +75,9 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean move(Direction theDirection) {
-        //if(checkCombat()) {
-        //   return false; // currently in combat. can't move.
-        //}
+        if(checkCombat() && !cheatCanFleeCombat) {
+           return false; // currently in combat. can't move.
+        }
         final var location = getHeroLocation();
         for(var otherDirection : myDungeon.getCurrentRoomDoors()) {
             if(theDirection == otherDirection) { // door is open. proceed.
@@ -75,13 +89,18 @@ public class DefaultModel implements GameModel {
                         case SOUTH -> new Pair(location.getRow()+1, location.getColumn());
                 });
                 // if the new room has monsters in it, we have a combat encounter on our hands.
-                List<Monster> monsters = myDungeon.getRoom(myDungeon.getMyHeroLocation()).getMyMonsters();
+                List<Monster> monsters = myDungeon.getRoom(getHeroLocation()).getMyMonsters();
                 if(monsters != null && monsters.size() > 0) {
                     System.out.println("Combat encountered: ");
                     for(var m : monsters) {
                         System.out.println(m.getStats());
                     }
                     myCombat = new Combat(monsters, getHero());
+                }
+                // automagically pick up any items?
+                final List<Item> localItems = new ArrayList<>(myDungeon.getCurrentRoomItems());
+                for(var item : localItems) {
+                    pickupItem(item);
                 }
                 return true;
             }
@@ -106,8 +125,6 @@ public class DefaultModel implements GameModel {
         if(getHero().isDead()) return true;
         final var localItems = getRoomItems(getHeroLocation());
         if(localItems == null || localItems.isEmpty()) return false; // have to be on the exit.
-        return (
-                localItems.get(0) == Item.Exit
-                        && getHero().getPillars().size() == 4);
+        return localItems.get(0) == Item.Exit && getHero().hasAllPillars();
     }
 }
