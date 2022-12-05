@@ -7,19 +7,19 @@ import java.io.File;
 import java.io.IOException;
 
 public class GUIView extends JFrame {
-    private static Dungeon myDungeon;
-    private static final Map MY_MAP = new Map(6,4);
-    private static final Textlog MY_TEXTLOG = new Textlog();
+    private static GameModel myModel;
+//    private static final Textlog MY_TEXTLOG = ;
     private static final POV MY_POV = new POV();
     private static final Optionlog MY_OPTIONLOG = new Optionlog();
 
-    public GUIView(Dungeon theDungeon) {
-        myDungeon = theDungeon;
+    public GUIView(GameModel theModel) {
+        myModel = theModel;
         setTitle("Cave Rescue");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(MY_POV);
-        add(MY_MAP);
-        add(MY_TEXTLOG);
+        add(new Map(theModel.getRooms().length,
+                    theModel.getRooms()[0].length));
+        add(new Textlog());
         add(MY_OPTIONLOG);
         setLayout(new GridLayout(2,2));
         setResizable(false);
@@ -28,13 +28,20 @@ public class GUIView extends JFrame {
     }
 
     public static void main(String[] args) {
-        GUIView guiView = new GUIView(null);
+        DefaultModel model = new DefaultModel();
+        model.newDungeon(3,3);
+        model.setHero(new Warrior("Karl"));
+        GUIView guiView = new GUIView(model);
     }
 
     public static void appendTextlog(String theText) {
         Textlog.TEXT_AREA.append(" >" + theText + "\n");
         Textlog.TEXT_AREA.setCaretPosition(
                 Textlog.TEXT_AREA.getDocument().getLength());
+    }
+
+    public static void update() {
+        Textlog.updateHUD();
     }
 
     private static class POV extends JPanel{
@@ -50,9 +57,9 @@ public class GUIView extends JFrame {
 
         private void drawMonsters(Graphics g) {
             Image gremlin = null, skeleton = null, ogre = null;
-            Room heroRoom = myDungeon.getRooms()
-                    [myDungeon.getMyHeroLocation().getRow()]
-                    [myDungeon.getMyHeroLocation().getColumn()];
+            Room heroRoom = myModel.getRooms()
+                    [myModel.getHeroLocation().getRow()]
+                    [myModel.getHeroLocation().getColumn()];
             try {
                 gremlin = ImageIO.read(new File("sprites/Skitter.png"));
                 skeleton = ImageIO.read(new File("sprites/Crawler.png"));
@@ -107,7 +114,8 @@ public class GUIView extends JFrame {
         private Textlog() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
-            add(getHUD(0,0,0,0));
+            HUD = setHUD(myModel.getHero().getMyHealth(), 0, 0, 0);
+            add(HUD);
             TEXT_AREA.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
             TEXT_AREA.append("\n");
             JScrollPane scroll = new JScrollPane(TEXT_AREA);
@@ -126,7 +134,16 @@ public class GUIView extends JFrame {
             return textArea;
         }
 
-        private static JLabel getHUD(int health, int pillars, int hpots, int vpots) {
+        public static void updateHUD() {
+            Hero hero = myModel.getHero();
+            int health = hero.getMyHealth();
+            int pillars = hero.getPillars().size();
+            int hpots = hero.getHealingPots();
+            int vpots = hero.getVisionPots();
+            HUD = setHUD(health,pillars,hpots,vpots);
+        }
+
+        private static JLabel setHUD(int health, int pillars, int hpots, int vpots) {
             JLabel label = new JLabel("Health: " + health + " Pillars: " + pillars +
                     "/4 H.Pots: " + hpots + " V.Pots: " + vpots);
             label.setFont(new Font("Monospaced",Font.PLAIN ,24));
@@ -185,9 +202,9 @@ public class GUIView extends JFrame {
         private void drawRoom(Room theRoom, Graphics g) {
             int row = theRoom.getMyLocation().getRow();
             int col = theRoom.getMyLocation().getColumn();
-            Room heroRoom = myDungeon.getRooms()
-                    [myDungeon.getMyHeroLocation().getRow()]
-                    [myDungeon.getMyHeroLocation().getColumn()];
+            Room heroRoom = myModel.getRooms()
+                    [myModel.getHeroLocation().getRow()]
+                    [myModel.getHeroLocation().getColumn()];
             Image explored = null, tile = null, player = null;
             try {
                 explored = ImageIO.read(new File("sprites/explored.png"));
@@ -251,40 +268,38 @@ public class GUIView extends JFrame {
                 for (int i = 0; i < myRows; i++) {
                     for (int j = 0; j < myCols; j++) {
 
-                        g.drawImage(tile, i * TILE_SIZE, j * TILE_SIZE, this);
-//                        if (exploredRooms[i][j] != 0) {
-                            g.drawImage(explored,i * TILE_SIZE, j * TILE_SIZE, this);
-                            drawDoor(i,j,Direction.NORTH,g);
-                        drawDoor(i,j,Direction.SOUTH,g);
-                        drawDoor(i,j,Direction.EAST,g);
-                        drawDoor(i,j,Direction.WEST,g);
-//                            g.drawImage(player,i * TILE_SIZE, j * TILE_SIZE, this);
-//                        }
-
+                        drawRoom(myModel.getRooms()[i][j], g);
+//
+//                        g.drawImage(tile, i * TILE_SIZE, j * TILE_SIZE, this);
+//                        g.drawImage(explored,i * TILE_SIZE, j * TILE_SIZE, this);
+//                        drawDoor(i,j,Direction.NORTH,g);
+//                        drawDoor(i,j,Direction.SOUTH,g);
+//                        drawDoor(i,j,Direction.EAST,g);
+//                        drawDoor(i,j,Direction.WEST,g);
                     }
                 }
-                g.drawImage(player, 0, 0, this);
             } catch (IOException e) {
                 System.out.println("Missing sprites");
             }
         }
     }
     private static class Optionlog extends JPanel {
-        private static JButton[] myButtons = new JButton[5];
+        private static JButton[] myButtons = new JButton[3];
 
         private Optionlog() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
             setLayout(new GridLayout(10, 1));
-            myButtons[0] = makeButton("ATTACK");
-            myButtons[1] = makeButton("MOVE");
-            myButtons[2] = makeButton("USE ITEM");
-            myButtons[3] = makeButton("HELP");
-            myButtons[4] = makeButton("<- RETURN");
+            myButtons[0] = makeButton("MOVE");
+            myButtons[1] = makeButton("USE ITEM");
+            myButtons[2] = makeButton("HELP");
+//            myButtons[3] = makeButton("<- RETURN");
             for (JButton button : myButtons) {
                 add(button);
             }
+            myButtons[0].addActionListener(e -> {
 
+            });
         }
 
         private static JButton makeButton(String theText) {
