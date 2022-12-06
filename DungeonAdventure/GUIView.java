@@ -297,7 +297,7 @@ public class GUIView extends JFrame {
         private static final JPanel MOVE = movementPanel();
         private static final JPanel DIRECTION = directionPanel();
 //        private static JPanel targetsPanel = ;
-//        private static JPanel itemsPanel = ;
+        private static final JPanel ITEMS = itemPanel();
 
         private Optionlog() {
             setBackground(new Color(40,40,40));
@@ -305,6 +305,7 @@ public class GUIView extends JFrame {
             setLayout(new CardLayout());
             add(MOVE);
             add(DIRECTION);
+            add(ITEMS);
         }
         private static JPanel movementPanel() {
             JPanel panel = new JPanel();
@@ -313,13 +314,16 @@ public class GUIView extends JFrame {
             myButtons[0] = makeButton("MOVE");
             myButtons[1] = makeButton("USE ITEM");
             myButtons[2] = makeButton("HELP");
-//            myButtons[3] = makeButton("<- RETURN");
             for (int i = 0; i < 3; i++) {
                 panel.add(myButtons[i]);
             }
             myButtons[0].addActionListener(e -> {
                 MOVE.setVisible(false);
                 DIRECTION.setVisible(true);
+            });
+            myButtons[1].addActionListener(e -> {
+                MOVE.setVisible(false);
+                ITEMS.setVisible(true);
             });
             return panel;
         }
@@ -354,6 +358,22 @@ public class GUIView extends JFrame {
             myButtons[4].addActionListener(e -> {
                 MOVE.setVisible(true);
                 DIRECTION.setVisible(false);
+            });
+            return panel;
+        }
+        private static JPanel itemPanel() {
+            JPanel panel = new JPanel();
+            panel.setBackground(new Color(40,40,40));
+            panel.setLayout(new GridLayout(10, 1));
+            myButtons[0] = makeButton("USE HEALING");
+            myButtons[1] = makeButton("USE VISION");
+            myButtons[2] = makeButton("<- RETURN");
+            for (int i = 0; i < 3; i++) {
+                panel.add(myButtons[i]);
+            }
+            myButtons[2].addActionListener(e -> {
+                ITEMS.setVisible(false);
+                MOVE.setVisible(true);
             });
             return panel;
         }
