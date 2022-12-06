@@ -60,8 +60,6 @@ public class MonsterFactory {
                 "('Crawler', 100, 3, .8, 15, 30, .3, 15 ,30)";
         String query3 = "INSERT INTO monsters VALUES" +
                 "('Predator', 200, 2, .6, 20, 40, .1, 20, 40)";
-        String query4 = "INSERT INTO monsters VALUES" +
-                "('Awoken Horror', 330, 2, .6, 30, 40, .1, 30, 40)";
 
         try {
             Connection conn = ds.getConnection();
@@ -69,7 +67,6 @@ public class MonsterFactory {
             stmt.executeUpdate( query1 );
             stmt.executeUpdate( query2 );
             stmt.executeUpdate( query3 );
-            stmt.executeUpdate( query4 );
 
         } catch ( SQLException e ) {
             e.printStackTrace();
@@ -90,7 +87,6 @@ public class MonsterFactory {
             case("gremlin") -> rowID = 1;
             case("skeleton") -> rowID = 2;
             case("ogre") -> rowID = 3;
-            case("boss") -> rowID = 4;
         }
         String query = "SELECT * FROM monsters WHERE rowid = " + rowID;
 
