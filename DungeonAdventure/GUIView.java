@@ -86,7 +86,6 @@ public class GUIView extends JFrame {
                 }
                 count++;
             }
-            g.drawImage(gremlin, POS.x, POS.y, this);
         }
 
         @Override
