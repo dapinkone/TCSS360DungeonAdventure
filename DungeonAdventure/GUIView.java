@@ -10,6 +10,7 @@ public class GUIView extends JFrame {
     private static GameModel myModel;
 //    private static final Textlog MY_TEXTLOG = ;
     private static final POV MY_POV = new POV();
+    static Map map;
     private static final Optionlog MY_OPTIONLOG = new Optionlog();
 
     public GUIView(GameModel theModel) {
@@ -17,7 +18,7 @@ public class GUIView extends JFrame {
         setTitle("Cave Rescue");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(MY_POV);
-        add(new Map(theModel.getRooms().length,
+        add(map = new Map(theModel.getRooms().length,
                     theModel.getRooms()[0].length));
         add(new Textlog());
         add(MY_OPTIONLOG);
@@ -42,6 +43,7 @@ public class GUIView extends JFrame {
 
     public static void update() {
         Textlog.updateHUD();
+        map.repaint();
     }
 
     private static class POV extends JPanel{
@@ -199,8 +201,8 @@ public class GUIView extends JFrame {
         }
 
         private void drawRoom(Room theRoom, Graphics g) {
-            int row = theRoom.getMyLocation().getRow();
-            int col = theRoom.getMyLocation().getColumn();
+            int x = theRoom.getMyLocation().getColumn();
+            int y = theRoom.getMyLocation().getRow();
             Room heroRoom = myModel.getRooms()
                     [myModel.getHeroLocation().getRow()]
                     [myModel.getHeroLocation().getColumn()];
@@ -214,17 +216,17 @@ public class GUIView extends JFrame {
                 System.out.println("Missing sprites");
             }
 
-            g.drawImage(tile,row * TILE_SIZE, col * TILE_SIZE, this);
+            g.drawImage(tile,x * TILE_SIZE, y * TILE_SIZE, this);
 
             if (theRoom.getMyVisitedStatus()) {
-                g.drawImage(explored,row * TILE_SIZE, col * TILE_SIZE, this);
+                g.drawImage(explored,x * TILE_SIZE, y * TILE_SIZE, this);
                 for (Direction d: theRoom.getDoors()) {
                     if (theRoom.getDoor(d)) {
-                        drawDoor(row, col, d, g);
+                        drawDoor(x, y, d, g);
                     }
                 }
                 if (heroRoom == theRoom) {
-                    g.drawImage(player,row * TILE_SIZE, col * TILE_SIZE, this);
+                    g.drawImage(player,x * TILE_SIZE, y * TILE_SIZE, this);
                 } else {
                     drawItems(theRoom, g);
                 }
@@ -233,25 +235,33 @@ public class GUIView extends JFrame {
         }
 
         private void drawItems(Room theRoom, Graphics g) {
-            Image exit = null, items = null;
+            Image exit = null, items = null, vpot = null, hpot = null, pillar = null;
             try {
                 exit = ImageIO.read(new File("sprites/exit.png"));
                 items = ImageIO.read(new File("sprites/items.png"));
+                vpot = ImageIO.read(new File("sprites/visionpot.png"));
+                hpot = ImageIO.read(new File("sprites/healpot.png"));
+                pillar = ImageIO.read(new File("sprites/pillar.png"));
             } catch (IOException e) {
                 System.out.println("Missing Sprites");
             }
-            int row = theRoom.getMyLocation().getRow();
-            int col = theRoom.getMyLocation().getColumn();
+            int x = theRoom.getMyLocation().getColumn();
+            int y = theRoom.getMyLocation().getRow();
             if (theRoom.getMyItems().contains(Item.Exit)) {
-                g.drawImage(exit, row * TILE_SIZE, col * TILE_SIZE, this);
+                g.drawImage(exit, x * TILE_SIZE, y * TILE_SIZE, this);
             } else {
                 if (theRoom.getMyItems().size() > 1) {
-                    g.drawImage(items, row * TILE_SIZE, col * TILE_SIZE, this);
+                    g.drawImage(items, x * TILE_SIZE, y * TILE_SIZE, this);
                 } else {
-                    if (theRoom.getMyItems().contains(Item.HealingPotion)) {
-
+                    if (theRoom.getMyItems().contains(Item.PillarAbstraction) ||
+                            theRoom.getMyItems().contains(Item.PillarEncapsulation) ||
+                            theRoom.getMyItems().contains(Item.PillarPolymorphism) ||
+                            theRoom.getMyItems().contains(Item.PillarInheritance)) {
+                        g.drawImage(pillar, x * TILE_SIZE, y * TILE_SIZE, this);
+                    } else if (theRoom.getMyItems().contains(Item.HealingPotion)) {
+                        g.drawImage(hpot, x * TILE_SIZE, y * TILE_SIZE, this);
                     } else if (theRoom.getMyItems().contains(Item.VisionPotion)) {
-
+                        g.drawImage(vpot, x * TILE_SIZE, y * TILE_SIZE, this);
                     }
                 }
             }
@@ -283,22 +293,69 @@ public class GUIView extends JFrame {
         }
     }
     private static class Optionlog extends JPanel {
-        private static JButton[] myButtons = new JButton[3];
+        private static JButton[] myButtons = new JButton[5];
+        private static final JPanel MOVE = movementPanel();
+        private static final JPanel DIRECTION = directionPanel();
+//        private static JPanel targetsPanel = ;
+//        private static JPanel itemsPanel = ;
 
         private Optionlog() {
-            setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
-            setLayout(new GridLayout(10, 1));
+            setPreferredSize(new Dimension(WIDTH, HEIGHT));
+            setLayout(new CardLayout());
+            add(MOVE);
+            add(DIRECTION);
+        }
+        private static JPanel movementPanel() {
+            JPanel panel = new JPanel();
+            panel.setBackground(new Color(40,40,40));
+            panel.setLayout(new GridLayout(10, 1));
             myButtons[0] = makeButton("MOVE");
             myButtons[1] = makeButton("USE ITEM");
             myButtons[2] = makeButton("HELP");
 //            myButtons[3] = makeButton("<- RETURN");
-            for (JButton button : myButtons) {
-                add(button);
+            for (int i = 0; i < 3; i++) {
+                panel.add(myButtons[i]);
             }
             myButtons[0].addActionListener(e -> {
-
+                MOVE.setVisible(false);
+                DIRECTION.setVisible(true);
             });
+            return panel;
+        }
+        private static JPanel directionPanel() {
+            JPanel panel = new JPanel();
+            panel.setBackground(new Color(40,40,40));
+            panel.setLayout(new GridLayout(10, 1));
+            myButtons[0] = makeButton("NORTH");
+            myButtons[1] = makeButton("WEST");
+            myButtons[2] = makeButton("EAST");
+            myButtons[3] = makeButton("SOUTH");
+            myButtons[4] = makeButton("<- RETURN");
+            for (int i = 0; i < 5; i++) {
+                panel.add(myButtons[i]);
+            }
+            myButtons[0].addActionListener(e -> {
+                myModel.move(Direction.NORTH);
+                GUIView.update();
+            });
+            myButtons[1].addActionListener(e -> {
+                myModel.move(Direction.WEST);
+                GUIView.update();
+            });
+            myButtons[2].addActionListener(e -> {
+                myModel.move(Direction.EAST);
+                GUIView.update();
+            });
+            myButtons[3].addActionListener(e -> {
+                myModel.move(Direction.SOUTH);
+                GUIView.update();
+            });
+            myButtons[4].addActionListener(e -> {
+                MOVE.setVisible(true);
+                DIRECTION.setVisible(false);
+            });
+            return panel;
         }
 
         private static JButton makeButton(String theText) {
