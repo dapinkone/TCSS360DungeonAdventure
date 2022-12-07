@@ -342,7 +342,24 @@ public class GUIView extends JFrame {
             add(MOVE);
             add(DIRECTION);
             add(ITEMS);
+            add(COMBAT);
+            add(TARGETS);
         }
+
+        public static void enterCombat() {
+            MOVE.setVisible(false);
+            DIRECTION.setVisible(false);
+            ITEMS.setVisible(false);
+            TARGETS.setVisible(false);
+            COMBAT.setVisible(true);
+        }
+
+        public static void exitCombat() {
+            TARGETS.setVisible(false);
+            COMBAT.setVisible(false);
+            MOVE.setVisible(true);
+        }
+
         private static JPanel movementPanel() {
             JPanel panel = new JPanel();
             panel.setBackground(new Color(40,40,40));
@@ -350,9 +367,12 @@ public class GUIView extends JFrame {
             myButtons[0] = makeButton("MOVE");
             myButtons[1] = makeButton("USE ITEM");
             myButtons[2] = makeButton("HELP");
-            for (int i = 0; i < 3; i++) {
+            myButtons[3] = makeButton("SAVE GAME");
+            myButtons[4] = makeButton("[TEST] START COMBAT");
+            for (int i = 0; i < 4; i++) {
                 panel.add(myButtons[i]);
             }
+            panel.add(myButtons[4]);
             myButtons[0].addActionListener(e -> {
                 MOVE.setVisible(false);
                 DIRECTION.setVisible(true);
@@ -363,6 +383,12 @@ public class GUIView extends JFrame {
             });
             myButtons[2].addActionListener(e -> {
                 appendTextlog("Call for help?");
+            });
+            myButtons[3].addActionListener(e -> {
+
+            });
+            myButtons[4].addActionListener(e -> {
+                enterCombat();
             });
             return panel;
         }
@@ -410,6 +436,14 @@ public class GUIView extends JFrame {
             for (int i = 0; i < 3; i++) {
                 panel.add(myButtons[i]);
             }
+            myButtons[0].addActionListener(e -> {
+                ITEMS.setVisible(false);
+                MOVE.setVisible(true);
+            });
+            myButtons[1].addActionListener(e -> {
+                ITEMS.setVisible(false);
+                MOVE.setVisible(true);
+            });
             myButtons[2].addActionListener(e -> {
                 ITEMS.setVisible(false);
                 MOVE.setVisible(true);
@@ -427,6 +461,25 @@ public class GUIView extends JFrame {
             for (int i = 0; i < 4; i++) {
                 panel.add(myButtons[i]);
             }
+            myButtons[0].addActionListener(e -> {
+
+                TARGETS.setVisible(false);
+                COMBAT.setVisible(true);
+            });
+            myButtons[1].addActionListener(e -> {
+
+                TARGETS.setVisible(false);
+                COMBAT.setVisible(true);
+            });
+            myButtons[2].addActionListener(e -> {
+
+                TARGETS.setVisible(false);
+                COMBAT.setVisible(true);
+            });
+            myButtons[3].addActionListener(e -> {
+                TARGETS.setVisible(false);
+                COMBAT.setVisible(true);
+            });
             return panel;
         }
 
@@ -438,12 +491,26 @@ public class GUIView extends JFrame {
             myButtons[1] = makeButton("SPECIAL");
             myButtons[2] = makeButton("USE ITEM");
             myButtons[3] = makeButton("HELP");
+            myButtons[4] = makeButton("[TEST] END COMBAT");
             for (int i = 0; i < 4; i++) {
                 panel.add(myButtons[i]);
             }
+            panel.add(myButtons[4]);
             myButtons[0].addActionListener(e -> {
 
+                COMBAT.setVisible(false);
+                TARGETS.setVisible(true);
             });
+            myButtons[1].addActionListener(e -> {
+
+                COMBAT.setVisible(false);
+                TARGETS.setVisible(true);
+            });
+            myButtons[4].addActionListener(e -> {
+                COMBAT.setVisible(false);
+                MOVE.setVisible(true);
+            });
+
             return panel;
         }
 
