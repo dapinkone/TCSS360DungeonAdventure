@@ -51,7 +51,7 @@ public class GUIView extends JFrame {
     private static class POV extends JPanel{
         private static final int WIDTH = 700;
         private static final int HEIGHT = 400;
-        private static final Point POS = new Point(520,200);
+        private static final Point POS = new Point(380,160);
         private static final Point OFFSET = new Point(120,20);
 
         private POV() {
