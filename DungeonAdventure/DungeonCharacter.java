@@ -20,6 +20,7 @@ public abstract class DungeonCharacter implements Serializable {
                             final double theHitChance,
                             final int theMinDmg,
                             final int theMaxDmg) {
+        //TODO: make setters, make sure setters take proper input.
         myName = theName;
         myHealth = theHealth;
         myMaxHealth = theHealth;
