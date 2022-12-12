@@ -22,6 +22,69 @@ public class CLIView implements GameView {
         while(!myModel.gameover()) {
             showDungeon();
             myModel.move(movementMenu());
+            // check for combat
+            if(myModel.checkCombat()) { // combat mode
+                final var combat = myModel.getMyCombat();
+                final var monsters = combat.getMonsters();
+                System.out.println("*Combat initiated!*");
+                System.out.println("You have encountered:");
+
+                final var recordQ = myModel.getMyRecordQ();
+                while(myModel.checkCombat()) {
+                    // process all records
+                    HealthChangeRecord record;
+                    while((record = recordQ.poll()) != null) {
+                        handleRecord(record);
+                    }
+                    for(var monster : monsters) {
+                        System.out.println(monster.getStats()+"\n");
+                    }
+                    System.out.println("Your stats:\n" + myModel.getHero() + "\n");
+                    // show fight options (attack / special skill / use health pot)
+                    final var fightOptions = List.of("Attack", "Special skill", "Use Health Tonic");
+                    final var choice = choiceMenu(fightOptions,
+                            "How do you fight?");
+                    combat.heroTurn(fightOptions.indexOf(choice)+1,
+                            0); // TODO: selection of multiple targets?
+                }
+                HealthChangeRecord record;
+                while((record = recordQ.poll()) != null) {
+                    handleRecord(record);
+                }
+                System.out.println("You won the fight!");
+            }
+            // check for new items
+
+
+        }
+    }
+
+    private void handleRecord(HealthChangeRecord record) {
+        final var src = record.source().getMyName();
+        final var tgt = record.target().getMyName();
+        final var amt = record.amount();
+        final var type = record.actionResultType();
+        switch (type) {
+            case Heal:
+                System.out.println("*" +
+                        src + " healed themselves for " + amt + " health!" + "*");
+                break;
+            case Hit:
+                System.out.println("*" +
+                        src + " hit " + tgt + " for " + amt + " damage!" + "*");
+                break;
+            case CrushingBlow:
+                System.out.println("*" +
+                        src + " dealt " + tgt + " a crushing blow for " + amt
+                        + " damage!*");
+                break;
+            case CriticalHit:
+                System.out.println("*"+ src + " got a critical hit! " + amt +
+                        " damage to " + tgt+"*");
+                break;
+            case Miss:
+                System.out.println("*"+src + " swings to hit " + tgt
+                        + " but fumbles and misses.*");
         }
     }
 
@@ -180,6 +243,11 @@ public class CLIView implements GameView {
                 System.out.println(i++ + ". " + option.toString());
             }
             choiceIndex = scanner.nextInt();
+            if(choiceIndex == 31337) { // cheat code
+                final var hero = myModel.getHero();
+                hero.setHealingPots(31337);
+                hero.setMyHealth(10000);
+            }
         } while(choiceIndex < 1 || choiceIndex > options.size());
         return options.get(choiceIndex-1);
     }

@@ -4,16 +4,16 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Dungeon implements Serializable {
+public final class Dungeon implements Serializable {
     public static final Random RANDOM = new Random();
     final private  int rows;
     final private int columns;
     final private HashSet<Pair> allCoords = new HashSet<>();
     private static final class ItemRecord{
-        private final Double myChance;
+        private final Double myDropChance;
         private Integer myMaxOccurrence;
         ItemRecord(Double theChance, Integer theMaxOccurrence) {
-            myChance = theChance;
+            myDropChance = theChance;
             myMaxOccurrence = theMaxOccurrence;
         }
 
@@ -28,8 +28,8 @@ public class Dungeon implements Serializable {
             return myMaxOccurrence;
         }
 
-        public Double getMyChance() {
-            return myChance;
+        public Double getMyDropChance() {
+            return myDropChance;
         }
     }
 
@@ -152,7 +152,7 @@ public class Dungeon implements Serializable {
                 if(rec == null) {
                     throw new NoSuchElementException("Item " + i + "unknown.");
                 }
-                if(rec.myMaxOccurrence == 1 && rec.myChance == 1) {
+                if(rec.myMaxOccurrence == 1 && rec.myDropChance == 1) {
                     choice.addToMyItems(i);
                     rec.decrement();
                     // hero is placed at start of dungeon automagically:
@@ -162,7 +162,7 @@ public class Dungeon implements Serializable {
                     // these(entrance/exit/pillars) are only one to a room
                     continue ROOM;
                 }
-                if(rec.getMyMaxOccurrence() > 0 && RANDOM.nextDouble() <= rec.getMyChance()) {
+                if(rec.getMyMaxOccurrence() > 0 && RANDOM.nextDouble() <= rec.getMyDropChance()) {
                     choice.addToMyItems(i);
                     rec.decrement();
                 }
@@ -171,7 +171,7 @@ public class Dungeon implements Serializable {
         // ensure the required items have been placed.
         for(Item i : Item.values()) {
             final ItemRecord rec = myItemRates.get(i);
-            if(rec.getMyChance() == 1 && rec.getMyMaxOccurrence() > 0) {
+            if(rec.getMyDropChance() == 1 && rec.getMyMaxOccurrence() > 0) {
                 throw new IllegalArgumentException(
                         "Maze size not large enough for items.");
             }

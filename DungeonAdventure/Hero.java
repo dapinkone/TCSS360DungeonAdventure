@@ -1,10 +1,9 @@
 package DungeonAdventure;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class Hero extends DungeonCharacter implements Serializable {
 
@@ -26,29 +25,32 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
 
     /**
      * Class's special skill to be initialized in child classes.
-     * @return int indicating the success.
      */
-    public abstract int specialSkill();
+    public abstract void specialSkill(DungeonCharacter target);
     public HashMap<Item, Integer> getMyInventory() {
         return myInventory;
     }
     /**
      * Use a "Healing Tonic," restores 40 health but value can be changed.
+     *
      * @return
      */
-    public int useHealingPot() {
+    public HealthChangeRecord useHealingPot() {
         //if (healingPots == 0) return 0;
         final var quantity = myInventory.getOrDefault(Item.HealingPotion,0);
-        if(quantity == 0) return 0;
+        if(quantity == 0) return null;
         int healing = 40;
-        if (getMyHealth() + healing > getMyMaxHealth()) {
+        /*if (getMyHealth() + healing > getMyMaxHealth()) {
             setMyHealth(getMyMaxHealth());
         } else {
             setMyHealth(getMyMaxHealth() + healing);
-        }
+        }*/
+        heal(healing);
         myInventory.put(Item.HealingPotion, quantity - 1);
         //healingPots--;
-        return healing;
+        return new HealthChangeRecord(
+                this, this,
+                healing, ActionResultType.Heal);
     }
 
     public int useVisionPot() {
@@ -110,4 +112,11 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
         }
         return String.valueOf(string);
     }
+
+    public List<Item> getPillars() {
+        return new ArrayList<Item>();
+    }
+
+
+
 }

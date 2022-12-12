@@ -1,18 +1,21 @@
 package DungeonAdventure;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DefaultModel implements GameModel {
     private Dungeon myDungeon;
     private Combat myCombat;
     private final boolean cheatCanFleeCombat = true;
+    private final RecordQ myRecordQ = RecordQ.getInstance();
+    private final ArrayList<Item> newItems = new ArrayList<>();
     public DefaultModel() {
 
     }
-
+    @Override
+    public RecordQ getMyRecordQ() {
+        return myRecordQ;
+    }
     @Override
     public void newDungeon(int rows, int cols) {
         myDungeon = new Dungeon(rows, cols);
@@ -62,19 +65,18 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean pickupItem(Item theItem) {
-        final var cantPickup = List.of(Item.Entrance, Item.Exit, Item.Pit);
         final var roomItems = getRoomItems(getHeroLocation());
 
-        if(cantPickup.contains(theItem) || !roomItems.contains(theItem)) {
+        if(!theItem.canBePickedUp() || !roomItems.contains(theItem)) {
             return false;
         }
         // for any item, get the # held, and increase by one in inventory.
         final var inv = getHero().getMyInventory();
         final var count = inv.getOrDefault(theItem, 0);
         inv.put(theItem, count + 1);
+        newItems.add(theItem);
         //System.out.println("Picked up: " + theItem); // TODO: remove.
         roomItems.remove(theItem);
-
         return true;
     }
 
@@ -101,16 +103,14 @@ public class DefaultModel implements GameModel {
                 // if the new room has monsters in it, we have a combat encounter on our hands.
                 List<Monster> monsters = myDungeon.getRoom(getHeroLocation()).getMyMonsters();
                 if(monsters != null && monsters.size() > 0) {
-                    System.out.println("Combat encountered: ");
-                    for(var m : monsters) {
-                        System.out.println(m.getStats());
-                    }
                     myCombat = new Combat(monsters, getHero());
                 }
                 // automagically pick up any items?
                 final List<Item> localItems = new ArrayList<>(myDungeon.getCurrentRoomItems());
+
                 for(var item : localItems) {
-                    pickupItem(item);
+                    if(item.canBePickedUp())
+                        pickupItem(item);
                 }
                 return true;
             }
@@ -121,9 +121,17 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean checkCombat() {
-        return myCombat != null && !myCombat.isOver();
+        if(myCombat == null) return false;
+        if(myCombat.isOver()) {
+            myCombat = null;
+            return false;
+        }
+        return true;
     }
-
+    @Override
+    public Combat getMyCombat() {
+        return myCombat;
+    }
     @Override
     public Room[][] getRooms() {
         return myDungeon.getRooms();
@@ -136,5 +144,22 @@ public class DefaultModel implements GameModel {
         final var localItems = getRoomItems(getHeroLocation());
         if(localItems == null || localItems.isEmpty()) return false; // have to be on the exit.
         return localItems.get(0) == Item.Exit && getHero().hasAllPillars();
+    }
+
+    /***
+     * retrieves and returns the head of the gameEventsQueue;
+     * returns null if the queue is empty.
+     * @return gameEvent : the next event which is to be processed.
+     */
+    @Override
+    public HealthChangeRecord nextGameRecord() {
+        return myRecordQ.poll();
+    }
+
+    @Override
+    public ArrayList<Item> checkNewItems() {
+        final ArrayList<Item> ret = (ArrayList<Item>) newItems.clone();
+        newItems.clear();
+        return ret;
     }
 }

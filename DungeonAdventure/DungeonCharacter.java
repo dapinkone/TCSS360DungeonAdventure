@@ -11,8 +11,8 @@ public abstract class DungeonCharacter implements Serializable {
     private int myAttackSpeed;
     private double myHitChance;
     private double myDodgeChance = 0;
-    private int myMinDmg;
-    private int myMaxDmg;
+    final int myMinDmg;
+    final int myMaxDmg;
 
     public DungeonCharacter(final String theName,
                             final int theHealth,
@@ -38,20 +38,21 @@ public abstract class DungeonCharacter implements Serializable {
      * @param theTarget the target to attack
      * @return The damage, or 0 if missed or -1 if dodged by a hero.
      */
-    public int attack(final DungeonCharacter theTarget) {
+    public void attack(final DungeonCharacter theTarget) {
+        int amount = 0;
+        // if "dodged" / "blocked" or "miss", it's of type miss.
+        ActionResultType result = ActionResultType.Miss;
         if (RANDOM.nextDouble() <= myHitChance) {
-
-            if (RANDOM.nextDouble() <= theTarget.getMyDodgeChance()) {
-                return -1; //DODGED
-            } else {
+            if (RANDOM.nextDouble() >= theTarget.getMyDodgeChance()) {
                 int damage = RANDOM.nextInt(myMinDmg, myMaxDmg + 1);
-                theTarget.setMyHealth(theTarget.getMyHealth() - damage);
-                return damage; //HIT
+                theTarget.takeDamage(damage);
+                amount = damage;
+                result = ActionResultType.Hit;
             }
-
-        } else {
-            return 0; //MISSED
         }
+        RecordQ.getInstance().add(new HealthChangeRecord(
+                this,theTarget, amount, result
+        ));
     }
 
     public boolean isDead() {
@@ -73,7 +74,6 @@ public abstract class DungeonCharacter implements Serializable {
     public void setMyHealth(int myHealth) {
         this.myHealth = myHealth;
     }
-
     public int getMyMaxHealth() {
         return myMaxHealth;
     }
@@ -100,5 +100,10 @@ public abstract class DungeonCharacter implements Serializable {
         if (myDodgeChance > 0) string.append("\nBlock Chance: " + myDodgeChance * 100 + "%");
         return String.valueOf(string);
     }
-
+    public void heal(int amount) {
+        setMyHealth(Integer.min(getMyHealth() + amount, getMyMaxHealth()));
+    }
+    public void takeDamage(int amount) {
+        setMyHealth(getMyHealth()-amount);
+    }
 }
