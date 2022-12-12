@@ -13,18 +13,19 @@ public class Warrior extends Hero implements Serializable {
     /**
      * DungeonAdventure.Warrior special skill is Crushing Blow, which does big dmg at a random chance to hit.
      * Currently hits at a 50% chance
-     * @return The damage or 0 if missed.
      */
     @Override
-    public int specialSkill() {
+    public void specialSkill(DungeonCharacter target) {
         Random random = new Random();
+        int amount = 0;
+        ActionResultType resultType = ActionResultType.Miss;
         if (random.nextDouble() <= .5) {
             //Successful roll
-            int damage = random.nextInt(60, 150) + 1;
-            return damage;
-        } else {
-            //Miss roll
-            return 0;
+            amount = random.nextInt(60, 150) + 1;
+            resultType = ActionResultType.CrushingBlow;
         }
+        target.takeDamage(amount);
+        RecordQ.getInstance().add(
+                new HealthChangeRecord(this, target, amount, resultType));
     }
 }
