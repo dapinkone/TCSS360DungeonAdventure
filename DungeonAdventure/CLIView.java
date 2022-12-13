@@ -54,7 +54,18 @@ public class CLIView implements GameView {
                 System.out.println("You won the fight!");
             }
             // check for new items
+            final var newItems = myModel.checkNewItems();
+            if(!newItems.isEmpty()) {
+                System.out.println("New items found:" + newItems);
+            }
+            final var roomItems = myModel.getRoomItems(myModel.getHeroLocation());
 
+            if(!roomItems.isEmpty()) {
+                System.out.println("You see something in the room....:");
+                for(Item item : roomItems) {
+                    System.out.println("<" + item.name() + ">");
+                }
+            }
 
         }
     }
@@ -64,28 +75,20 @@ public class CLIView implements GameView {
         final var tgt = record.target().getMyName();
         final var amt = record.amount();
         final var type = record.actionResultType();
-        switch (type) {
-            case Heal:
-                System.out.println("*" +
-                        src + " healed themselves for " + amt + " health!" + "*");
-                break;
-            case Hit:
-                System.out.println("*" +
-                        src + " hit " + tgt + " for " + amt + " damage!" + "*");
-                break;
-            case CrushingBlow:
-                System.out.println("*" +
-                        src + " dealt " + tgt + " a crushing blow for " + amt
-                        + " damage!*");
-                break;
-            case CriticalHit:
-                System.out.println("*"+ src + " got a critical hit! " + amt +
-                        " damage to " + tgt+"*");
-                break;
-            case Miss:
-                System.out.println("*"+src + " swings to hit " + tgt
-                        + " but fumbles and misses.*");
-        }
+        System.out.println(
+                switch (type) {
+                    case Heal -> "*" + src + " healed themselves for "
+                            + amt + " health!*";
+                    case Hit -> "*" +
+                            src + " hit " + tgt + " for " + amt + " damage!*";
+                    case CrushingBlow -> "*" + src + " dealt " + tgt
+                            + " a crushing blow for " + amt + " damage!*";
+                    case CriticalHit ->
+                            "*" + src + " got a critical hit! " + amt +
+                                    " damage to " + tgt + "*";
+                    case Miss -> "*" + src + " swings to hit " + tgt
+                            + " but fumbles and misses.*";
+                });
     }
 
     private Direction movementMenu() {
