@@ -6,13 +6,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 public class MonsterFactory {
     private static MonsterFactory instance = new MonsterFactory();
 
     SQLiteDataSource ds = null;
-
+    private static java.sql.Connection connection;
     /**
      * Access point for the Singleton MonsterFactory class.
      * @return the global instance of MonsterFactory.
@@ -27,6 +28,7 @@ public class MonsterFactory {
         try {
             ds = new SQLiteDataSource();
             ds.setUrl("jdbc:sqlite:monsters.db");
+            connection = ds.getConnection();
         } catch ( Exception e ) {
             e.printStackTrace();
             System.exit(0);
@@ -44,8 +46,7 @@ public class MonsterFactory {
                 "MINHEAL int," +
                 "MAXHEAL int )";
         try {
-            Connection conn = ds.getConnection();
-            Statement stmt = conn.createStatement();
+            Statement stmt = connection.createStatement();
             stmt.executeUpdate("drop table if exists monsters");
             stmt.executeUpdate( query );
 
@@ -64,8 +65,7 @@ public class MonsterFactory {
                 "('Awoken Horror', 330, 2, .6, 30, 40, .1, 30, 40)";
 
         try {
-            Connection conn = ds.getConnection();
-            Statement stmt = conn.createStatement();
+            Statement stmt = connection.createStatement();
             stmt.executeUpdate( query1 );
             stmt.executeUpdate( query2 );
             stmt.executeUpdate( query3 );
@@ -77,7 +77,6 @@ public class MonsterFactory {
         }
 
     }
-
     /**
      * Generates a monster when given the name of the monster. Translates the name into
      * the in-game alias.
@@ -86,17 +85,19 @@ public class MonsterFactory {
      */
     public Monster generateMonster(String theName) {
         int rowID = 0;
-        switch (theName) {
-            case("gremlin") -> rowID = 1;
-            case("skeleton") -> rowID = 2;
-            case("ogre") -> rowID = 3;
-            case("boss") -> rowID = 4;
+        switch (theName.toLowerCase()) {
+            case("skitter") -> rowID = 1;
+            case("crawler") -> rowID = 2;
+            case("predator") -> rowID = 3;
+            case("awoken horror") -> rowID = 4;
+            default -> {
+                throw new NoSuchElementException(theName + " not a valid monster type.");
+            }
         }
         String query = "SELECT * FROM monsters WHERE rowid = " + rowID;
 
         try {
-            Connection conn = ds.getConnection();
-            Statement stmt = conn.createStatement();
+            Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             return new Monster(
                     rs.getString("name"),
@@ -125,9 +126,9 @@ public class MonsterFactory {
         int num = rand.nextInt(3) + 1;
         String name = "";
         switch (num) {
-            case(1)-> name = "gremlin";
-            case(2)-> name = "skeleton";
-            case(3)-> name = "ogre";
+            case(1)-> name = "skitter";
+            case(2)-> name = "crawler";
+            case(3)-> name = "predator";
         }
         return generateMonster(name);
     }

@@ -1,6 +1,7 @@
 package DungeonAdventure;
 
 import java.io.Serializable;
+import java.util.List;
 
 public enum Item implements Serializable {
     /***
@@ -14,5 +15,8 @@ public enum Item implements Serializable {
     PillarEncapsulation,
     PillarInheritance,
     PillarPolymorphism,
-    Pit
+    Pit;
+    public boolean canBePickedUp() {
+        return !List.of(Entrance, Exit, Pit).contains(this);
+    }
 }

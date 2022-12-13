@@ -1,6 +1,5 @@
 package DungeonAdventure;
 
-
 import java.util.Random;
 
 public class Monster extends DungeonCharacter {
@@ -32,8 +31,16 @@ public class Monster extends DungeonCharacter {
         Random random = new Random();
         if (random.nextDouble() <= myHealChance) {
             int result = random.nextInt(myMinHeal + myMaxHeal) + 1;
-            setMyHealth(getMyHealth() + result);
+            heal(result);
             return result;
         } else return 0;
     }
+
+    @Override
+    public void takeDamage(int amount) {
+        setMyHealth(getMyHealth() - amount);
+        if(!isDead()) tryToHeal();
+    }
+
+
 }

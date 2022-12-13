@@ -13,17 +13,17 @@ public class Priestess extends Hero implements Serializable {
     /**
      * The priestess special is to heal. Currently coded to only heal themselves, but if in the future
      * multiple party members are added to the functionality then the code should be changed.
-     * @return The amount of healing
      */
     @Override
-    public int specialSkill() {
+    public void specialSkill(DungeonCharacter target) { // kinda breaks contract?
         Random random = new Random();
         int healing = random.nextInt(10, 50) + 1;
-        if (getMyHealth() + healing > getMyMaxHealth()) {
-            setMyHealth(getMyMaxHealth());
-        } else {
-            setMyHealth(getMyHealth() + healing);
-        }
-        return healing;
+        heal(healing);
+        RecordQ.getInstance().add(
+                new HealthChangeRecord(
+                        this,
+                        this,
+                        healing,
+                        ActionResultType.Heal));
     }
 }

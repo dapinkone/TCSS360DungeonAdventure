@@ -13,21 +13,30 @@ public class Thief extends Hero implements Serializable {
     /**
      * DungeonAdventure.Thief's skill which lets them surprise attack an enemy, with 40% chance to attack twice, another 40% to attack
      * regularly, and 20% to miss.
-     * @return 2 for critical success (2 attacks), 1 for normal attack, and 0 for miss.
      */
     @Override
-    public int specialSkill() {
+    public void specialSkill(DungeonCharacter target) {
         Random random = new Random();
         double chance = random.nextDouble();
+        var type = ActionResultType.Miss;
+        var amount = 0;
         if (chance > .6) {
             //Crit roll
-            return 2;
+            type = ActionResultType.CriticalHit;
+            amount = this.myMaxDmg * 2;
         } else if (chance > .2) {
             //Normal roll
-            return 1;
-        } else {
-            //Miss roll
-            return 0;
+            type = ActionResultType.Hit;
+            amount = random.nextInt(myMinDmg, myMaxDmg+1);
         }
+        target.takeDamage(amount);
+        RecordQ.getInstance().add(
+                new HealthChangeRecord(
+                        this,
+                        target,
+                        amount,
+                        type
+                )
+        );
     }
 }

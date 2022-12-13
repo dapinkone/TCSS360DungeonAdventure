@@ -2,24 +2,26 @@ package DungeonAdventure;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
 public class GUIView extends JFrame {
-    private static Dungeon myDungeon;
-    private static final Map MY_MAP = new Map(4,4);
-    private static final Textlog MY_TEXTLOG = new Textlog();
+    private static GameModel myModel;
+//    private static final Textlog MY_TEXTLOG = ;
     private static final POV MY_POV = new POV();
+    static Map map;
     private static final Optionlog MY_OPTIONLOG = new Optionlog();
 
-    public GUIView(Dungeon theDungeon) {
-        myDungeon = theDungeon;
+    public GUIView(GameModel theModel) {
+        myModel = theModel;
         setTitle("Cave Rescue");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(MY_POV);
-        add(MY_MAP);
-        add(MY_TEXTLOG);
+        add(map = new Map(theModel.getRooms().length,
+                    theModel.getRooms()[0].length));
+        add(new Textlog());
         add(MY_OPTIONLOG);
         setLayout(new GridLayout(2,2));
         setResizable(false);
@@ -28,7 +30,10 @@ public class GUIView extends JFrame {
     }
 
     public static void main(String[] args) {
-        GUIView guiView = new GUIView(null);
+        DefaultModel model = new DefaultModel();
+        model.newDungeon(4,4);
+        model.setHero(new Warrior("Karl"));
+        GUIView guiView = new GUIView(model);
     }
 
     public static void appendTextlog(String theText) {
@@ -37,39 +42,109 @@ public class GUIView extends JFrame {
                 Textlog.TEXT_AREA.getDocument().getLength());
     }
 
+    public static void update() {
+        Textlog.updateHUD();
+        map.repaint();
+        MY_POV.repaint();
+    }
+
     private static class POV extends JPanel{
         private static final int WIDTH = 700;
         private static final int HEIGHT = 400;
-        private static final Point POS1 = new Point(520,200);
-        private static final Point POS2 = new Point(400,180);
-        private static final Point POS3 = new Point(280,160);
+        private static final Point POS = new Point(380,160);
+        private static final Point OFFSET = new Point(120,20);
 
         private POV() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
+            setBorder(new LineBorder(Color.GREEN, 1));
+        }
+
+        private void drawMonsters(Graphics g) {
+            Image gremlin = null, skeleton = null, ogre = null;
+            Room heroRoom = myModel.getRooms()
+                    [myModel.getHeroLocation().getRow()]
+                    [myModel.getHeroLocation().getColumn()];
+            try {
+                gremlin = ImageIO.read(new File("sprites/Skitter.png"));
+                skeleton = ImageIO.read(new File("sprites/Crawler.png"));
+                ogre = ImageIO.read(new File("sprites/predator.png"));
+            } catch (IOException e) {
+                System.out.println("Missing Sprites");
+            }
+            int count = 0;
+            for (Monster monster : heroRoom.getMyMonsters()) {
+                String name = monster.getMyName();
+                switch (name) {
+                    case "Skitter" -> g.drawImage(gremlin,
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                    case "Crawler" -> g.drawImage(skeleton,
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                    case "Predator" -> g.drawImage(ogre,
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                }
+                count++;
+            }
+        }
+        private void drawItems(Graphics g) {
+            Image vpot = null, hpot = null, pillar = null;
+            Room heroRoom = myModel.getRooms()
+                    [myModel.getHeroLocation().getRow()]
+                    [myModel.getHeroLocation().getColumn()];
+            try {
+                hpot = ImageIO.read(new File("sprites/healpot.png"));
+                vpot = ImageIO.read(new File("sprites/visionpot.png"));
+                pillar = ImageIO.read(new File("sprites/pillar.png"));
+            } catch (IOException e) {
+                System.out.println("Missing Sprites");
+            }
+            int count = 0;
+            for (Item item : heroRoom.getMyItems()) {
+                if (item == Item.PillarAbstraction ||
+                        item == (Item.PillarEncapsulation) ||
+                        item == (Item.PillarPolymorphism) ||
+                        item == (Item.PillarInheritance)) {
+                    g.drawImage(pillar,
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                } else if (item == (Item.HealingPotion)) {
+                    g.drawImage(hpot,
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                } else if (item == (Item.VisionPotion)) {
+                    g.drawImage(vpot,
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                }
+                count++;
+            }
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Image bg = null;
-            Image vpot = null, hpot = null, pillar = null;
-            Image gremlin = null, skeleton = null, ogre = null;
             try {
                 bg = ImageIO.read(new File("sprites/Background.png"));
-                gremlin = ImageIO.read(new File("sprites/Skitter.png"));
-                skeleton = ImageIO.read(new File("sprites/Crawler.png"));
-                ogre = ImageIO.read(new File("sprites/predator.png"));
-                hpot = ImageIO.read(new File("sprites/healpot.png"));
-                vpot = ImageIO.read(new File("sprites/visionpot.png"));
-                pillar = ImageIO.read(new File("sprites/pillar.png"));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
             g.drawImage(bg, 0,0, this);
-            g.drawImage(gremlin, POS1.x,POS1.y, this);
-            g.drawImage(skeleton, POS2.x,POS2.y, this);
-            g.drawImage(ogre, POS3.x,POS3.y, this);
+            if (myModel.checkCombat()) {
+//            drawMonsters(g);
+            } else {
+                drawItems(g);
+            }
 
         }
     }
@@ -80,7 +155,8 @@ public class GUIView extends JFrame {
         private Textlog() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
-            add(getHUD(0,0,0,0));
+            HUD = setHUD(myModel.getHero().getMyHealth(), 0, 0, 0);
+            add(HUD);
             TEXT_AREA.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
             TEXT_AREA.append("\n");
             JScrollPane scroll = new JScrollPane(TEXT_AREA);
@@ -98,20 +174,28 @@ public class GUIView extends JFrame {
             textArea.setEditable(false);
             return textArea;
         }
-        private static JLabel getHUD(int health, int pillars, int hpots, int vpots) {
+
+        public static void updateHUD() {
+            Hero hero = myModel.getHero();
+            int health = hero.getMyHealth();
+            int pillars = hero.getPillars().size();
+            int hpots = hero.getHealingPots();
+            int vpots = hero.getVisionPots();
+            HUD = setHUD(health,pillars,hpots,vpots);
+        }
+
+        private static JLabel setHUD(int health, int pillars, int hpots, int vpots) {
             JLabel label = new JLabel("Health: " + health + " Pillars: " + pillars +
                     "/4 H.Pots: " + hpots + " V.Pots: " + vpots);
             label.setFont(new Font("Monospaced",Font.PLAIN ,24));
             label.setForeground(Color.GREEN);
             return label;
         }
+
         private static JTextField getTextField() {
             JTextField field = new JTextField(60);
             field.addActionListener(e -> {
                 appendTextlog(field.getText());
-                if (field.getText().equals("2 1")) {
-                    MY_MAP.exploreRoom(2,1);
-                }
                 field.setText("");
             });
             return field;
@@ -119,8 +203,6 @@ public class GUIView extends JFrame {
 
     }
     private static class Map extends JPanel{
-
-        private static int[][] exploredRooms;
         private static int myRows;
         private static int myCols;
         private static final int TILE_SIZE = 100;
@@ -131,23 +213,12 @@ public class GUIView extends JFrame {
         private static final Point WEST_DOOR = new Point(0,40);
         private static final Point EAST_DOOR = new Point(TILE_SIZE - HORI_DOOR.width,40);
 
-        private Map(int x, int y) {
+        private Map(int theRows, int theCol) {
 
             setBackground(new Color(40, 40, 40));
             setAlignmentX(CENTER_ALIGNMENT);
-            myRows = x;
-            myCols = y;
-            exploredRooms = new int[x][y];
-            for (int i = 0; i < x; i++) {
-                for (int j = 0; j < y; j++) {
-                    exploredRooms[i][j] = 0;
-                }
-            }
-        }
-
-        public void exploreRoom(int x, int y) {
-            exploredRooms[x][y] = 1;
-            repaint();
+            myRows = theRows;
+            myCols = theCol;
         }
 
         private void drawDoor(int theRow, int theCol, Direction theDirection, Graphics g) {
@@ -168,44 +239,73 @@ public class GUIView extends JFrame {
         }
 
         private void drawRoom(Room theRoom, Graphics g) {
-            int row = theRoom.getMyLocation().getRow();
-            int col = theRoom.getMyLocation().getColumn();
-            Room heroRoom = myDungeon.getRooms()
-                    [myDungeon.getMyHeroLocation().getRow()]
-                    [myDungeon.getMyHeroLocation().getColumn()];
-            Image explored = null;
-            Image tile = null;
-            Image player = null;
-            Image exit = null;
+            int x = theRoom.getMyLocation().getColumn();
+            int y = theRoom.getMyLocation().getRow();
+            Room heroRoom = myModel.getRooms()
+                    [myModel.getHeroLocation().getRow()]
+                    [myModel.getHeroLocation().getColumn()];
+            Image explored = null, tile = null, player = null;
             try {
                 explored = ImageIO.read(new File("sprites/explored.png"));
                 tile = ImageIO.read(new File("sprites/tile.png"));
                 player = ImageIO.read(new File("sprites/player.png"));
-                exit = ImageIO.read(new File("sprites/exit.png"));
+
             } catch (IOException e) {
                 System.out.println("Missing sprites");
             }
 
-            g.drawImage(tile,row * TILE_SIZE, col * TILE_SIZE, this);
+            g.drawImage(tile,x * TILE_SIZE, y * TILE_SIZE, this);
 
-            if (exploredRooms[row][col] != 0) {
-                g.drawImage(explored,row * TILE_SIZE, col * TILE_SIZE, this);
+            if (theRoom.getMyVisitedStatus()) {
+                g.drawImage(explored,x * TILE_SIZE, y * TILE_SIZE, this);
                 for (Direction d: theRoom.getDoors()) {
                     if (theRoom.getDoor(d)) {
-                        drawDoor(row, col, d, g);
+                        drawDoor(x, y, d, g);
                     }
                 }
                 if (heroRoom == theRoom) {
-                    g.drawImage(player,row * TILE_SIZE, col * TILE_SIZE, this);
-                } else if (theRoom.getMyItems().contains(Item.Exit)) {
-                    g.drawImage(exit,row * TILE_SIZE, col * TILE_SIZE, this);
-                } else if (theRoom.getMyItems().contains(Item.HealingPotion)) {
-
-                } else if (theRoom.getMyItems().contains(Item.VisionPotion)) {
-
+                    g.drawImage(player,x * TILE_SIZE, y * TILE_SIZE, this);
+                } else {
+                    drawItems(theRoom, g);
                 }
             }
 
+        }
+
+        private void drawItems(Room theRoom, Graphics g) {
+            Image exit = null, items = null, vpot = null, hpot = null, pillar = null, hazard = null;
+            try {
+                exit = ImageIO.read(new File("sprites/exit.png"));
+                items = ImageIO.read(new File("sprites/items.png"));
+                vpot = ImageIO.read(new File("sprites/visionpot.png"));
+                hpot = ImageIO.read(new File("sprites/healpot.png"));
+                pillar = ImageIO.read(new File("sprites/pillar.png"));
+                hazard = ImageIO.read(new File("sprites/warning.png"));
+            } catch (IOException e) {
+                System.out.println("Missing Sprites");
+            }
+            int x = theRoom.getMyLocation().getColumn();
+            int y = theRoom.getMyLocation().getRow();
+            if (theRoom.getMyItems().contains(Item.Exit)) {
+                g.drawImage(exit, x * TILE_SIZE, y * TILE_SIZE, this);
+            } else {
+                if (theRoom.getMyItems().size() > 1) {
+                    g.drawImage(items, x * TILE_SIZE, y * TILE_SIZE, this);
+                } else {
+                    if (theRoom.getMyItems().contains(Item.PillarAbstraction) ||
+                            theRoom.getMyItems().contains(Item.PillarEncapsulation) ||
+                            theRoom.getMyItems().contains(Item.PillarPolymorphism) ||
+                            theRoom.getMyItems().contains(Item.PillarInheritance)) {
+                        g.drawImage(pillar, x * TILE_SIZE, y * TILE_SIZE, this);
+                    } else if (theRoom.getMyItems().contains(Item.HealingPotion)) {
+                        g.drawImage(hpot, x * TILE_SIZE, y * TILE_SIZE, this);
+                    } else if (theRoom.getMyItems().contains(Item.VisionPotion)) {
+                        g.drawImage(vpot, x * TILE_SIZE, y * TILE_SIZE, this);
+                    } else if (theRoom.getMyItems().contains(Item.Pit)) {
+                        g.drawImage(hazard, x * TILE_SIZE, y * TILE_SIZE, this);
+                    }
+                }
+            }
         }
 
         @Override
@@ -218,19 +318,10 @@ public class GUIView extends JFrame {
                 for (int i = 0; i < myRows; i++) {
                     for (int j = 0; j < myCols; j++) {
 
-                        g.drawImage(tile, i * TILE_SIZE, j * TILE_SIZE, this);
-//                        if (exploredRooms[i][j] != 0) {
-                            g.drawImage(explored,i * TILE_SIZE, j * TILE_SIZE, this);
-                            drawDoor(i,j,Direction.NORTH,g);
-                        drawDoor(i,j,Direction.SOUTH,g);
-                        drawDoor(i,j,Direction.EAST,g);
-                        drawDoor(i,j,Direction.WEST,g);
-//                            g.drawImage(player,i * TILE_SIZE, j * TILE_SIZE, this);
-//                        }
+                        drawRoom(myModel.getRooms()[i][j], g);
 
                     }
                 }
-                g.drawImage(player, 0, 0, this);
             } catch (IOException e) {
                 System.out.println("Missing sprites");
             }
@@ -238,20 +329,189 @@ public class GUIView extends JFrame {
     }
     private static class Optionlog extends JPanel {
         private static JButton[] myButtons = new JButton[5];
+        private static final JPanel MOVE = movementPanel();
+        private static final JPanel DIRECTION = directionPanel();
+        private static final JPanel TARGETS = targetPanel();
+        private static final JPanel ITEMS = itemPanel();
+        private static final JPanel COMBAT = combatPanel();
 
         private Optionlog() {
-            setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40,40,40));
-            setLayout(new GridLayout(10, 1));
+            setPreferredSize(new Dimension(WIDTH, HEIGHT));
+            setLayout(new CardLayout());
+            add(MOVE);
+            add(DIRECTION);
+            add(ITEMS);
+            add(COMBAT);
+            add(TARGETS);
+        }
+
+        public static void enterCombat() {
+            MOVE.setVisible(false);
+            DIRECTION.setVisible(false);
+            ITEMS.setVisible(false);
+            TARGETS.setVisible(false);
+            COMBAT.setVisible(true);
+        }
+
+        public static void exitCombat() {
+            TARGETS.setVisible(false);
+            COMBAT.setVisible(false);
+            MOVE.setVisible(true);
+        }
+
+        private static JPanel movementPanel() {
+            JPanel panel = new JPanel();
+            panel.setBackground(new Color(40,40,40));
+            panel.setLayout(new GridLayout(10, 1));
+            myButtons[0] = makeButton("MOVE");
+            myButtons[1] = makeButton("USE ITEM");
+            myButtons[2] = makeButton("HELP");
+            myButtons[3] = makeButton("SAVE GAME");
+            myButtons[4] = makeButton("[TEST] START COMBAT");
+            for (int i = 0; i < 4; i++) {
+                panel.add(myButtons[i]);
+            }
+            panel.add(myButtons[4]);
+            myButtons[0].addActionListener(e -> {
+                MOVE.setVisible(false);
+                DIRECTION.setVisible(true);
+            });
+            myButtons[1].addActionListener(e -> {
+                MOVE.setVisible(false);
+                ITEMS.setVisible(true);
+            });
+            myButtons[2].addActionListener(e -> {
+                appendTextlog("Call for help?");
+            });
+            myButtons[3].addActionListener(e -> {
+
+            });
+            myButtons[4].addActionListener(e -> {
+                enterCombat();
+            });
+            return panel;
+        }
+        private static JPanel directionPanel() {
+            JPanel panel = new JPanel();
+            panel.setBackground(new Color(40,40,40));
+            panel.setLayout(new GridLayout(10, 1));
+            myButtons[0] = makeButton("NORTH");
+            myButtons[1] = makeButton("WEST");
+            myButtons[2] = makeButton("EAST");
+            myButtons[3] = makeButton("SOUTH");
+            myButtons[4] = makeButton("<- RETURN");
+            for (int i = 0; i < 5; i++) {
+                panel.add(myButtons[i]);
+            }
+            myButtons[0].addActionListener(e -> {
+                myModel.move(Direction.NORTH);
+                GUIView.update();
+            });
+            myButtons[1].addActionListener(e -> {
+                myModel.move(Direction.WEST);
+                GUIView.update();
+            });
+            myButtons[2].addActionListener(e -> {
+                myModel.move(Direction.EAST);
+                GUIView.update();
+            });
+            myButtons[3].addActionListener(e -> {
+                myModel.move(Direction.SOUTH);
+                GUIView.update();
+            });
+            myButtons[4].addActionListener(e -> {
+                MOVE.setVisible(true);
+                DIRECTION.setVisible(false);
+            });
+            return panel;
+        }
+        private static JPanel itemPanel() {
+            JPanel panel = new JPanel();
+            panel.setBackground(new Color(40,40,40));
+            panel.setLayout(new GridLayout(10, 1));
+            myButtons[0] = makeButton("USE HEALING");
+            myButtons[1] = makeButton("USE VISION");
+            myButtons[2] = makeButton("<- RETURN");
+            for (int i = 0; i < 3; i++) {
+                panel.add(myButtons[i]);
+            }
+            myButtons[0].addActionListener(e -> {
+                ITEMS.setVisible(false);
+                MOVE.setVisible(true);
+            });
+            myButtons[1].addActionListener(e -> {
+                ITEMS.setVisible(false);
+                MOVE.setVisible(true);
+            });
+            myButtons[2].addActionListener(e -> {
+                ITEMS.setVisible(false);
+                MOVE.setVisible(true);
+            });
+            return panel;
+        }
+        private static JPanel targetPanel() {
+            JPanel panel = new JPanel();
+            panel.setBackground(new Color(40,40,40));
+            panel.setLayout(new GridLayout(10, 1));
+            myButtons[0] = makeButton("1");
+            myButtons[1] = makeButton("2");
+            myButtons[2] = makeButton("3");
+            myButtons[3] = makeButton("<- RETURN");
+            for (int i = 0; i < 4; i++) {
+                panel.add(myButtons[i]);
+            }
+            myButtons[0].addActionListener(e -> {
+
+                TARGETS.setVisible(false);
+                COMBAT.setVisible(true);
+            });
+            myButtons[1].addActionListener(e -> {
+
+                TARGETS.setVisible(false);
+                COMBAT.setVisible(true);
+            });
+            myButtons[2].addActionListener(e -> {
+
+                TARGETS.setVisible(false);
+                COMBAT.setVisible(true);
+            });
+            myButtons[3].addActionListener(e -> {
+                TARGETS.setVisible(false);
+                COMBAT.setVisible(true);
+            });
+            return panel;
+        }
+
+        private static JPanel combatPanel() {
+            JPanel panel = new JPanel();
+            panel.setBackground(new Color(40,40,40));
+            panel.setLayout(new GridLayout(10, 1));
             myButtons[0] = makeButton("ATTACK");
-            myButtons[1] = makeButton("MOVE");
+            myButtons[1] = makeButton("SPECIAL");
             myButtons[2] = makeButton("USE ITEM");
             myButtons[3] = makeButton("HELP");
-            myButtons[4] = makeButton("<- RETURN");
-            for (JButton button : myButtons) {
-                add(button);
+            myButtons[4] = makeButton("[TEST] END COMBAT");
+            for (int i = 0; i < 4; i++) {
+                panel.add(myButtons[i]);
             }
+            panel.add(myButtons[4]);
+            myButtons[0].addActionListener(e -> {
 
+                COMBAT.setVisible(false);
+                TARGETS.setVisible(true);
+            });
+            myButtons[1].addActionListener(e -> {
+
+                COMBAT.setVisible(false);
+                TARGETS.setVisible(true);
+            });
+            myButtons[4].addActionListener(e -> {
+                COMBAT.setVisible(false);
+                MOVE.setVisible(true);
+            });
+
+            return panel;
         }
 
         private static JButton makeButton(String theText) {

@@ -1,25 +1,41 @@
 package DungeonAdventure;
 
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 public class DefaultModel implements GameModel {
     private Dungeon myDungeon;
+    private Combat myCombat;
+    private final boolean cheatCanFleeCombat = true;
+    private final RecordQ myRecordQ = RecordQ.getInstance();
+    private final ArrayList<Item> newItems = new ArrayList<>();
     public DefaultModel() {
 
     }
-
+    @Override
+    public RecordQ getMyRecordQ() {
+        return myRecordQ;
+    }
     @Override
     public void newDungeon(int rows, int cols) {
         myDungeon = new Dungeon(rows, cols);
     }
 
-    public void saveGame() {
-
+    public void saveGame() throws IOException {
+        try (var fileOut = new FileOutputStream("CaveRescue.save")) {
+            final var objStreamOut = new ObjectOutputStream(fileOut);
+            objStreamOut.writeObject(myDungeon);
+            objStreamOut.flush();
+        }
     }
 
-    public void loadGame() {
-
+    public void loadGame() throws IOException {
+        try (var fileIn = new FileInputStream("CaveRescue.save")) {
+            final var objStreamIn = new ObjectInputStream(fileIn);
+            myDungeon = (Dungeon) objStreamIn.readObject();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -49,7 +65,19 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean pickupItem(Item theItem) {
-        return false;
+        final var roomItems = getRoomItems(getHeroLocation());
+
+        if(!theItem.canBePickedUp() || !roomItems.contains(theItem)) {
+            return false;
+        }
+        // for any item, get the # held, and increase by one in inventory.
+        final var inv = getHero().getMyInventory();
+        final var count = inv.getOrDefault(theItem, 0);
+        inv.put(theItem, count + 1);
+        newItems.add(theItem);
+        //System.out.println("Picked up: " + theItem); // TODO: remove.
+        roomItems.remove(theItem);
+        return true;
     }
 
     @Override
@@ -59,7 +87,7 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean move(Direction theDirection) {
-        if(checkCombat()) {
+        if(checkCombat() && !cheatCanFleeCombat) {
            return false; // currently in combat. can't move.
         }
         final var location = getHeroLocation();
@@ -72,6 +100,18 @@ public class DefaultModel implements GameModel {
                         case NORTH -> new Pair(location.getRow()-1, location.getColumn());
                         case SOUTH -> new Pair(location.getRow()+1, location.getColumn());
                 });
+                // if the new room has monsters in it, we have a combat encounter on our hands.
+                List<Monster> monsters = myDungeon.getRoom(getHeroLocation()).getMyMonsters();
+                if(monsters != null && monsters.size() > 0) {
+                    myCombat = new Combat(monsters, getHero());
+                }
+                // automagically pick up any items?
+                final List<Item> localItems = new ArrayList<>(myDungeon.getCurrentRoomItems());
+
+                for(var item : localItems) {
+                    if(item.canBePickedUp())
+                        pickupItem(item);
+                }
                 return true;
             }
         }
@@ -81,9 +121,17 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean checkCombat() {
-        return false;
+        if(myCombat == null) return false;
+        if(myCombat.isOver()) {
+            myCombat = null;
+            return false;
+        }
+        return true;
     }
-
+    @Override
+    public Combat getMyCombat() {
+        return myCombat;
+    }
     @Override
     public Room[][] getRooms() {
         return myDungeon.getRooms();
@@ -95,8 +143,23 @@ public class DefaultModel implements GameModel {
         if(getHero().isDead()) return true;
         final var localItems = getRoomItems(getHeroLocation());
         if(localItems == null || localItems.isEmpty()) return false; // have to be on the exit.
-        return (
-                localItems.get(0) == Item.Exit
-                        && getHero().getPillars().size() == 4);
+        return localItems.get(0) == Item.Exit && getHero().hasAllPillars();
+    }
+
+    /***
+     * retrieves and returns the head of the gameEventsQueue;
+     * returns null if the queue is empty.
+     * @return gameEvent : the next event which is to be processed.
+     */
+    @Override
+    public HealthChangeRecord nextGameRecord() {
+        return myRecordQ.poll();
+    }
+
+    @Override
+    public ArrayList<Item> checkNewItems() {
+        final ArrayList<Item> ret = (ArrayList<Item>) newItems.clone();
+        newItems.clear();
+        return ret;
     }
 }

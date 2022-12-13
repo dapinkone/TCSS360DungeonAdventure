@@ -22,7 +22,73 @@ public class CLIView implements GameView {
         while(!myModel.gameover()) {
             showDungeon();
             myModel.move(movementMenu());
+            // check for combat
+            if(myModel.checkCombat()) { // combat mode
+                final var combat = myModel.getMyCombat();
+                final var monsters = combat.getMonsters();
+                System.out.println("*Combat initiated!*");
+                System.out.println("You have encountered:");
+
+                final var recordQ = myModel.getMyRecordQ();
+                while(myModel.checkCombat()) {
+                    // process all records
+                    HealthChangeRecord record;
+                    while((record = recordQ.poll()) != null) {
+                        handleRecord(record);
+                    }
+                    for(var monster : monsters) {
+                        System.out.println(monster.getStats()+"\n");
+                    }
+                    System.out.println("Your stats:\n" + myModel.getHero() + "\n");
+                    // show fight options (attack / special skill / use health pot)
+                    final var fightOptions = List.of("Attack", "Special skill", "Use Health Tonic");
+                    final var choice = choiceMenu(fightOptions,
+                            "How do you fight?");
+                    combat.heroTurn(fightOptions.indexOf(choice)+1,
+                            0); // TODO: selection of multiple targets?
+                }
+                HealthChangeRecord record;
+                while((record = recordQ.poll()) != null) {
+                    handleRecord(record);
+                }
+                System.out.println("You won the fight!");
+            }
+            // check for new items
+            final var newItems = myModel.checkNewItems();
+            if(!newItems.isEmpty()) {
+                System.out.println("New items found:" + newItems);
+            }
+            final var roomItems = myModel.getRoomItems(myModel.getHeroLocation());
+
+            if(!roomItems.isEmpty()) {
+                System.out.println("You see something in the room....:");
+                for(Item item : roomItems) {
+                    System.out.println("<" + item.name() + ">");
+                }
+            }
+
         }
+    }
+
+    private void handleRecord(HealthChangeRecord record) {
+        final var src = record.source().getMyName();
+        final var tgt = record.target().getMyName();
+        final var amt = record.amount();
+        final var type = record.actionResultType();
+        System.out.println(
+                switch (type) {
+                    case Heal -> "*" + src + " healed themselves for "
+                            + amt + " health!*";
+                    case Hit -> "*" +
+                            src + " hit " + tgt + " for " + amt + " damage!*";
+                    case CrushingBlow -> "*" + src + " dealt " + tgt
+                            + " a crushing blow for " + amt + " damage!*";
+                    case CriticalHit ->
+                            "*" + src + " got a critical hit! " + amt +
+                                    " damage to " + tgt + "*";
+                    case Miss -> "*" + src + " swings to hit " + tgt
+                            + " but fumbles and misses.*";
+                });
     }
 
     private Direction movementMenu() {
@@ -64,9 +130,13 @@ public class CLIView implements GameView {
     public void showHeroInventory() {
         final var hero = myModel.getHero();
         System.out.println("Our hero has these items:"); // this should be generalized. pots aren't special.
-        System.out.println("Healing pots" + hero.getHealingPots());
-        System.out.println("Healing pots" + hero.getVisionPots());
-        System.out.println("Pillars: " + hero.getPillars());
+//        System.out.println("Healing pots" + hero.getHealingPots());
+//        System.out.println("Healing pots" + hero.getVisionPots());
+//        System.out.println("Pillars: " + hero.getPillars());
+        final var inv = hero.getMyInventory();
+        for(Item item : inv.keySet()) {
+            System.out.println(item + " " + inv.get(item));
+        }
     }
 
     @Override
@@ -99,9 +169,11 @@ public class CLIView implements GameView {
         // TODO: should we be able to see monsters here?
         // append specific item representations / hero to center of room
         if(myModel.getHeroLocation().compareTo(theRoom.getMyLocation()) == 0) {
-            sb.append('%');
+            sb.append('%'); // hero representation
+        } else if(!theRoom.getMyMonsters().isEmpty()) {
+            sb.append("*"); // monsters in CLIView are displayed as *
         } else if(theRoom.getMyItems().size() > 1) {
-            sb.append("M");
+            sb.append("M"); // stack of multiple items is displayed as M
         } else if(theRoom.getMyItems().size() == 1) {
             var theItem = theRoom.getMyItems().get(0);
             sb.append(switch (theItem) {
@@ -174,6 +246,11 @@ public class CLIView implements GameView {
                 System.out.println(i++ + ". " + option.toString());
             }
             choiceIndex = scanner.nextInt();
+            if(choiceIndex == 31337) { // cheat code
+                final var hero = myModel.getHero();
+                hero.setHealingPots(31337);
+                hero.setMyHealth(10000);
+            }
         } while(choiceIndex < 1 || choiceIndex > options.size());
         return options.get(choiceIndex-1);
     }
