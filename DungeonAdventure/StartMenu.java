@@ -145,7 +145,7 @@ public class StartMenu extends JFrame {
                 }
                 case 4 -> {
                     setVisible(false);
-
+                    GUIView guiView = new GUIView(myModel);
                 }
             }
             field.setText("");
