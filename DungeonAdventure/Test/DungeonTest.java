@@ -4,7 +4,7 @@ import DungeonAdventure.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
-public class DungeonGenTest {
+public class DungeonTest {
     @Test
     public void testRightNumberOfRooms() {
         // verifying that the constructor for Dungeon creates the requested # of rooms.
