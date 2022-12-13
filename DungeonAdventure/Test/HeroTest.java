@@ -1,6 +1,8 @@
 package DungeonAdventure.Test;
 
+import DungeonAdventure.ActionResultType;
 import DungeonAdventure.DungeonCharacter;
+import DungeonAdventure.RecordQ;
 import org.junit.jupiter.api.*;
 import DungeonAdventure.Hero;
 
@@ -14,16 +16,22 @@ public class HeroTest {
         }
 
         @Override
-        public int specialSkill() {
-            return 0;
+        public void specialSkill(DungeonCharacter target) {
+
         }
     }
     @Test
     public void testDodge() {
         MockHero test1 = new MockHero("test1", 1, 1);
         MockHero test2 = new MockHero("test2", 1, 1);
-        int result = test1.attack(test2);
-        Assertions.assertEquals(-1, result);
+        test1.attack(test2);
+        final var result = RecordQ.getInstance().poll();
+        assert result != null;
+        final var type = result.actionResultType();
+        final var amount = result.amount();
+        final var src = result.source();
+        final var tgt = result.target();
+        Assertions.assertEquals(ActionResultType.Miss, type);
     }
 
     @Test
