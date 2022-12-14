@@ -88,6 +88,10 @@ public class GUIView extends JFrame {
         myTextlog.updateHUD();
         // set invalid directions to inactive, and valid to active.
         validateDirections();
+        myButtons.get("USE HEALING").setEnabled(
+                myModel.getHero().getHealingPots() >= 1);
+        myButtons.get("USE VISION").setEnabled(
+                myModel.getHero().getVisionPots() >= 1);
 
         guiMap.repaint();
         MY_POV.repaint();
