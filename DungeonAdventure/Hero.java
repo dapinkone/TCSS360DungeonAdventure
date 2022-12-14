@@ -44,13 +44,6 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
                 healing, ActionResultType.Heal));
     }
 
-    public void useVisionPot(Dungeon theDungeon) {
-        final int vpots = getVisionPots();
-        if(vpots <= 0) return;
-        theDungeon.useVisionPot();
-        theDungeon.getHero().setVisionPots(vpots - 1);
-    }
-
     public boolean hasAllPillars() {
         return myInventory.keySet().stream().filter(
                 x -> x.name().contains("Pillar")

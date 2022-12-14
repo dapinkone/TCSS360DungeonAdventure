@@ -537,7 +537,8 @@ public class GUIView extends JFrame {
                 Objects.requireNonNull(returnPanel).setVisible(true);
             });
             buttons[1].addActionListener(e -> { // todo: implement vision pots
-                //myModel.getHero().useVisionPot( );
+                myModel.useVisionPot();
+
                 ITEM_PANEL.setVisible(false);
                 Objects.requireNonNull(returnPanel).setVisible(true);
             });

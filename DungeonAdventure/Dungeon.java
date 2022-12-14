@@ -222,9 +222,13 @@ public final class Dungeon implements Serializable {
                 .collect(Collectors.toList());
     }
     public void useVisionPot() {
+        var vpots = myHero.getVisionPots();
+
+        if(vpots <= 0) return;
         for(var choice : borderCoords(myHeroLocation)) {
             getRoom(choice.destination).setVisible();
         }
+        myHero.setVisionPots(vpots-1);
     }
     private void generateMaze() {
         HashSet<Pair> visited = new HashSet<>(); // visited rooms
