@@ -7,8 +7,10 @@ public interface GameView {
 
     // character select
     void showHeroSelect();
+
     // help page
     void showHelp();
+
     // main dungeon display page
     void showDungeon();
 

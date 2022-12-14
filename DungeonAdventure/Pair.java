@@ -1,13 +1,16 @@
 package DungeonAdventure;
 
 import java.io.Serializable;
-
-public record Pair(Integer getRow, Integer getColumn)  implements Comparable, Serializable {
-    /***
-     * serves as an immutable container for (row, column) pairs.
-     */
-    /**
-     * Compares this object with the specified object for order.  Returns a
+/***
+ * Pair serves as an immutable container for (row, column) pairs.
+ * @param row
+ * @param column
+ * @author Peter Iriarte (Peter.iriarte24@gmail.com)
+ * @version 0.1
+ */
+public record Pair(Integer row,
+                   Integer column) implements Comparable, Serializable {
+    /**Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
      * than, equal to, or greater than the specified object.
      *
@@ -40,11 +43,15 @@ public record Pair(Integer getRow, Integer getColumn)  implements Comparable, Se
      */
     @Override
     public int compareTo(final Object o) {
-        if(o == null) throw new NullPointerException();
-        if(o instanceof final Pair other) {
-            final int rowComparison = this.getRow().compareTo(other.getRow());
-            if (rowComparison != 0) return rowComparison;
-            return this.getColumn().compareTo(other.getColumn());
+        if (o == null) {
+            throw new NullPointerException();
+        }
+        if (o instanceof final Pair other) {
+            final int rowComparison = this.row().compareTo(other.row());
+            if (rowComparison != 0) {
+                return rowComparison;
+            }
+            return this.column().compareTo(other.column());
         } else {
             throw new ClassCastException();
         }

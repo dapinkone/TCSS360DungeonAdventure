@@ -7,10 +7,10 @@ import java.util.List;
 public abstract class Hero extends DungeonCharacter implements Serializable {
 
     private final HashMap<Item, Integer> myInventory = new HashMap<>();
-//    private int healingPots;
+    //    private int healingPots;
 //    private int visionPots;
     private final String myClass;
- //   private List<String> pillars = new LinkedList<>();
+    //   private List<String> pillars = new LinkedList<>();
 
     public Hero(String theClass, String theName, int theHealth, int theAttackSpeed, double theHitChance,
                 int theMinDmg, int theMaxDmg,
@@ -26,15 +26,17 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
      * Class's special skill to be initialized in child classes.
      */
     public abstract void specialSkill(DungeonCharacter target);
+
     public HashMap<Item, Integer> getMyInventory() {
         return myInventory;
     }
+
     /**
      * Use a "Healing Tonic," restores 40 health but value can be changed.
      */
     public void useHealingPot() {
-        final var quantity = myInventory.getOrDefault(Item.HealingPotion,0);
-        if(quantity == 0) return;
+        final var quantity = myInventory.getOrDefault(Item.HealingPotion, 0);
+        if (quantity == 0) return;
         int healing = 60; // TODO: randomize healing
         heal(healing);
         myInventory.put(Item.HealingPotion, quantity - 1);
@@ -49,8 +51,9 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
                 x -> x.name().contains("Pillar")
                         && myInventory.get(x) == 1).count() == 4;
     }
+
     public int getHealingPots() {
-        return myInventory.getOrDefault(Item.HealingPotion,0);
+        return myInventory.getOrDefault(Item.HealingPotion, 0);
     }
 
     public void setHealingPots(int theHealingPots) {
@@ -58,7 +61,7 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
     }
 
     public int getVisionPots() {
-        return myInventory.getOrDefault(Item.VisionPotion,0);
+        return myInventory.getOrDefault(Item.VisionPotion, 0);
     }
 
     public void setVisionPots(int theVisionPots) {
@@ -71,8 +74,8 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
 
     public String toString() {
         final var pillars = myInventory.keySet().stream().filter(
-                x-> (myInventory.getOrDefault(x, 0) > 0)
-                && (x.name().contains("Pillar"))
+                x -> (myInventory.getOrDefault(x, 0) > 0)
+                        && (x.name().contains("Pillar"))
         ).map(Enum::toString).toList();
 
         StringBuilder string = new StringBuilder();
@@ -92,7 +95,6 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
                 item -> item.name().contains("Pillar")
         ).toList();
     }
-
 
 
 }
