@@ -1,5 +1,6 @@
 package DungeonAdventure;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,8 @@ public interface GameModel {
      * encapsulates all the functionality/interactions required to play the game.
      */
     void newDungeon(int rows, int cols);
-    void saveGame() throws IOException;
-    void loadGame() throws IOException;
+    void saveGame(File selectedFile) throws IOException;
+    void loadGame(File selectedFile) throws IOException;
 
     // data that the view needs access to display/play the game
 

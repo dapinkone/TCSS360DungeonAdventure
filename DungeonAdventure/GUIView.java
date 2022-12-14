@@ -19,6 +19,7 @@ public class GUIView extends JFrame {
     private Optionlog myOptionlog;
     private Map<String, JButton> myButtons;
     private static GUIView instance = null;
+    private static final JFileChooser fileChooser = new JFileChooser("./");
     public static GUIView getInstance(GameModel theModel) {
         if(instance  == null) {
             instance = new GUIView(theModel);
@@ -442,14 +443,26 @@ public class GUIView extends JFrame {
             });
             buttons[3].addActionListener(e -> { // SAVE GAME
                 try {
-                    myModel.saveGame();
+                    var cwd = fileChooser.getCurrentDirectory();
+                    var choice = fileChooser.showOpenDialog(this);
+                    if (choice != JFileChooser.APPROVE_OPTION) { // option cancelled.
+                        fileChooser.setCurrentDirectory(cwd);
+                        return;
+                    }
+                    myModel.saveGame(fileChooser.getSelectedFile());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             });
             buttons[4].addActionListener(e -> {
                 try {
-                    myModel.loadGame();
+                    var cwd = fileChooser.getCurrentDirectory();
+                    var choice = fileChooser.showOpenDialog(this);
+                    if (choice != JFileChooser.APPROVE_OPTION) { // option cancelled.
+                        fileChooser.setCurrentDirectory(cwd);
+                        return;
+                    }
+                    myModel.loadGame(fileChooser.getSelectedFile());
                     myTextlog.TEXT_AREA.setText("");
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);

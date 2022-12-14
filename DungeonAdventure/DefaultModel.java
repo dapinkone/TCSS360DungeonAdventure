@@ -22,16 +22,16 @@ public class DefaultModel implements GameModel {
     }
 
     @Override
-    public void saveGame() throws IOException {
-        try (var fileOut = new FileOutputStream("CaveRescue.save")) {
+    public void saveGame(File selectedFile) throws IOException {
+        try (var fileOut = new FileOutputStream(selectedFile)) {
             final var objStreamOut = new ObjectOutputStream(fileOut);
             objStreamOut.writeObject(myDungeon);
             objStreamOut.flush();
         }
     }
     @Override
-    public void loadGame() throws IOException {
-        try (var fileIn = new FileInputStream("CaveRescue.save")) {
+    public void loadGame(File selectedFile) throws IOException {
+        try (var fileIn = new FileInputStream(selectedFile)) {
             final var objStreamIn = new ObjectInputStream(fileIn);
             myDungeon = (Dungeon) objStreamIn.readObject();
         } catch (ClassNotFoundException e) {
