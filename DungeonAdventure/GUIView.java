@@ -115,7 +115,7 @@ public class GUIView extends JFrame {
     private class POV extends JPanel{
         private final int WIDTH = 700;
         private final int HEIGHT = 400;
-        private final Point POS = new Point(380,160);
+        private final Point POS = new Point(300,160);
         private final Point OFFSET = new Point(120,20);
 
         private POV() {
@@ -611,9 +611,11 @@ public class GUIView extends JFrame {
                 appendTextLog("Initiating bio-scanner...");
                 for (var monster : myModel.getMyCombat().getMonsters()) {
                     i++;
-                    String name = monster.getMyName();
-                    int health = monster.getMyHealth();
-                    appendTextLog("[" + i + "] " + name + " | Health: " + health);
+                    if (!monster.isDead()) {
+                        String name = monster.getMyName();
+                        int health = monster.getMyHealth();
+                        appendTextLog("[" + i + "] " + name + " | Health: " + health);
+                    }
                 }
             });
             for (var button : buttons) {
