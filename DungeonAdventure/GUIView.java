@@ -586,7 +586,7 @@ public class GUIView extends JFrame {
             panel.setBackground(new Color(40,40,40));
             panel.setLayout(new GridLayout(10, 1));
 
-            JButton[] buttons = new JButton[5];
+            JButton[] buttons = new JButton[4];
             buttons[0] = makeButton("ATTACK");
             buttons[1] = makeButton("SPECIAL");
             buttons[2] = makeButton("USE ITEM");
