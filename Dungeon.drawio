@@ -1,11 +1,11 @@
-<mxfile host="app.diagrams.net" modified="2022-11-02T20:12:45.454Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36" etag="oGwP7SYEAldxnkMGMlii" version="20.5.1" type="github">
+<mxfile host="app.diagrams.net" modified="2022-12-14T07:48:49.891Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" etag="Qs98U3j8TOYZEK8We4er" version="20.5.1" type="github">
   <diagram id="z6mJwRc4O_LnGbL8Kmjg" name="Page-1">
-    <mxGraphModel dx="2980" dy="1945" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+    <mxGraphModel dx="3365" dy="2427" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="nbmygcf86C2PuPvqUZod-41" value="Monster" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
-          <mxGeometry x="-1770" y="-420" width="160" height="138" as="geometry" />
+          <mxGeometry x="-1770" y="-440" width="160" height="138" as="geometry" />
         </mxCell>
         <mxCell id="nbmygcf86C2PuPvqUZod-42" value="- healChance: double" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="nbmygcf86C2PuPvqUZod-41" vertex="1">
           <mxGeometry y="26" width="160" height="26" as="geometry" />
@@ -363,6 +363,28 @@
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="-1060" y="-700" as="sourcePoint" />
             <mxPoint x="-980" y="-690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZhIrKOdw2gnVGBiS_Fly-1" value="MonsterFactory&#xa;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="1">
+          <mxGeometry x="-1910" y="-760" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="ZhIrKOdw2gnVGBiS_Fly-2" value="-ds: SQLiteDataSource" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="ZhIrKOdw2gnVGBiS_Fly-1">
+          <mxGeometry y="26" width="220" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ZhIrKOdw2gnVGBiS_Fly-5" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="ZhIrKOdw2gnVGBiS_Fly-1">
+          <mxGeometry y="52" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="ZhIrKOdw2gnVGBiS_Fly-6" value="+generateMonsters(String): Monster&#xa;+generateRandom(): Monster" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="ZhIrKOdw2gnVGBiS_Fly-1">
+          <mxGeometry y="60" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ZhIrKOdw2gnVGBiS_Fly-7" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.475;exitY=1.009;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ZhIrKOdw2gnVGBiS_Fly-6" target="nbmygcf86C2PuPvqUZod-41">
+          <mxGeometry x="-0.0826" y="13" width="160" relative="1" as="geometry">
+            <mxPoint x="-1780" y="-470" as="sourcePoint" />
+            <mxPoint x="-1620" y="-470" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-1800" y="-440" />
+            </Array>
+            <mxPoint y="1" as="offset" />
           </mxGeometry>
         </mxCell>
       </root>
