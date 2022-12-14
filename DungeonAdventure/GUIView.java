@@ -69,6 +69,7 @@ public class GUIView extends JFrame {
         }
         if(!myModel.checkCombat()) { // won the fight!
             myOptionlog.exitCombat();
+            update();
         }
     }
     public static void main(String[] args) {
@@ -141,10 +142,12 @@ public class GUIView extends JFrame {
                     "Crawler", crawler,
                     "Predator", predator);
             for (Monster monster : heroRoom.getMyMonsters()) {
-                g.drawImage(spriteLookup.get(monster.getMyName()),
-                        POS.x + OFFSET.x * count,
-                        POS.y + OFFSET.y * count,
-                        this);
+                if (!monster.isDead()) {
+                    g.drawImage(spriteLookup.get(monster.getMyName()),
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                }
                 count++;
             }
         }
