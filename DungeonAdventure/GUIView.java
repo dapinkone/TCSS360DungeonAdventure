@@ -126,9 +126,8 @@ public class GUIView extends JFrame {
 
         private void drawMonsters(Graphics g) {
             Image skitter = null, crawler = null, predator = null;
-            Room heroRoom = myModel.getRooms()
-                    [myModel.getHeroLocation().getRow()]
-                    [myModel.getHeroLocation().getColumn()];
+            Room heroRoom = myModel.getRoom(myModel.getHeroLocation());
+
             try {
                 skitter = ImageIO.read(new File("sprites/Skitter.png"));
                 crawler = ImageIO.read(new File("sprites/Crawler.png"));
@@ -412,9 +411,12 @@ public class GUIView extends JFrame {
         }
 
         public void exitCombat() {
+            // if this condition is true, we were in combat(showing combat panel)
+            // but we are no longer in combat; we must have won the fight.
             if(!myModel.checkCombat() && (COMBAT_PANEL.isVisible() || TARGETS.isVisible())) {
                 COMBAT_PANEL.setVisible(false);
                 MAIN_MENU_PANEL.setVisible(true);
+                appendTextLog("You won the fight!");
             }
             TARGETS.setVisible(false);
         }
@@ -540,7 +542,6 @@ public class GUIView extends JFrame {
             });
             buttons[1].addActionListener(e -> { // todo: implement vision pots
                 myModel.useVisionPot();
-
                 ITEM_PANEL.setVisible(false);
                 Objects.requireNonNull(returnPanel).setVisible(true);
             });

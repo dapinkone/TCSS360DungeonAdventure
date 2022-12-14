@@ -47,6 +47,8 @@ public interface GameModel {
     void spawnBossFight();
     boolean gameover();
 
+    boolean victoryCondition();
+
     HealthChangeRecord nextGameRecord();
     ArrayList<Item> checkNewItems();
 }
