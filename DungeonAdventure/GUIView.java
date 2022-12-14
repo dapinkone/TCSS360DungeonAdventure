@@ -616,10 +616,6 @@ public class GUIView extends JFrame {
                     appendTextLog("[" + i + "] " + name + " | Health: " + health);
                 }
             });
-            buttons[4].addActionListener(e -> { // "[TEST] END COMBAT"
-                COMBAT_PANEL.setVisible(false);
-                MAIN_MENU_PANEL.setVisible(true);
-            });
             for (var button : buttons) {
                 panel.add(button);
             }
