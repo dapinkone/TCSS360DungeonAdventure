@@ -165,11 +165,14 @@ public class DefaultModel implements GameModel {
     public boolean gameover() {
         // test if character dead or victory condition
         if(getHero().isDead()) return true;
-        final var localItems = getRoomItems(getHeroLocation());
-        if(localItems == null || localItems.isEmpty()) return false; // have to be on the exit.
-        return localItems.get(0) == Item.Exit && getHero().hasAllPillars();
+        return victoryCondition();
     }
-
+    @Override
+    public boolean victoryCondition() {
+        final var hero = getHero();
+        final var atExit = myDungeon.getCurrentRoomItems().contains(Item.Exit);
+        return !hero.isDead() && hero.hasAllPillars() && atExit && !checkCombat();
+    }
     /***
      * retrieves and returns the head of the gameEventsQueue;
      * returns null if the queue is empty.
