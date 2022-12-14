@@ -586,7 +586,7 @@ public class GUIView extends JFrame {
             panel.setBackground(new Color(40,40,40));
             panel.setLayout(new GridLayout(10, 1));
 
-            JButton[] buttons = new JButton[5];
+            JButton[] buttons = new JButton[4];
             buttons[0] = makeButton("ATTACK");
             buttons[1] = makeButton("SPECIAL");
             buttons[2] = makeButton("USE ITEM");
@@ -615,10 +615,6 @@ public class GUIView extends JFrame {
                     int health = monster.getMyHealth();
                     appendTextLog("[" + i + "] " + name + " | Health: " + health);
                 }
-            });
-            buttons[4].addActionListener(e -> { // "[TEST] END COMBAT"
-                COMBAT_PANEL.setVisible(false);
-                MAIN_MENU_PANEL.setVisible(true);
             });
             for (var button : buttons) {
                 panel.add(button);
