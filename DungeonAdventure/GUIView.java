@@ -152,7 +152,7 @@ public class GUIView extends JFrame {
             }
         }
         private void drawItems(Graphics g) {
-            Image vpot = null, hpot = null, pillar = null;
+            Image vpot = null, hpot = null, pillar = null, exit = null;
             Room heroRoom = myModel.getRooms()
                     [myModel.getHeroLocation().getRow()]
                     [myModel.getHeroLocation().getColumn()];
@@ -160,12 +160,19 @@ public class GUIView extends JFrame {
                 hpot = ImageIO.read(new File("sprites/healpot.png"));
                 vpot = ImageIO.read(new File("sprites/visionpot.png"));
                 pillar = ImageIO.read(new File("sprites/pillar.png"));
+                exit = ImageIO.read(new File("sprites/exit.png"));
+
             } catch (IOException e) {
                 System.out.println("Missing Sprites");
             }
             int count = 0;
             for (Item item : heroRoom.getMyItems()) {
-                if (item.name().contains("Pillar")) {
+                if (item == Item.Exit) {
+                    g.drawImage(exit,
+                            POS.x + OFFSET.x * count,
+                            POS.y + OFFSET.y * count,
+                            this);
+                } else if (item.name().contains("Pillar")) {
                     g.drawImage(pillar,
                             POS.x + OFFSET.x * count,
                             POS.y + OFFSET.y * count,
@@ -559,6 +566,7 @@ public class GUIView extends JFrame {
                 });
                 panel.add(buttons[i]);
             }
+
             buttons[3] = makeButton("<- RETURN");
             buttons[3].addActionListener(e -> {
                 TARGETS.setVisible(false);
