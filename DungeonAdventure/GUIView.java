@@ -572,6 +572,12 @@ public class GUIView extends JFrame { //implements GameView {
                     for (var item : myModel.checkNewItems()) {
                         appendTextLog("Found " + item.name() + "!");
                     }
+                    final var roomItems = myModel.getRoomItems(
+                            myModel.getHeroLocation());
+                    for(var item : roomItems) {
+                        appendTextLog("You see a " + item.name()
+                                + " in the room...");
+                    }
                     if (myModel.checkCombat()) {
                         enterCombat();
                     }
