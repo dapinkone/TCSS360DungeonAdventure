@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>DungeonAdventure</OriginalElement>
+  <nodes>
+    <node x="1256.5" y="3328.0">DungeonAdventure.CaveRescue</node>
+    <node x="1805.0" y="1854.0">DungeonAdventure.Priestess</node>
+    <node x="2114.0" y="1763.5">DungeonAdventure.GameView</node>
+    <node x="640.0" y="1840.5">DungeonAdventure.RecordQ</node>
+    <node x="1205.0" y="1854.0">DungeonAdventure.Warrior</node>
+    <node x="-115.0" y="501.0">DungeonAdventure.Monster</node>
+    <node x="328.0" y="3276.0">DungeonAdventure.GUIView</node>
+    <node x="1452.0" y="3341.0">DungeonAdventure.ActionResultType</node>
+    <node x="316.5" y="488.0">DungeonAdventure.Item</node>
+    <node x="-209.0" y="1594.0">DungeonAdventure.GameModel</node>
+    <node x="971.0" y="2354.0">DungeonAdventure.DefaultModel</node>
+    <node x="717.0" y="488.0">DungeonAdventure.Direction</node>
+    <node x="844.5" y="1593.0">DungeonAdventure.Dungeon</node>
+    <node x="127.0" y="1749.0">DungeonAdventure.Combat</node>
+    <node x="36.0" y="2628.0">DungeonAdventure.GUIView.POV</node>
+    <node x="1414.5" y="-345.0">DungeonAdventure.HealthChangeRecord</node>
+    <node x="1488.5" y="2485.0">DungeonAdventure.CLIView</node>
+    <node x="322.0" y="2615.0">DungeonAdventure.GUIView.GuiMap</node>
+    <node x="487.5" y="951.0">DungeonAdventure.Room</node>
+    <node x="744.5" y="1081.0">DungeonAdventure.Dungeon.ItemRecord</node>
+    <node x="-231.5" y="2563.0">DungeonAdventure.GUIView.Optionlog</node>
+    <node x="682.0" y="2614.5">DungeonAdventure.GUIView.MY_TEXTLOG</node>
+    <node x="901.0" y="3288.0">DungeonAdventure.StartMenu</node>
+    <node x="1014.5" y="1003.0">DungeonAdventure.Hero</node>
+    <node x="918.5" y="-69.0">DungeonAdventure.DungeonCharacter</node>
+    <node x="-204.5" y="3382.0">DungeonAdventure.Test</node>
+    <node x="1429.0" y="1121.0">DungeonAdventure.Dungeon.ChoicePair</node>
+    <node x="130.5" y="1094.0">DungeonAdventure.MonsterFactory</node>
+    <node x="1505.0" y="1854.0">DungeonAdventure.Thief</node>
+    <node x="1225.5" y="488.0">DungeonAdventure.Pair</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="DungeonAdventure.DefaultModel" target="DungeonAdventure.RecordQ" relationship="TO_ONE">
+      <point x="-60.0" y="-345.0" />
+      <point x="1066.0" y="2279.0" />
+      <point x="786.0" y="2279.0" />
+      <point x="60.0" y="58.5" />
+    </edge>
+    <edge source="DungeonAdventure.DefaultModel" target="DungeonAdventure.Combat" relationship="CREATE">
+      <point x="20.0" y="-345.0" />
+      <point x="1146.0" y="2239.0" />
+      <point x="326.0" y="2239.0" />
+      <point x="60.0" y="150.0" />
+    </edge>
+    <edge source="DungeonAdventure.RecordQ" target="DungeonAdventure.RecordQ" relationship="TO_ONE">
+      <point x="-86.0" y="-29.25" />
+      <point x="486.0" y="1869.75" />
+      <point x="486.0" y="2099.0" />
+      <point x="726.0" y="2099.0" />
+      <point x="0.0" y="58.5" />
+    </edge>
+    <edge source="DungeonAdventure.Warrior" target="DungeonAdventure.HealthChangeRecord" relationship="CREATE">
+      <point x="-80.0" y="-45.0" />
+      <point x="1266.0" y="1479.0" />
+      <point x="1766.0" y="1479.0" />
+      <point x="120.0" y="84.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GUIView.MY_TEXTLOG" relationship="TO_ONE">
+      <point x="-92.0" y="-123.0" />
+      <point x="374.0" y="3239.0" />
+      <point x="-114.0" y="3239.0" />
+      <point x="-114.0" y="3139.0" />
+      <point x="723.3333333333334" y="3139.0" />
+      <point x="-82.66666666666663" y="84.5" />
+    </edge>
+    <edge source="DungeonAdventure.Dungeon" target="DungeonAdventure.Room" relationship="TO_MANY">
+      <point x="-114.33333333333326" y="-306.0" />
+      <point x="891.6666666666667" y="1559.0" />
+      <point x="546.0" y="1559.0" />
+      <point x="-60.0" y="228.0" />
+    </edge>
+    <edge source="DungeonAdventure.Hero" target="DungeonAdventure.HealthChangeRecord" relationship="CREATE">
+      <point x="120.0" y="-176.0" />
+      <point x="1326.0" y="879.0" />
+      <point x="1446.0" y="879.0" />
+      <point x="1446.0" y="-101.0" />
+      <point x="1766.0" y="-101.0" />
+      <point x="120.0" y="84.0" />
+    </edge>
+    <edge source="DungeonAdventure.CLIView" target="DungeonAdventure.Thief" relationship="CREATE">
+      <point x="0.0" y="-214.0" />
+      <point x="0.0" y="45.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GUIView.Optionlog" relationship="TO_ONE">
+      <point x="-92.0" y="-123.0" />
+      <point x="374.0" y="3239.0" />
+      <point x="-114.0" y="3239.0" />
+      <point x="-114.0" y="3139.0" />
+      <point x="-194.0" y="3139.0" />
+      <point x="-80.0" y="136.0" />
+    </edge>
+    <edge source="DungeonAdventure.CLIView" target="DungeonAdventure.GameView" relationship="REALIZATION">
+      <point x="105.0" y="-214.0" />
+      <point x="1751.0" y="2459.0" />
+      <point x="2226.0" y="2459.0" />
+      <point x="0.0" y="135.5" />
+    </edge>
+    <edge source="DungeonAdventure.StartMenu" target="DungeonAdventure.Thief" relationship="CREATE">
+      <point x="50.0" y="-111.0" />
+      <point x="1056.0" y="3259.0" />
+      <point x="1386.0" y="3259.0" />
+      <point x="1386.0" y="3239.0" />
+      <point x="1466.0" y="3239.0" />
+      <point x="1466.0" y="1979.0" />
+      <point x="1646.0" y="1979.0" />
+      <point x="0.0" y="45.0" />
+    </edge>
+    <edge source="DungeonAdventure.Combat" target="DungeonAdventure.Monster" relationship="TO_MANY">
+      <point x="0.0" y="-150.0" />
+      <point x="266.0" y="1579.0" />
+      <point x="-94.0" y="1579.0" />
+      <point x="-94.0" y="1039.0" />
+      <point x="186.0" y="1039.0" />
+      <point x="100.0" y="58.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.Warrior" relationship="CREATE">
+      <point x="120.0" y="-123.0" />
+      <point x="586.0" y="3099.0" />
+      <point x="1346.0" y="3099.0" />
+      <point x="0.0" y="45.0" />
+    </edge>
+    <edge source="DungeonAdventure.Priestess" target="DungeonAdventure.HealthChangeRecord" relationship="CREATE">
+      <point x="-40.0" y="-45.0" />
+      <point x="1906.0" y="1779.0" />
+      <point x="1846.0" y="1779.0" />
+      <point x="1846.0" y="-101.0" />
+      <point x="1766.0" y="-101.0" />
+      <point x="120.0" y="84.0" />
+    </edge>
+    <edge source="DungeonAdventure.Dungeon" target="DungeonAdventure.Dungeon.ItemRecord" relationship="CREATE">
+      <point x="100.0" y="-306.0" />
+      <point x="1106.0" y="1439.0" />
+      <point x="927.0" y="1439.0" />
+      <point x="61.0" y="98.0" />
+    </edge>
+    <edge source="DungeonAdventure.Room" target="DungeonAdventure.Item" relationship="TO_MANY">
+      <point x="0.0" y="-228.0" />
+      <point x="606.0" y="919.0" />
+      <point x="886.0" y="919.0" />
+      <point x="886.0" y="819.0" />
+      <point x="426.0" y="819.0" />
+      <point x="0.0" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.DefaultModel" target="DungeonAdventure.Item" relationship="TO_MANY">
+      <point x="-60.0" y="-345.0" />
+      <point x="1066.0" y="2279.0" />
+      <point x="426.0" y="2279.0" />
+      <point x="0.0" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.Dungeon" target="DungeonAdventure.Pair" relationship="TO_MANY">
+      <point x="-114.33333333333326" y="-306.0" />
+      <point x="891.6666666666667" y="1559.0" />
+      <point x="546.0" y="1559.0" />
+      <point x="546.0" y="1499.0" />
+      <point x="466.0" y="1499.0" />
+      <point x="466.0" y="899.0" />
+      <point x="1166.0" y="899.0" />
+      <point x="1166.0" y="659.0" />
+      <point x="1275.75" y="659.0" />
+      <point x="-50.25" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GUIView" relationship="CREATE">
+      <point x="-138.0" y="61.5" />
+      <point x="146.0" y="3460.5" />
+      <point x="146.0" y="3699.0" />
+      <point x="397.0" y="3699.0" />
+      <point x="-69.0" y="123.0" />
+    </edge>
+    <edge source="DungeonAdventure.Room" target="DungeonAdventure.Pair" relationship="TO_ONE">
+      <point x="0.0" y="-228.0" />
+      <point x="606.0" y="919.0" />
+      <point x="886.0" y="919.0" />
+      <point x="886.0" y="839.0" />
+      <point x="1166.0" y="839.0" />
+      <point x="1166.0" y="659.0" />
+      <point x="1275.75" y="659.0" />
+      <point x="-50.25" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.DefaultModel" relationship="CREATE">
+      <point x="120.0" y="-123.0" />
+      <point x="586.0" y="3159.0" />
+      <point x="1346.0" y="3159.0" />
+      <point x="1346.0" y="3079.0" />
+      <point x="1126.0" y="3079.0" />
+      <point x="0.0" y="345.0" />
+    </edge>
+    <edge source="DungeonAdventure.RecordQ" target="DungeonAdventure.RecordQ" relationship="CREATE">
+      <point x="-86.0" y="29.25" />
+      <point x="506.0" y="1928.25" />
+      <point x="506.0" y="2079.0" />
+      <point x="668.6666666666667" y="2079.0" />
+      <point x="-57.33333333333333" y="58.5" />
+    </edge>
+    <edge source="DungeonAdventure.Hero" target="DungeonAdventure.DungeonCharacter" relationship="GENERALIZATION">
+      <point x="0.0" y="-176.0" />
+      <point x="100.0" y="228.0" />
+    </edge>
+    <edge source="DungeonAdventure.Room" target="DungeonAdventure.Direction" relationship="TO_MANY">
+      <point x="0.0" y="-228.0" />
+      <point x="606.0" y="919.0" />
+      <point x="886.0" y="919.0" />
+      <point x="60.0" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.Combat" target="DungeonAdventure.DungeonCharacter" relationship="TO_MANY">
+      <point x="0.0" y="-150.0" />
+      <point x="266.0" y="1579.0" />
+      <point x="-94.0" y="1579.0" />
+      <point x="-94.0" y="1559.0" />
+      <point x="-134.0" y="1559.0" />
+      <point x="-134.0" y="439.0" />
+      <point x="1006.0" y="439.0" />
+      <point x="-100.0" y="228.0" />
+    </edge>
+    <edge source="DungeonAdventure.Hero" target="DungeonAdventure.Item" relationship="TO_MANY">
+      <point x="-120.0" y="-176.0" />
+      <point x="1086.0" y="799.0" />
+      <point x="426.0" y="799.0" />
+      <point x="0.0" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GUIView.POV" relationship="TO_ONE">
+      <point x="-92.0" y="-123.0" />
+      <point x="374.0" y="3239.0" />
+      <point x="-114.0" y="3239.0" />
+      <point x="-114.0" y="3139.0" />
+      <point x="79.33333333333331" y="3139.0" />
+      <point x="-86.66666666666669" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.CLIView" target="DungeonAdventure.Priestess" relationship="CREATE">
+      <point x="0.0" y="-214.0" />
+      <point x="1646.0" y="2439.0" />
+      <point x="1946.0" y="2439.0" />
+      <point x="0.0" y="45.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView.POV" target="DungeonAdventure.GUIView" relationship="INNER_CLASS">
+      <point x="0.0" y="71.0" />
+      <point x="166.0" y="3119.0" />
+      <point x="466.0" y="3119.0" />
+      <point x="0.0" y="-123.0" />
+    </edge>
+    <edge source="DungeonAdventure.StartMenu" target="DungeonAdventure.Priestess" relationship="CREATE">
+      <point x="50.0" y="-111.0" />
+      <point x="1056.0" y="3259.0" />
+      <point x="1386.0" y="3259.0" />
+      <point x="1386.0" y="3239.0" />
+      <point x="1946.0" y="3239.0" />
+      <point x="0.0" y="45.0" />
+    </edge>
+    <edge source="DungeonAdventure.Dungeon" target="DungeonAdventure.Dungeon.ChoicePair" relationship="CREATE">
+      <point x="100.0" y="-306.0" />
+      <point x="1106.0" y="1439.0" />
+      <point x="1604.5" y="1439.0" />
+      <point x="58.5" y="58.0" />
+    </edge>
+    <edge source="DungeonAdventure.Thief" target="DungeonAdventure.HealthChangeRecord" relationship="CREATE">
+      <point x="67.33333333333326" y="-45.0" />
+      <point x="1713.3333333333333" y="1819.0" />
+      <point x="1806.0" y="1819.0" />
+      <point x="1806.0" y="-101.0" />
+      <point x="1766.0" y="-101.0" />
+      <point x="120.0" y="84.0" />
+    </edge>
+    <edge source="DungeonAdventure.Direction" target="DungeonAdventure.Direction" relationship="TO_MANY">
+      <point x="-109.0" y="-0.0" />
+      <point x="566.0" y="559.0" />
+      <point x="566.0" y="779.0" />
+      <point x="771.5" y="779.0" />
+      <point x="-54.5" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.HealthChangeRecord" target="DungeonAdventure.DungeonCharacter" relationship="TO_ONE">
+      <point x="-120.0" y="84.0" />
+      <point x="1526.0" y="-121.0" />
+      <point x="1006.0" y="-121.0" />
+      <point x="-100.0" y="-228.0" />
+    </edge>
+    <edge source="DungeonAdventure.Monster" target="DungeonAdventure.DungeonCharacter" relationship="GENERALIZATION">
+      <point x="0.0" y="-58.0" />
+      <point x="86.0" y="459.0" />
+      <point x="1206.0" y="459.0" />
+      <point x="100.0" y="228.0" />
+    </edge>
+    <edge source="DungeonAdventure.Thief" target="DungeonAdventure.Hero" relationship="GENERALIZATION">
+      <point x="-80.0" y="-45.0" />
+      <point x="1566.0" y="1799.0" />
+      <point x="1426.0" y="1799.0" />
+      <point x="1426.0" y="1379.0" />
+      <point x="1301.75" y="1379.0" />
+      <point x="95.75" y="176.0" />
+    </edge>
+    <edge source="DungeonAdventure.StartMenu" target="DungeonAdventure.Hero" relationship="TO_ONE">
+      <point x="-60.0" y="-111.0" />
+      <point x="946.0" y="3239.0" />
+      <point x="1306.0" y="3239.0" />
+      <point x="1306.0" y="2259.0" />
+      <point x="466.0" y="2259.0" />
+      <point x="466.0" y="1459.0" />
+      <point x="1110.25" y="1459.0" />
+      <point x="-95.75" y="176.0" />
+    </edge>
+    <edge source="DungeonAdventure.DefaultModel" target="DungeonAdventure.GameModel" relationship="REALIZATION">
+      <point x="-100.0" y="-345.0" />
+      <point x="1026.0" y="2319.0" />
+      <point x="26.0" y="2319.0" />
+      <point x="80.0" y="305.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GUIView.GuiMap" relationship="CREATE">
+      <point x="120.0" y="-123.0" />
+      <point x="100.0" y="84.0" />
+    </edge>
+    <edge source="DungeonAdventure.StartMenu" target="DungeonAdventure.DefaultModel" relationship="CREATE">
+      <point x="50.0" y="-111.0" />
+      <point x="1056.0" y="3259.0" />
+      <point x="1386.0" y="3259.0" />
+      <point x="1386.0" y="3179.0" />
+      <point x="1346.0" y="3179.0" />
+      <point x="1346.0" y="3079.0" />
+      <point x="1126.0" y="3079.0" />
+      <point x="0.0" y="345.0" />
+    </edge>
+    <edge source="DungeonAdventure.Combat" target="DungeonAdventure.Hero" relationship="TO_ONE">
+      <point x="0.0" y="-150.0" />
+      <point x="266.0" y="1579.0" />
+      <point x="-94.0" y="1579.0" />
+      <point x="-94.0" y="1479.0" />
+      <point x="466.0" y="1479.0" />
+      <point x="466.0" y="1459.0" />
+      <point x="1110.25" y="1459.0" />
+      <point x="-95.75" y="176.0" />
+    </edge>
+    <edge source="DungeonAdventure.Room" target="DungeonAdventure.Monster" relationship="TO_MANY">
+      <point x="0.0" y="-228.0" />
+      <point x="606.0" y="919.0" />
+      <point x="886.0" y="919.0" />
+      <point x="886.0" y="859.0" />
+      <point x="186.0" y="859.0" />
+      <point x="100.0" y="58.0" />
+    </edge>
+    <edge source="DungeonAdventure.Warrior" target="DungeonAdventure.Hero" relationship="GENERALIZATION">
+      <point x="80.0" y="-45.0" />
+      <point x="1426.0" y="1379.0" />
+      <point x="1301.75" y="1379.0" />
+      <point x="95.75" y="176.0" />
+    </edge>
+    <edge source="DungeonAdventure.Dungeon.ChoicePair" target="DungeonAdventure.Dungeon" relationship="INNER_CLASS">
+      <point x="-58.5" y="58.0" />
+      <point x="1487.5" y="1399.0" />
+      <point x="986.0" y="1399.0" />
+      <point x="-20.0" y="-306.0" />
+    </edge>
+    <edge source="DungeonAdventure.Dungeon.ChoicePair" target="DungeonAdventure.Pair" relationship="TO_ONE">
+      <point x="0.0" y="-58.0" />
+      <point x="1546.0" y="899.0" />
+      <point x="1166.0" y="899.0" />
+      <point x="1166.0" y="659.0" />
+      <point x="1275.75" y="659.0" />
+      <point x="-50.25" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GUIView.POV" relationship="CREATE">
+      <point x="120.0" y="-123.0" />
+      <point x="586.0" y="3099.0" />
+      <point x="246.0" y="3099.0" />
+      <point x="80.0" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.CaveRescue" target="DungeonAdventure.CLIView" relationship="CREATE">
+      <point x="0.0" y="-71.0" />
+      <point x="1346.0" y="3219.0" />
+      <point x="1646.0" y="3219.0" />
+      <point x="0.0" y="214.0" />
+    </edge>
+    <edge source="DungeonAdventure.Priestess" target="DungeonAdventure.Hero" relationship="GENERALIZATION">
+      <point x="-80.0" y="-45.0" />
+      <point x="1866.0" y="1799.0" />
+      <point x="1426.0" y="1799.0" />
+      <point x="1426.0" y="1379.0" />
+      <point x="1301.75" y="1379.0" />
+      <point x="95.75" y="176.0" />
+    </edge>
+    <edge source="DungeonAdventure.Dungeon.ItemRecord" target="DungeonAdventure.Dungeon" relationship="INNER_CLASS">
+      <point x="-60.0" y="98.0" />
+      <point x="806.0" y="1399.0" />
+      <point x="986.0" y="1399.0" />
+      <point x="-20.0" y="-306.0" />
+    </edge>
+    <edge source="DungeonAdventure.DungeonCharacter" target="DungeonAdventure.HealthChangeRecord" relationship="CREATE">
+      <point x="100.0" y="-228.0" />
+      <point x="1206.0" y="-101.0" />
+      <point x="1766.0" y="-101.0" />
+      <point x="120.0" y="84.0" />
+    </edge>
+    <edge source="DungeonAdventure.CaveRescue" target="DungeonAdventure.DefaultModel" relationship="CREATE">
+      <point x="0.0" y="-71.0" />
+      <point x="1346.0" y="3079.0" />
+      <point x="1126.0" y="3079.0" />
+      <point x="0.0" y="345.0" />
+    </edge>
+    <edge source="DungeonAdventure.MonsterFactory" target="DungeonAdventure.MonsterFactory" relationship="TO_ONE">
+      <point x="-135.5" y="-42.5" />
+      <point x="-74.0" y="1136.5" />
+      <point x="-74.0" y="1459.0" />
+      <point x="333.75" y="1459.0" />
+      <point x="67.75" y="85.0" />
+    </edge>
+    <edge source="DungeonAdventure.DefaultModel" target="DungeonAdventure.Combat" relationship="TO_ONE">
+      <point x="-60.0" y="-345.0" />
+      <point x="1066.0" y="2279.0" />
+      <point x="206.0" y="2279.0" />
+      <point x="-60.0" y="150.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GUIView.MY_TEXTLOG" relationship="CREATE">
+      <point x="120.0" y="-123.0" />
+      <point x="586.0" y="3099.0" />
+      <point x="866.0" y="3099.0" />
+      <point x="60.0" y="84.5" />
+    </edge>
+    <edge source="DungeonAdventure.StartMenu" target="DungeonAdventure.GameModel" relationship="TO_ONE">
+      <point x="-60.0" y="-111.0" />
+      <point x="946.0" y="2339.0" />
+      <point x="-134.0" y="2339.0" />
+      <point x="-80.0" y="305.0" />
+    </edge>
+    <edge source="DungeonAdventure.Dungeon" target="DungeonAdventure.Room" relationship="CREATE">
+      <point x="100.0" y="-306.0" />
+      <point x="1106.0" y="1439.0" />
+      <point x="665.0" y="1439.0" />
+      <point x="59.0" y="228.0" />
+    </edge>
+    <edge source="DungeonAdventure.StartMenu" target="DungeonAdventure.Warrior" relationship="CREATE">
+      <point x="50.0" y="-111.0" />
+      <point x="1056.0" y="3259.0" />
+      <point x="1386.0" y="3259.0" />
+      <point x="1386.0" y="2319.0" />
+      <point x="1346.0" y="2319.0" />
+      <point x="0.0" y="45.0" />
+    </edge>
+    <edge source="DungeonAdventure.StartMenu" target="DungeonAdventure.StartMenu" relationship="CREATE">
+      <point x="-105.0" y="-0.0" />
+      <point x="746.0" y="3399.0" />
+      <point x="746.0" y="3659.0" />
+      <point x="1006.0" y="3659.0" />
+      <point x="0.0" y="111.0" />
+    </edge>
+    <edge source="DungeonAdventure.CLIView" target="DungeonAdventure.GameModel" relationship="TO_ONE">
+      <point x="-105.0" y="-214.0" />
+      <point x="1541.0" y="2339.0" />
+      <point x="-134.0" y="2339.0" />
+      <point x="-80.0" y="305.0" />
+    </edge>
+    <edge source="DungeonAdventure.MonsterFactory" target="DungeonAdventure.MonsterFactory" relationship="CREATE">
+      <point x="-135.5" y="42.5" />
+      <point x="-54.0" y="1221.5" />
+      <point x="-54.0" y="1439.0" />
+      <point x="198.25" y="1439.0" />
+      <point x="-67.75" y="85.0" />
+    </edge>
+    <edge source="DungeonAdventure.Dungeon" target="DungeonAdventure.Hero" relationship="TO_ONE">
+      <point x="-114.33333333333326" y="-306.0" />
+      <point x="891.6666666666667" y="1559.0" />
+      <point x="546.0" y="1559.0" />
+      <point x="546.0" y="1539.0" />
+      <point x="466.0" y="1539.0" />
+      <point x="466.0" y="1459.0" />
+      <point x="1110.25" y="1459.0" />
+      <point x="-95.75" y="176.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView.MY_TEXTLOG" target="DungeonAdventure.GUIView" relationship="INNER_CLASS">
+      <point x="0.0" y="84.5" />
+      <point x="806.0" y="3119.0" />
+      <point x="466.0" y="3119.0" />
+      <point x="0.0" y="-123.0" />
+    </edge>
+    <edge source="DungeonAdventure.DefaultModel" target="DungeonAdventure.Dungeon" relationship="CREATE">
+      <point x="20.0" y="-345.0" />
+      <point x="1146.0" y="2239.0" />
+      <point x="1086.0" y="2239.0" />
+      <point x="80.0" y="306.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GUIView" relationship="TO_ONE">
+      <point x="-138.0" y="-61.5" />
+      <point x="126.0" y="3337.5" />
+      <point x="126.0" y="3719.0" />
+      <point x="535.0" y="3719.0" />
+      <point x="69.0" y="123.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView.Optionlog" target="DungeonAdventure.GUIView" relationship="INNER_CLASS">
+      <point x="40.0" y="136.0" />
+      <point x="-74.0" y="3119.0" />
+      <point x="466.0" y="3119.0" />
+      <point x="0.0" y="-123.0" />
+    </edge>
+    <edge source="DungeonAdventure.DefaultModel" target="DungeonAdventure.Pair" relationship="CREATE">
+      <point x="20.0" y="-345.0" />
+      <point x="1146.0" y="2239.0" />
+      <point x="1186.0" y="2239.0" />
+      <point x="1186.0" y="1459.0" />
+      <point x="1726.0" y="1459.0" />
+      <point x="1726.0" y="1159.0" />
+      <point x="1686.0" y="1159.0" />
+      <point x="1686.0" y="659.0" />
+      <point x="1376.25" y="659.0" />
+      <point x="50.25" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GUIView.Optionlog" relationship="CREATE">
+      <point x="120.0" y="-123.0" />
+      <point x="586.0" y="3099.0" />
+      <point x="-34.0" y="3099.0" />
+      <point x="80.0" y="136.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GameModel" relationship="TO_ONE">
+      <point x="-92.0" y="-123.0" />
+      <point x="374.0" y="3239.0" />
+      <point x="-114.0" y="3239.0" />
+      <point x="-114.0" y="3139.0" />
+      <point x="-254.0" y="3139.0" />
+      <point x="-254.0" y="2339.0" />
+      <point x="-134.0" y="2339.0" />
+      <point x="-80.0" y="305.0" />
+    </edge>
+    <edge source="DungeonAdventure.DefaultModel" target="DungeonAdventure.Dungeon" relationship="TO_ONE">
+      <point x="-60.0" y="-345.0" />
+      <point x="1066.0" y="2279.0" />
+      <point x="926.0" y="2279.0" />
+      <point x="-80.0" y="306.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView.GuiMap" target="DungeonAdventure.GUIView" relationship="INNER_CLASS">
+      <point x="0.0" y="84.0" />
+      <point x="486.0" y="3119.0" />
+      <point x="466.0" y="3119.0" />
+      <point x="0.0" y="-123.0" />
+    </edge>
+    <edge source="DungeonAdventure.GUIView" target="DungeonAdventure.GUIView.GuiMap" relationship="TO_ONE">
+      <point x="-92.0" y="-123.0" />
+      <point x="374.0" y="3239.0" />
+      <point x="-114.0" y="3239.0" />
+      <point x="-114.0" y="3139.0" />
+      <point x="376.66666666666663" y="3139.0" />
+      <point x="-109.33333333333337" y="84.0" />
+    </edge>
+    <edge source="DungeonAdventure.Dungeon" target="DungeonAdventure.Pair" relationship="CREATE">
+      <point x="100.0" y="-306.0" />
+      <point x="1106.0" y="1439.0" />
+      <point x="1686.0" y="1439.0" />
+      <point x="1686.0" y="659.0" />
+      <point x="1376.25" y="659.0" />
+      <point x="50.25" y="71.0" />
+    </edge>
+    <edge source="DungeonAdventure.CLIView" target="DungeonAdventure.Warrior" relationship="CREATE">
+      <point x="0.0" y="-214.0" />
+      <point x="1646.0" y="1999.0" />
+      <point x="1346.0" y="1999.0" />
+      <point x="0.0" y="45.0" />
+    </edge>
+    <edge source="DungeonAdventure.MonsterFactory" target="DungeonAdventure.Monster" relationship="CREATE">
+      <point x="0.0" y="-85.0" />
+      <point x="266.0" y="1059.0" />
+      <point x="-14.0" y="1059.0" />
+      <point x="-100.0" y="58.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.0" showDependencies="true" x="1052.0" y="26.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
