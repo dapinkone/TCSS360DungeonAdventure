@@ -70,7 +70,7 @@ public final class Dungeon implements Serializable {
                 } else {
                     newMonster = mf.generateMonster("Skitter");
                 }
-                System.out.println("adding " + newMonster.getMyName());
+                //System.out.println("adding " + newMonster.getMyName());
                 getRoom(coord).addMonster(newMonster);
             }
         }
