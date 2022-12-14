@@ -39,6 +39,7 @@ public abstract class DungeonCharacter implements Serializable {
      * @return The damage, or 0 if missed or -1 if dodged by a hero.
      */
     public void attack(final DungeonCharacter theTarget) {
+        if(isDead()) return;
         int amount = 0;
         // if "dodged" / "blocked" or "miss", it's of type miss.
         ActionResultType result = ActionResultType.Miss;
