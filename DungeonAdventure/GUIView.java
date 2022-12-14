@@ -486,6 +486,9 @@ public class GUIView extends JFrame {
                 var button = makeButton(d.name());
                 button.addActionListener(e -> {
                     myModel.move(d);
+                    for(var item : myModel.checkNewItems()) {
+                        appendTextLog("Found " + item.name() + "!");
+                    }
                     if(myModel.checkCombat()) {
                         enterCombat();
                     }
