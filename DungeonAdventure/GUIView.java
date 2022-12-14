@@ -450,6 +450,8 @@ public class GUIView extends JFrame {
             });
             buttons[2].addActionListener(e -> {
                 appendTextLog("Call for help?");
+                appendTextLog("Well too bad, because you're alone down there.");
+                appendTextLog("Get the pillars, get to the teleporter and get out.");
             });
             buttons[3].addActionListener(e -> { // SAVE GAME
                 try {
@@ -587,9 +589,7 @@ public class GUIView extends JFrame {
             buttons[0] = makeButton("ATTACK");
             buttons[1] = makeButton("SPECIAL");
             buttons[2] = makeButton("USE ITEM");
-            buttons[3] = makeButton("HELP");
-            buttons[4] = makeButton("[TEST] END COMBAT");
-
+            buttons[3] = makeButton("INFO");
 
             buttons[0].addActionListener(e -> { // ATTACK
                 COMBAT_PANEL.setVisible(false);
@@ -604,6 +604,16 @@ public class GUIView extends JFrame {
             buttons[2].addActionListener(e -> { // USE ITEM
                 COMBAT_PANEL.setVisible(false);
                 ITEM_PANEL.setVisible(true);
+            });
+            buttons[3].addActionListener(e -> { // INFO
+                int i = 0;
+                appendTextLog("Initiating bio-scanner...");
+                for (var monster : myModel.getMyCombat().getMonsters()) {
+                    i++;
+                    String name = monster.getMyName();
+                    int health = monster.getMyHealth();
+                    appendTextLog("[" + i + "] " + name + " | Health: " + health);
+                }
             });
             buttons[4].addActionListener(e -> { // "[TEST] END COMBAT"
                 COMBAT_PANEL.setVisible(false);
