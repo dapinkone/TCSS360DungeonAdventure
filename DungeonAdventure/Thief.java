@@ -27,7 +27,7 @@ public class Thief extends Hero implements Serializable {
         } else if (chance > .2) {
             //Normal roll
             type = ActionResultType.Hit;
-            amount = random.nextInt(myMinDmg, myMaxDmg+1);
+            amount = random.nextInt(myMinDmg, myMaxDmg + 1);
         }
         target.takeDamage(amount);
         RecordQ.getInstance().add(
