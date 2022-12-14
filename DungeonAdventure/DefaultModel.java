@@ -6,7 +6,7 @@ import java.util.*;
 public class DefaultModel implements GameModel {
     private Dungeon myDungeon;
     private Combat myCombat;
-    private final boolean cheatCanFleeCombat = true;
+    private final boolean cheatCanFleeCombat = false;
     private final RecordQ myRecordQ = RecordQ.getInstance();
     private final ArrayList<Item> newItems = new ArrayList<>();
     public DefaultModel() {
@@ -162,4 +162,5 @@ public class DefaultModel implements GameModel {
         newItems.clear();
         return ret;
     }
+
 }

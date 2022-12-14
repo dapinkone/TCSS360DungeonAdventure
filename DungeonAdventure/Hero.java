@@ -1,7 +1,6 @@
 package DungeonAdventure;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,44 +31,27 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
     }
     /**
      * Use a "Healing Tonic," restores 40 health but value can be changed.
-     *
-     * @return
      */
-    public HealthChangeRecord useHealingPot() {
-        //if (healingPots == 0) return 0;
+    public void useHealingPot() {
         final var quantity = myInventory.getOrDefault(Item.HealingPotion,0);
-        if(quantity == 0) return null;
-        int healing = 40;
-        /*if (getMyHealth() + healing > getMyMaxHealth()) {
-            setMyHealth(getMyMaxHealth());
-        } else {
-            setMyHealth(getMyMaxHealth() + healing);
-        }*/
+        if(quantity == 0) return;
+        int healing = 40; // TODO: randomize healing
         heal(healing);
         myInventory.put(Item.HealingPotion, quantity - 1);
         //healingPots--;
-        return new HealthChangeRecord(
+        RecordQ.getInstance().add(new HealthChangeRecord(
                 this, this,
-                healing, ActionResultType.Heal);
+                healing, ActionResultType.Heal));
     }
 
-    public int useVisionPot() {
-        if (getVisionPots() == 0) return 0;
+    public void useVisionPot(Dungeon theDungeon) {
+        final int vpots = getVisionPots();
+        if(vpots <= 0) return;
         //How would this be implemented, if not in the driver?
-        return 1;
+        theDungeon.useVisionPot();
+        theDungeon.getHero().setVisionPots(vpots - 1);
     }
 
-//    /**
-//     * Adds a new pillar to the hero's inventory
-//     * @param thePillar The pillar to be added.
-//     */
-//    public void addNewPillar(String thePillar) {
-//        pillars.add(thePillar);
-//    }
-
-    //public List<String> getPillars() {
-//        return pillars;
-//    }
     public boolean hasAllPillars() {
         return myInventory.keySet().stream().filter(
                 x -> x.name().contains("Pillar")
@@ -114,7 +96,9 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
     }
 
     public List<Item> getPillars() {
-        return new ArrayList<Item>();
+        return myInventory.keySet().stream().filter(
+                item -> item.name().contains("Pillar")
+        ).toList();
     }
 
 

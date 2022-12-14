@@ -104,6 +104,6 @@ public abstract class DungeonCharacter implements Serializable {
         setMyHealth(Integer.min(getMyHealth() + amount, getMyMaxHealth()));
     }
     public void takeDamage(int amount) {
-        setMyHealth(getMyHealth()-amount);
+        setMyHealth(Integer.max(0, getMyHealth() - amount));
     }
 }

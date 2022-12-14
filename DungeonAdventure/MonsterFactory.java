@@ -89,7 +89,7 @@ public class MonsterFactory {
             case("skitter") -> rowID = 1;
             case("crawler") -> rowID = 2;
             case("predator") -> rowID = 3;
-            case("awoken horror") -> rowID = 4;
+       //     case("awoken horror") -> rowID = 4;
             default -> {
                 throw new NoSuchElementException(theName + " not a valid monster type.");
             }

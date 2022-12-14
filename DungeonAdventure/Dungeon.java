@@ -61,9 +61,9 @@ public final class Dungeon implements Serializable {
             if(RANDOM.nextDouble() > 0.8) { // 20% chance to see a monster at all
                 final var chance = RANDOM.nextDouble();
                 Monster newMonster;
-                if(chance > 0.9) {// ver5y unlucky.
+                /*if(chance > 0.9) {// ver5y unlucky.
                     newMonster = mf.generateMonster("Awoken Horror");
-                } else if (chance > 0.7) {
+                } else */if (chance > 0.7) {
                     newMonster = mf.generateMonster("predator");
                 } else if (chance > 0.4) {
                     newMonster =  mf.generateMonster("Crawler");
@@ -92,7 +92,7 @@ public final class Dungeon implements Serializable {
         // if coordinate is valid
         if(allCoords.contains(theHeroLocation)) {
             myHeroLocation = theHeroLocation;
-            getRoom(myHeroLocation).setMyVisitedStatus();
+            getRoom(myHeroLocation).setVisible();
         }
     }
 
@@ -215,7 +215,11 @@ public final class Dungeon implements Serializable {
                 .filter(c -> allCoords.contains(c.destination))
                 .collect(Collectors.toList());
     }
-
+    public void useVisionPot() {
+        for(var choice : borderCoords(myHeroLocation)) {
+            getRoom(choice.destination).setVisible();
+        }
+    }
     private void generateMaze() {
         HashSet<Pair> visited = new HashSet<>(); // visited rooms
         Pair current = new Pair(0,0); // starting position

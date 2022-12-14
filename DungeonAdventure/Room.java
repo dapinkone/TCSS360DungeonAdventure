@@ -7,7 +7,7 @@ public class Room implements Serializable {
     private final List<Item> myItems = new ArrayList<>();
     private final Map<Direction, Boolean> myDoors;
     private final Pair myLocation;
-    private boolean myVisitedStatus = false;
+    private boolean isVisible = false;
     private final List<Monster> myMonsters = new ArrayList<>();
     public Room(Pair theLocation) {
         myLocation = theLocation;
@@ -40,11 +40,11 @@ public class Room implements Serializable {
                 ", myLocation=" + myLocation +
                 '}';
     }
-    public void setMyVisitedStatus() {
-        myVisitedStatus = true;
+    public void setVisible() {
+        isVisible = true;
     }
-    public boolean getMyVisitedStatus() {
-        return myVisitedStatus;
+    public boolean getVisible() {
+        return isVisible;
     }
     public void setDoor(Direction d) {
         myDoors.put(d, true);
