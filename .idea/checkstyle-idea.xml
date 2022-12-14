@@ -6,12 +6,14 @@
     <copyLibs>true</copyLibs>
     <option name="thirdPartyClasspath" />
     <option name="activeLocationIds">
+      <option value="8766522b-6654-44ef-9734-2202bbf95205" />
       <option value="bundled-sun-checks" />
     </option>
     <option name="locations">
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="8766522b-6654-44ef-9734-2202bbf95205" type="LOCAL_FILE" scope="All" description="tcss305">$PROJECT_DIR$/.idea/checkstyleidea-libs/tcss305_checkstyle_sameline.xml</ConfigurationLocation>
       </list>
     </option>
   </component>
