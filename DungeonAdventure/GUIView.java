@@ -20,7 +20,7 @@ public class GUIView extends JFrame { //implements GameView {
     private final Optionlog myOptionlog;
     private final Map<String, JButton> myButtons;
     private final GuiMap myGuiMap;
-
+    private boolean myGameOverFlag = false;
     private GUIView(final GameModel theModel) {
         myButtons = new HashMap<>();
         myModel = theModel;
@@ -80,6 +80,27 @@ public class GUIView extends JFrame { //implements GameView {
             }
         }
         if (!myModel.checkCombat()) { // won the fight!
+            Image newScreen = null;
+            if (myModel.getHero().isDead() && ! myGameOverFlag) {
+                myGameOverFlag = true;
+                appendTextLog("Game Over! You have died.");
+                try {
+                    newScreen = ImageIO.read(new File("sprites/gameover.png"));
+                } catch (final IOException e) {
+                    appendTextLog("Game Over! You have died.");
+                }
+            } else if (myModel.victoryCondition() && !myGameOverFlag) {
+                myGameOverFlag = true;
+                appendTextLog("Victory! You have escaped!");
+                try {
+                    newScreen = ImageIO.read(new File("sprites/gamewin.png"));
+                } catch (final IOException e) {
+                    appendTextLog("Victory! You have escaped!");
+                }
+            }
+            if(newScreen != null) {
+                myPov.drawItems(newScreen.getGraphics());
+            }
             myOptionlog.exitCombat();
             update();
         }
@@ -440,7 +461,7 @@ public class GUIView extends JFrame { //implements GameView {
             if (!myModel.checkCombat() && (COMBAT_PANEL.isVisible() || TARGETS.isVisible())) {
                 COMBAT_PANEL.setVisible(false);
                 MAIN_MENU_PANEL.setVisible(true);
-                appendTextLog("You won the fight!");
+                //appendTextLog("You won the fight!");
             }
             TARGETS.setVisible(false);
         }        private final JPanel ITEM_PANEL = itemPanel();
