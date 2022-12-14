@@ -109,7 +109,13 @@ public class DefaultModel implements GameModel {
                         case SOUTH -> new Pair(location.getRow()+1, location.getColumn());
                 });
                 // if the new room has monsters in it, we have a combat encounter on our hands.
-                List<Monster> monsters = myDungeon.getRoom(getHeroLocation()).getMyMonsters();
+                final var theRoom =  myDungeon.getRoom(getHeroLocation());
+
+                // if we have all the pillars, and this room is the exit, we spawn boss
+                if(getHero().hasAllPillars() && theRoom.getMyItems().contains(Item.Exit)) {
+                    spawnBossFight();
+                }
+                List<Monster> monsters = theRoom.getMyMonsters();
                 if(monsters != null && monsters.size() > 0) {
                     myCombat = new Combat(monsters, getHero());
                 }
@@ -143,6 +149,16 @@ public class DefaultModel implements GameModel {
     @Override
     public Room[][] getRooms() {
         return myDungeon.getRooms();
+    }
+    @Override
+    public Room getRoom(Pair theCoord) {
+        return myDungeon.getRoom(theCoord);
+    }
+
+
+    @Override
+    public void spawnBossFight() {
+        myDungeon.spawnBossFight();
     }
 
     @Override

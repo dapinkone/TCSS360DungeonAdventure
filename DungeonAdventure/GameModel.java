@@ -40,8 +40,11 @@ public interface GameModel {
      */
     //List<Monster> combatStats();
 
-    Room[][] getRooms(); // TODO: Rooms are mutable. better solution?
+    Room[][] getRooms();
 
+    Room getRoom(Pair theCoord);
+
+    void spawnBossFight();
     boolean gameover();
 
     HealthChangeRecord nextGameRecord();

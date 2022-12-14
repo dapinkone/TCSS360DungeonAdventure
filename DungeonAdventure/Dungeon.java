@@ -48,18 +48,21 @@ public final class Dungeon implements Serializable {
         spawnItems();
         spawnMonsters();
     }
-    private Monster rollMonster() {
+    private void spawnMonster(Pair location) {
         final var chance = RANDOM.nextDouble();
         final var mf = MonsterFactory.getInstance();
+        Monster monster;
         /*if(chance > 0.9) {// ver5y unlucky.
                     newMonster = mf.generateMonster("Awoken Horror");
                 } else */
         if (chance > 0.7) {
-            return mf.generateMonster("predator");
+            monster = mf.generateMonster("predator");
         } else if (chance > 0.4) {
-            return mf.generateMonster("Crawler");
+            monster = mf.generateMonster("Crawler");
+        } else {
+            monster = mf.generateMonster("Skitter");
         }
-        return mf.generateMonster("Skitter");
+        getRoom(location).addMonster(monster);
     }
     private void spawnMonsters() {
         MonsterFactory mf = MonsterFactory.getInstance();
@@ -70,18 +73,24 @@ public final class Dungeon implements Serializable {
             if(room.getMyItems().contains(Item.Entrance)) continue;
 
             if(RANDOM.nextDouble() > 0.8) { // 20% chance to see a monster at all
-                final var chance = RANDOM.nextDouble();
-                //System.out.println("adding " + newMonster.getMyName());
-                getRoom(coord).addMonster(rollMonster());
+                spawnMonster(coord);
             }
             if(getRoom(coord).getMyItems().stream().anyMatch(
                 // double monsters in pillar or exit rooms.
-                    e -> (e.name().contains("Pillar")) || e == Item.Exit)) {
-                getRoom(coord).addMonster(rollMonster());
+                    e -> (e.name().contains("Pillar")))) {
+                spawnMonster(coord);
             }
         }
     }
-
+    public void spawnBossFight() {
+        for(var coord : allCoords) { // find exit
+            if(getRoom(coord).getMyItems().contains(Item.Exit)) {
+                spawnMonster(coord);
+                spawnMonster(coord);
+                spawnMonster(coord);
+            }
+        }
+    }
     public int getColumns() {
         return columns;
     }
