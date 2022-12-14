@@ -139,7 +139,7 @@ public class GUIView extends JFrame { //implements GameView {
      * disables/enables buttons so that only valid choices are enabled for
      * navigation
      */
-    public void validateDirections() {
+    private void validateDirections() {
         final var validDirections = myModel.getRoomDoors(myModel.getHeroLocation());
         for (Direction d : Direction.values()) {
             myButtons.get(d.name()).setEnabled(
@@ -147,7 +147,18 @@ public class GUIView extends JFrame { //implements GameView {
             );
         }
     }
-
+    private void validateTargets() {
+        final var monsters = myModel.getMyCombat().getMonsters();
+        for(int i=0; i < 3; i++) {
+            final var button = myButtons.get(Integer.toString(i+1));
+            if(monsters.size() >= i) {
+                button.setEnabled(
+                        !monsters.get(i).isDead() && !myModel.getHero().isDead());
+            } else {
+                myButtons.get(Integer.toString(i)).setEnabled(false);
+            }
+        }
+    }
     private class POV extends JPanel {
         private final int WIDTH = 700;
         private final int HEIGHT = 400;
@@ -586,10 +597,10 @@ public class GUIView extends JFrame { //implements GameView {
             buttons[0] = makeButton("USE HEALING");
             buttons[1] = makeButton("USE VISION");
             buttons[2] = makeButton("<- RETURN");
-            JPanel retPanel = MAIN_MENU_PANEL;
+            var returnToMain = MAIN_MENU_PANEL;
             if (myModel.checkCombat())
-                retPanel = COMBAT_PANEL;
-            final var returnPanel = retPanel;
+                returnToMain = COMBAT_PANEL;
+            final var returnPanel = returnToMain;
             for (int i = 0; i < 3; i++) {
                 panel.add(buttons[i]);
             }
@@ -654,11 +665,13 @@ public class GUIView extends JFrame { //implements GameView {
 
             buttons[0].addActionListener(e -> { // ATTACK
                 COMBAT_PANEL.setVisible(false);
+                validateTargets();
                 TARGETS.setVisible(true);
                 myAttackOrSpecial = 1;
             });
             buttons[1].addActionListener(e -> { // SPECIAL
                 COMBAT_PANEL.setVisible(false);
+                validateTargets();
                 TARGETS.setVisible(true);
                 myAttackOrSpecial = 2;
             });
@@ -672,20 +685,10 @@ public class GUIView extends JFrame { //implements GameView {
                 final var monsters =  myModel.getMyCombat().getMonsters();
                 for (var monster : monsters) {
                     i++;
-
                     if (!monster.isDead()) {
                         final String name = monster.getMyName();
                         final int health = monster.getMyHealth();
                         appendTextLog("[" + i + "] " + name + " | Health: " + health);
-                    }
-                }
-                for(i=0; i < 3; i++) {
-                    final var button = myButtons.get(Integer.toString(i));
-                    if(monsters.size() >= i) {
-                        button.setEnabled(
-                                !monsters.get(i).isDead() && !myModel.getHero().isDead());
-                    } else {
-                        myButtons.get(Integer.toString(i)).setEnabled(false);
                     }
                 }
             });
