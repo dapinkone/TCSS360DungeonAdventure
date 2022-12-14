@@ -16,6 +16,7 @@ public enum Item implements Serializable {
     PillarInheritance,
     PillarPolymorphism,
     Pit;
+
     public boolean canBePickedUp() {
         return !List.of(Entrance, Exit, Pit).contains(this);
     }

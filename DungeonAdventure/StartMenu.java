@@ -5,17 +5,17 @@ import java.awt.*;
 
 public class StartMenu extends JFrame {
     private final JTextArea TEXT_AREA = textBox();
+    private final GameModel myModel = new DefaultModel();
     private int myStage = 0;
     private String myName;
     private Hero myHero = null;
-    private final GameModel myModel = new DefaultModel();
 
     public StartMenu() {
         setTitle("Cave Rescue");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setVisible(true);
-        setPreferredSize(new Dimension(700,400));
+        setPreferredSize(new Dimension(700, 400));
 
         JPanel panel = new JPanel();
         add(panel);
@@ -24,20 +24,15 @@ public class StartMenu extends JFrame {
         panel.add(scroll);
         panel.add(textField());
         panel.setLayout(new FlowLayout());
-        panel.setBackground(new Color(20,20,20));
+        panel.setBackground(new Color(20, 20, 20));
         pack();
-    }
-    public void appendText(final String theText) {
-        TEXT_AREA.append(theText);
-        TEXT_AREA.setCaretPosition(
-                TEXT_AREA.getDocument().getLength());
     }
 
     private static JTextArea textBox() {
         JTextArea textArea = new JTextArea(12, 60);
-        textArea.setBackground(new Color(20,20,20));
+        textArea.setBackground(new Color(20, 20, 20));
         textArea.setForeground(Color.GREEN);
-        textArea.setFont(new Font("Monospaced",Font.PLAIN ,18));
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 18));
         textArea.setLineWrap(true);
         textArea.setEditable(false);
         textArea.setText(
@@ -53,6 +48,18 @@ public class StartMenu extends JFrame {
                         """);
         return textArea;
     }
+
+    public static void main(String[] args) {
+        new StartMenu();
+
+    }
+
+    public void appendText(final String theText) {
+        TEXT_AREA.append(theText);
+        TEXT_AREA.setCaretPosition(
+                TEXT_AREA.getDocument().getLength());
+    }
+
     private JTextField textField() {
         JTextField field = new JTextField(60);
         field.addActionListener(e -> {
@@ -90,15 +97,15 @@ public class StartMenu extends JFrame {
                         if (myHero != null) {
 
                             appendText("""
-                                >Alright, I need to fill out your death insurance now-
-                                >Can't be too careful, you know.
-                                >...
-                                >How tough do you think you are?
-                                 [1] Easy   : Small cave
-                                 [2] Medium : Medium cave
-                                 [3] Hard   : Large cave
-                                 [TYPE A NUMBER TO SELECT]
-                                """);
+                                    >Alright, I need to fill out your death insurance now-
+                                    >Can't be too careful, you know.
+                                    >...
+                                    >How tough do you think you are?
+                                     [1] Easy   : Small cave
+                                     [2] Medium : Medium cave
+                                     [3] Hard   : Large cave
+                                     [TYPE A NUMBER TO SELECT]
+                                    """);
                             myStage++;
                         }
                     } catch (NumberFormatException exception) {
@@ -111,15 +118,15 @@ public class StartMenu extends JFrame {
                         int choice = Integer.parseInt(field.getText());
                         switch (choice) {
                             case 1 -> {
-                                myModel.newDungeon(3,3);
+                                myModel.newDungeon(3, 3);
                                 proper = true;
                             }
                             case 2 -> {
-                                myModel.newDungeon(4,4);
+                                myModel.newDungeon(4, 4);
                                 proper = true;
                             }
                             case 3 -> {
-                                myModel.newDungeon(4,6);
+                                myModel.newDungeon(4, 6);
                                 proper = true;
                             }
                             default -> appendText(" [INVALID CHOICE]\n");
@@ -157,11 +164,6 @@ public class StartMenu extends JFrame {
         if (myStage == 4) {
             return myModel;
         } else return null;
-    }
-
-    public static void main(String[] args) {
-        new StartMenu();
-
     }
 
 }

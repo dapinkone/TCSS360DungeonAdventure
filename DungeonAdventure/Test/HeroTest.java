@@ -2,24 +2,13 @@ package DungeonAdventure.Test;
 
 import DungeonAdventure.ActionResultType;
 import DungeonAdventure.DungeonCharacter;
-import DungeonAdventure.RecordQ;
-import org.junit.jupiter.api.*;
 import DungeonAdventure.Hero;
+import DungeonAdventure.RecordQ;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class HeroTest {
 
-    class MockHero extends Hero{
-        MockHero(String theName, double theHitChance, double theDodgeChance) {
-            super("test",theName,50, 1,
-                    theHitChance, 10, 20, theDodgeChance);
-
-        }
-
-        @Override
-        public void specialSkill(DungeonCharacter target) {
-
-        }
-    }
     @Test
     public void testDodge() {
         MockHero test1 = new MockHero("test1", 1, 1);
@@ -42,5 +31,18 @@ public class HeroTest {
         test2.attack(test1);
         test1.useHealingPot();
         Assertions.assertEquals(test1.getMyMaxHealth(), test1.getMyHealth());
+    }
+
+    class MockHero extends Hero {
+        MockHero(String theName, double theHitChance, double theDodgeChance) {
+            super("test", theName, 50, 1,
+                    theHitChance, 10, 20, theDodgeChance);
+
+        }
+
+        @Override
+        public void specialSkill(DungeonCharacter target) {
+
+        }
     }
 }

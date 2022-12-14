@@ -5,14 +5,14 @@ import java.util.Random;
 
 public abstract class DungeonCharacter implements Serializable {
     private static final Random RANDOM = new Random();
-    private String myName;
-    private int myHealth;
-    private final int myMaxHealth;
-    private int myAttackSpeed;
-    private double myHitChance;
-    private double myDodgeChance = 0;
     final int myMinDmg;
     final int myMaxDmg;
+    private final int myMaxHealth;
+    private final int myAttackSpeed;
+    private final double myHitChance;
+    private String myName;
+    private int myHealth;
+    private double myDodgeChance = 0;
 
     public DungeonCharacter(final String theName,
                             final int theHealth,
@@ -31,15 +31,15 @@ public abstract class DungeonCharacter implements Serializable {
     }
 
 
-
     /**
      * Attack method, rolls a chance to hit, and another chance for that hit to be blocked.
      * Then rolls the damage within the character's damage range.
+     *
      * @param theTarget the target to attack
      * @return The damage, or 0 if missed or -1 if dodged by a hero.
      */
     public void attack(final DungeonCharacter theTarget) {
-        if(isDead()) return;
+        if (isDead()) return;
         int amount = 0;
         // if "dodged" / "blocked" or "miss", it's of type miss.
         ActionResultType result = ActionResultType.Miss;
@@ -52,7 +52,7 @@ public abstract class DungeonCharacter implements Serializable {
             }
         }
         RecordQ.getInstance().add(new HealthChangeRecord(
-                this,theTarget, amount, result
+                this, theTarget, amount, result
         ));
     }
 
@@ -75,6 +75,7 @@ public abstract class DungeonCharacter implements Serializable {
     public void setMyHealth(int myHealth) {
         this.myHealth = myHealth;
     }
+
     public int getMyMaxHealth() {
         return myMaxHealth;
     }
@@ -97,13 +98,16 @@ public abstract class DungeonCharacter implements Serializable {
         string.append("\nHealth: " + myHealth + "/" + myMaxHealth);
         string.append("\nSpeed: " + myAttackSpeed);
         string.append("\nHit Chance: " + myHitChance * 100 + "%");
-        string.append("\nDamage: " + myMinDmg + "-" +myMaxDmg);
-        if (myDodgeChance > 0) string.append("\nBlock Chance: " + myDodgeChance * 100 + "%");
+        string.append("\nDamage: " + myMinDmg + "-" + myMaxDmg);
+        if (myDodgeChance > 0)
+            string.append("\nBlock Chance: " + myDodgeChance * 100 + "%");
         return String.valueOf(string);
     }
+
     public void heal(int amount) {
         setMyHealth(Integer.min(getMyHealth() + amount, getMyMaxHealth()));
     }
+
     public void takeDamage(int amount) {
         setMyHealth(Integer.max(0, getMyHealth() - amount));
     }

@@ -3,11 +3,12 @@ package DungeonAdventure;
 import java.util.*;
 
 public class Combat {
-    private List<Monster> myMonsters;
-    private Hero myHero;
-    private List<Integer> myTurnOrder;
-    private int nextTurn = 0;
+    private final List<Monster> myMonsters;
+    private final Hero myHero;
+    private final List<Integer> myTurnOrder;
     final private List<DungeonCharacter> combatants = new ArrayList<>();
+    private int nextTurn = 0;
+
     public Combat(List<Monster> theMonsters, Hero theHero) {
         myMonsters = theMonsters;
         myHero = theHero;
@@ -20,6 +21,7 @@ public class Combat {
 
     /**
      * Calculates the order in which turns should be taken.
+     *
      * @return List of turns in order, represented by their index in
      * the list of combatants.
      */
@@ -43,7 +45,7 @@ public class Combat {
         //speeds.add(new SpeedNode(0, heroSpeed));
         int index = 0;
         //for (Monster monster : myMonsters) {
-        for(DungeonCharacter theCombatant : combatants) {
+        for (DungeonCharacter theCombatant : combatants) {
             speeds.add(new SpeedNode(index++, theCombatant.getMyAttackSpeed()));
             //index++;
         }
@@ -69,6 +71,7 @@ public class Combat {
 
     /**
      * Returns the index of the character whose turn is next.
+     *
      * @return The index of the character whose turn is next.
      */
     private int getNextTurn() {
@@ -80,6 +83,7 @@ public class Combat {
         return result;
         //return myTurnOrder.get(nextTurn++ % myTurnOrder.size());
     }
+
     private DungeonCharacter getNextCombatant() {
         return combatants.get(getNextTurn());
     }
@@ -94,7 +98,8 @@ public class Combat {
 
     /**
      * The method for calculating the Hero's turn.
-     * @param theOption Which option the hero chooses on it's turn.
+     *
+     * @param theOption      Which option the hero chooses on it's turn.
      * @param theTargetIndex The character to be targeted by the hero.
      * @return int representing the result.
      */
@@ -107,13 +112,14 @@ public class Combat {
             case 3 ->  //USE ITEMS
                     myHero.useHealingPot();
             default -> throw new NoSuchElementException();
-        };
+        }
         progress();
     }
 
 
     /**
      * Method that performs each hero's special move.
+     *
      * @param theTargetIndex the target of the special move should there be one
      * @return int containing the result of the move.
      */
@@ -150,6 +156,7 @@ public class Combat {
 
     /**
      * Checks whether the combat is over.
+     *
      * @return boolean of if the combat is over.
      */
     public boolean isOver() {
@@ -167,8 +174,9 @@ public class Combat {
     public List<Monster> getMonsters() {
         return myMonsters;
     }
+
     private void progress() { // takes monster turns until it's the hero's turn.
-        for(var monster = getNextCombatant(); monster != myHero; monster = getNextCombatant()) {
+        for (var monster = getNextCombatant(); monster != myHero; monster = getNextCombatant()) {
             // monster's turn to attack.
             monster.attack(myHero);
         }
