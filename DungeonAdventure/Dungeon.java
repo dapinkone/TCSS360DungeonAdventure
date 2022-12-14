@@ -48,10 +48,21 @@ public final class Dungeon implements Serializable {
         spawnItems();
         spawnMonsters();
     }
-
+    private Monster rollMonster() {
+        final var chance = RANDOM.nextDouble();
+        final var mf = MonsterFactory.getInstance();
+        /*if(chance > 0.9) {// ver5y unlucky.
+                    newMonster = mf.generateMonster("Awoken Horror");
+                } else */
+        if (chance > 0.7) {
+            return mf.generateMonster("predator");
+        } else if (chance > 0.4) {
+            return mf.generateMonster("Crawler");
+        }
+        return mf.generateMonster("Skitter");
+    }
     private void spawnMonsters() {
         MonsterFactory mf = MonsterFactory.getInstance();
-
         // for every room in the maze, maybe add a monster
         for(var coord : allCoords) {
             final var room = getRoom(coord);
@@ -60,18 +71,13 @@ public final class Dungeon implements Serializable {
 
             if(RANDOM.nextDouble() > 0.8) { // 20% chance to see a monster at all
                 final var chance = RANDOM.nextDouble();
-                Monster newMonster;
-                /*if(chance > 0.9) {// ver5y unlucky.
-                    newMonster = mf.generateMonster("Awoken Horror");
-                } else */if (chance > 0.7) {
-                    newMonster = mf.generateMonster("predator");
-                } else if (chance > 0.4) {
-                    newMonster =  mf.generateMonster("Crawler");
-                } else {
-                    newMonster = mf.generateMonster("Skitter");
-                }
                 //System.out.println("adding " + newMonster.getMyName());
-                getRoom(coord).addMonster(newMonster);
+                getRoom(coord).addMonster(rollMonster());
+            }
+            if(getRoom(coord).getMyItems().stream().anyMatch(
+                // double monsters in pillar or exit rooms.
+                    e -> (e.name().contains("Pillar")) || e == Item.Exit)) {
+                getRoom(coord).addMonster(rollMonster());
             }
         }
     }
@@ -216,9 +222,13 @@ public final class Dungeon implements Serializable {
                 .collect(Collectors.toList());
     }
     public void useVisionPot() {
+        var vpots = myHero.getVisionPots();
+
+        if(vpots <= 0) return;
         for(var choice : borderCoords(myHeroLocation)) {
             getRoom(choice.destination).setVisible();
         }
+        myHero.setVisionPots(vpots-1);
     }
     private void generateMaze() {
         HashSet<Pair> visited = new HashSet<>(); // visited rooms

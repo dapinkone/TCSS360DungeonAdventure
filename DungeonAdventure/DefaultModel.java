@@ -170,5 +170,8 @@ public class DefaultModel implements GameModel {
         newItems.clear();
         return ret;
     }
-
+    @Override
+    public void useVisionPot() {
+        myDungeon.useVisionPot();
+    }
 }
