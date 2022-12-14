@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class GUIView extends JFrame {
@@ -361,11 +362,10 @@ public class GUIView extends JFrame {
                 Image player = ImageIO.read(new File("sprites/player.png"));
                 for (int i = 0; i < myRows; i++) {
                     for (int j = 0; j < myCols; j++) {
-
                         drawRoom(myModel.getRooms()[i][j], g);
-
                     }
                 }
+                checkRecords();
             } catch (IOException e) {
                 System.out.println("Missing sprites");
             }
@@ -397,9 +397,11 @@ public class GUIView extends JFrame {
         }
 
         public void exitCombat() {
+            if(!myModel.checkCombat() && (COMBAT_PANEL.isVisible() || TARGETS.isVisible())) {
+                COMBAT_PANEL.setVisible(false);
+                MAIN_MENU_PANEL.setVisible(true);
+            }
             TARGETS.setVisible(false);
-            COMBAT_PANEL.setVisible(false);
-            MAIN_MENU_PANEL.setVisible(true);
         }
 
         /***
@@ -491,6 +493,10 @@ public class GUIView extends JFrame {
             buttons[0] = makeButton("USE HEALING");
             buttons[1] = makeButton("USE VISION");
             buttons[2] = makeButton("<- RETURN");
+            JPanel retPanel = MAIN_MENU_PANEL;
+            if(myModel.checkCombat())
+                retPanel = COMBAT_PANEL;
+            final var returnPanel = retPanel;
             for (int i = 0; i < 3; i++) {
                 panel.add(buttons[i]);
             }
@@ -498,16 +504,16 @@ public class GUIView extends JFrame {
                 myModel.getHero().useHealingPot();
                 checkRecords();
                 ITEM_PANEL.setVisible(false);
-                MAIN_MENU_PANEL.setVisible(true);
+                Objects.requireNonNull(returnPanel).setVisible(true);
             });
             buttons[1].addActionListener(e -> { // todo: implement vision pots
                 //myModel.getHero().useVisionPot( );
                 ITEM_PANEL.setVisible(false);
-                MAIN_MENU_PANEL.setVisible(true);
+                Objects.requireNonNull(returnPanel).setVisible(true);
             });
             buttons[2].addActionListener(e -> {
                 ITEM_PANEL.setVisible(false);
-                MAIN_MENU_PANEL.setVisible(true);
+                Objects.requireNonNull(returnPanel).setVisible(true);
             });
             return panel;
         }
@@ -523,7 +529,7 @@ public class GUIView extends JFrame {
                 buttons[i] = makeButton(Integer.toString(i + 1));
                 final int finalI = i;
                 buttons[i].addActionListener(e -> {
-                    myModel.getMyCombat().heroTurn(1, finalI);
+                    myModel.getMyCombat().heroTurn(attackOrSpecial, finalI);
                     checkRecords();
                     TARGETS.setVisible(false);
                     COMBAT_PANEL.setVisible(true);
@@ -539,6 +545,7 @@ public class GUIView extends JFrame {
             panel.add(buttons[3]);
             return panel;
         }
+        int attackOrSpecial = 1; // attack == 1; special == 2
 
         private JPanel combatPanel() {
             JPanel panel = new JPanel();
@@ -556,15 +563,16 @@ public class GUIView extends JFrame {
             buttons[0].addActionListener(e -> { // ATTACK
                 COMBAT_PANEL.setVisible(false);
                 TARGETS.setVisible(true);
+                attackOrSpecial = 1;
             });
             buttons[1].addActionListener(e -> { // SPECIAL
                 COMBAT_PANEL.setVisible(false);
                 TARGETS.setVisible(true);
+                attackOrSpecial = 2;
             });
             buttons[2].addActionListener(e -> { // USE ITEM
-
                 COMBAT_PANEL.setVisible(false);
-                TARGETS.setVisible(true);
+                ITEM_PANEL.setVisible(true);
             });
             buttons[4].addActionListener(e -> { // "[TEST] END COMBAT"
                 COMBAT_PANEL.setVisible(false);

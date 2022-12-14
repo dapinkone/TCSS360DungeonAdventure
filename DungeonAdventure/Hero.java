@@ -47,7 +47,6 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
     public void useVisionPot(Dungeon theDungeon) {
         final int vpots = getVisionPots();
         if(vpots <= 0) return;
-        //How would this be implemented, if not in the driver?
         theDungeon.useVisionPot();
         theDungeon.getHero().setVisionPots(vpots - 1);
     }
