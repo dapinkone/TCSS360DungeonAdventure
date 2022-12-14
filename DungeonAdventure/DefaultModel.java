@@ -21,6 +21,7 @@ public class DefaultModel implements GameModel {
         myDungeon = new Dungeon(rows, cols);
     }
 
+    @Override
     public void saveGame() throws IOException {
         try (var fileOut = new FileOutputStream("CaveRescue.save")) {
             final var objStreamOut = new ObjectOutputStream(fileOut);
@@ -28,7 +29,7 @@ public class DefaultModel implements GameModel {
             objStreamOut.flush();
         }
     }
-
+    @Override
     public void loadGame() throws IOException {
         try (var fileIn = new FileInputStream("CaveRescue.save")) {
             final var objStreamIn = new ObjectInputStream(fileIn);
@@ -37,7 +38,14 @@ public class DefaultModel implements GameModel {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
+    public void newGame(final int theRows, final int theCols) {
+        // clear and rebuild game state.
+        myCombat = null;
+        myRecordQ.clear();
+        newItems.clear();
+        newDungeon(theRows, theCols);
+    }
     @Override
     public void setHero(Hero theHero) {
         myDungeon.setHero(theHero);
@@ -158,7 +166,7 @@ public class DefaultModel implements GameModel {
 
     @Override
     public ArrayList<Item> checkNewItems() {
-        final ArrayList<Item> ret = (ArrayList<Item>) newItems.clone();
+        final ArrayList<Item> ret = new ArrayList<>(newItems);
         newItems.clear();
         return ret;
     }

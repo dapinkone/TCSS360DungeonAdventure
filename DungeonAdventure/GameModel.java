@@ -17,6 +17,8 @@ public interface GameModel {
 
     // data that the view needs access to display/play the game
 
+    void newGame(int theRows, int theCols);
+
     void setHero(Hero theHero); // needed so we can do a hero select screen
     Hero getHero();
     Pair getHeroLocation(); // hero's position in the dungeon maze.
