@@ -20,6 +20,7 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
         myClass = theClass;
         //Sets dodge chance which is specific to heroes.
         setMyDodgeChance(theDodgeChance);
+        setHealingPots(1);
     }
 
     /**

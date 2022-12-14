@@ -107,7 +107,7 @@ public class GUIView extends JFrame { //implements GameView {
                 myButtons.get("LOAD GAME").setEnabled(true);
             }
             if(newScreen != null) {
-                myPov.drawItems(newScreen.getGraphics());
+                myPov.setMyBackground(newScreen);
                 myPov.repaint();
             }
             myOptionlog.exitCombat();
@@ -164,6 +164,7 @@ public class GUIView extends JFrame { //implements GameView {
         private final int HEIGHT = 400;
         private final Point POS = new Point(300, 160);
         private final Point OFFSET = new Point(120, 20);
+        private Image myBackground;
 
         private POV() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -198,6 +199,10 @@ public class GUIView extends JFrame { //implements GameView {
                 }
                 count++;
             }
+        }
+
+        public void setMyBackground(Image myBackground) {
+            this.myBackground = myBackground;
         }
 
         private void drawItems(final Graphics g) {
@@ -247,13 +252,14 @@ public class GUIView extends JFrame { //implements GameView {
         @Override
         protected void paintComponent(final Graphics g) {
             super.paintComponent(g);
-            Image bg = null;
             try {
-                bg = ImageIO.read(new File("sprites/Background.png"));
+                if (myBackground == null) {
+                    myBackground = ImageIO.read(new File("sprites/Background.png"));
+                }
             } catch (final IOException e) {
                 e.printStackTrace();
             }
-            g.drawImage(bg, 0, 0, this);
+            g.drawImage(myBackground, 0, 0, this);
             if (myModel.checkCombat()) {
                 drawMonsters(g);
             } else {
