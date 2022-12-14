@@ -89,6 +89,10 @@ public class GUIView extends JFrame { //implements GameView {
                 } catch (final IOException e) {
                     appendTextLog("Game Over! You have died.");
                 }
+                for(var buttonKey : myButtons.keySet()) {
+                    myButtons.get(buttonKey).setEnabled(false);
+                }
+                myButtons.get("LOAD GAME").setEnabled(true);
             } else if (myModel.victoryCondition() && !myGameOverFlag) {
                 myGameOverFlag = true;
                 appendTextLog("Victory! You have escaped!");
@@ -97,9 +101,14 @@ public class GUIView extends JFrame { //implements GameView {
                 } catch (final IOException e) {
                     appendTextLog("Victory! You have escaped!");
                 }
+                for(var buttonKey : myButtons.keySet()) {
+                    myButtons.get(buttonKey).setEnabled(false);
+                }
+                myButtons.get("LOAD GAME").setEnabled(true);
             }
             if(newScreen != null) {
                 myPov.drawItems(newScreen.getGraphics());
+                myPov.repaint();
             }
             myOptionlog.exitCombat();
             update();
@@ -107,7 +116,7 @@ public class GUIView extends JFrame { //implements GameView {
     }
 
     public void appendTextLog(final String theText) {
-        System.out.println(theText);
+        //System.out.println(theText);
         myTextlog.TEXT_AREA.append(" >" + theText + "\n");
         myTextlog.TEXT_AREA.setCaretPosition(
                 myTextlog.TEXT_AREA.getDocument().getLength());
@@ -477,7 +486,7 @@ public class GUIView extends JFrame { //implements GameView {
 
             final JButton[] buttons = new JButton[6];
             buttons[0] = makeButton("MOVE");
-            buttons[1] = makeButton("USE ITEM");
+            buttons[1] = makeButton("USE ITEM ");
             buttons[2] = makeButton("HELP");
             buttons[3] = makeButton("SAVE GAME");
             buttons[4] = makeButton("LOAD GAME");
@@ -520,6 +529,10 @@ public class GUIView extends JFrame { //implements GameView {
                     if (choice != JFileChooser.APPROVE_OPTION) { // option cancelled.
                         FILE_CHOOSER.setCurrentDirectory(cwd);
                         return;
+                    }
+                    myGameOverFlag = false;
+                    for(var key : myButtons.keySet()) {
+                        myButtons.get(key).setEnabled(true);
                     }
                     myModel.loadGame(FILE_CHOOSER.getSelectedFile());
                     myTextlog.TEXT_AREA.setText("");
@@ -656,12 +669,23 @@ public class GUIView extends JFrame { //implements GameView {
             buttons[3].addActionListener(e -> { // INFO
                 int i = 0;
                 appendTextLog("Initiating bio-scanner...");
-                for (var monster : myModel.getMyCombat().getMonsters()) {
+                final var monsters =  myModel.getMyCombat().getMonsters();
+                for (var monster : monsters) {
                     i++;
+
                     if (!monster.isDead()) {
                         final String name = monster.getMyName();
                         final int health = monster.getMyHealth();
                         appendTextLog("[" + i + "] " + name + " | Health: " + health);
+                    }
+                }
+                for(i=0; i < 3; i++) {
+                    final var button = myButtons.get(Integer.toString(i));
+                    if(monsters.size() >= i) {
+                        button.setEnabled(
+                                !monsters.get(i).isDead() && !myModel.getHero().isDead());
+                    } else {
+                        myButtons.get(Integer.toString(i)).setEnabled(false);
                     }
                 }
             });
