@@ -1,18 +1,20 @@
 package DungeonAdventure;
+
 // main program entrypoint
 public class CaveRescue {
-    private static GameModel myGameModel;
-    private static GameView myGameView;
-    public static void main(String[] args) {
-        // instantiate a model
-        myGameModel = new DefaultModel();
+    /***
+     * runs the CLIView for CaveRescue game.
+     * @param theArgs  command line arguments
+     */
+    public static void main(final String[] theArgs) {
+        // instantiate a model, feed to a view, and run the view.
         // instantiate a view
-        myGameView = new CLIView(myGameModel);
-        myGameView.run();
+        new CLIView(new DefaultModel()).run();
     }
 
     private void saveGame() {
     }
+
     private void loadGame() {
 
     }

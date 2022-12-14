@@ -1,8 +1,10 @@
 package DungeonAdventure.Test;
 
-import DungeonAdventure.*;
-import org.junit.jupiter.api.Test;
+import DungeonAdventure.Direction;
+import DungeonAdventure.Dungeon;
+import DungeonAdventure.Room;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DungeonTest {
     @Test
@@ -10,7 +12,7 @@ public class DungeonTest {
         // verifying that the constructor for Dungeon creates the requested # of rooms.
         final int maxWidth = 40, maxHeight = 40;
 
-        for(int height=1; height < maxHeight; height++) {
+        for (int height = 1; height < maxHeight; height++) {
             for (int width = 1; width < maxWidth; width++) {
                 Dungeon d = new Dungeon(height, width);
                 Assertions.assertEquals(d.getRooms().length, height);
@@ -18,10 +20,11 @@ public class DungeonTest {
             }
         }
     }
+
     @Test
     public void testOpenDoors2By2() {
         Dungeon.RANDOM.setSeed(0L); // tests need to be non-random.
-        Dungeon d = new Dungeon(2,2);
+        Dungeon d = new Dungeon(2, 2);
 
         final Room[][] theRooms = d.getRooms();
         final Room topLeft = theRooms[0][0];

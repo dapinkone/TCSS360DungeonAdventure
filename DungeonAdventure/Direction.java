@@ -1,4 +1,5 @@
 package DungeonAdventure;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ public enum Direction implements Serializable {
             EAST, WEST,
             WEST, EAST
     );
+
     public Direction invert() {
         /*
          returns the inversion of a given direction.

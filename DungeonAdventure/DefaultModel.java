@@ -1,21 +1,26 @@
 package DungeonAdventure;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class DefaultModel implements GameModel {
-    private Dungeon myDungeon;
-    private Combat myCombat;
     private final boolean cheatCanFleeCombat = false;
     private final RecordQ myRecordQ = RecordQ.getInstance();
     private final ArrayList<Item> newItems = new ArrayList<>();
+    private Dungeon myDungeon;
+    private Combat myCombat;
+
     public DefaultModel() {
 
     }
+
     @Override
     public RecordQ getMyRecordQ() {
         return myRecordQ;
     }
+
     @Override
     public void newDungeon(int rows, int cols) {
         myDungeon = new Dungeon(rows, cols);
@@ -29,6 +34,7 @@ public class DefaultModel implements GameModel {
             objStreamOut.flush();
         }
     }
+
     @Override
     public void loadGame(File selectedFile) throws IOException {
         try (var fileIn = new FileInputStream(selectedFile)) {
@@ -38,6 +44,7 @@ public class DefaultModel implements GameModel {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public void newGame(final int theRows, final int theCols) {
         // clear and rebuild game state.
@@ -46,14 +53,15 @@ public class DefaultModel implements GameModel {
         newItems.clear();
         newDungeon(theRows, theCols);
     }
-    @Override
-    public void setHero(Hero theHero) {
-        myDungeon.setHero(theHero);
-    }
 
     @Override
     public Hero getHero() {
         return myDungeon.getHero();
+    }
+
+    @Override
+    public void setHero(Hero theHero) {
+        myDungeon.setHero(theHero);
     }
 
     @Override
@@ -75,7 +83,7 @@ public class DefaultModel implements GameModel {
     public boolean pickupItem(Item theItem) {
         final var roomItems = getRoomItems(getHeroLocation());
 
-        if(!theItem.canBePickedUp() || !roomItems.contains(theItem)) {
+        if (!theItem.canBePickedUp() || !roomItems.contains(theItem)) {
             return false;
         }
         // for any item, get the # held, and increase by one in inventory.
@@ -95,35 +103,39 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean move(Direction theDirection) {
-        if(checkCombat() && !cheatCanFleeCombat) {
-           return false; // currently in combat. can't move.
+        if (checkCombat() && !cheatCanFleeCombat) {
+            return false; // currently in combat. can't move.
         }
         final var location = getHeroLocation();
-        for(var otherDirection : myDungeon.getCurrentRoomDoors()) {
-            if(theDirection == otherDirection) { // door is open. proceed.
+        for (var otherDirection : myDungeon.getCurrentRoomDoors()) {
+            if (theDirection == otherDirection) { // door is open. proceed.
                 myDungeon.setMyHeroLocation(
                         switch (theDirection) {
-                        case WEST -> new Pair(location.getRow(), location.getColumn()-1);
-                        case EAST -> new Pair(location.getRow(), location.getColumn()+1);
-                        case NORTH -> new Pair(location.getRow()-1, location.getColumn());
-                        case SOUTH -> new Pair(location.getRow()+1, location.getColumn());
-                });
+                            case WEST ->
+                                    new Pair(location.row(), location.column() - 1);
+                            case EAST ->
+                                    new Pair(location.row(), location.column() + 1);
+                            case NORTH ->
+                                    new Pair(location.row() - 1, location.column());
+                            case SOUTH ->
+                                    new Pair(location.row() + 1, location.column());
+                        });
                 // if the new room has monsters in it, we have a combat encounter on our hands.
-                final var theRoom =  myDungeon.getRoom(getHeroLocation());
+                final var theRoom = myDungeon.getRoom(getHeroLocation());
 
                 // if we have all the pillars, and this room is the exit, we spawn boss
-                if(getHero().hasAllPillars() && theRoom.getMyItems().contains(Item.Exit)) {
+                if (getHero().hasAllPillars() && theRoom.getMyItems().contains(Item.Exit)) {
                     spawnBossFight();
                 }
                 List<Monster> monsters = theRoom.getMyMonsters();
-                if(monsters != null && monsters.size() > 0) {
+                if (monsters != null && monsters.size() > 0) {
                     myCombat = new Combat(monsters, getHero());
                 }
                 // automagically pick up any items?
                 final List<Item> localItems = new ArrayList<>(myDungeon.getCurrentRoomItems());
 
-                for(var item : localItems) {
-                    if(item.canBePickedUp())
+                for (var item : localItems) {
+                    if (item.canBePickedUp())
                         pickupItem(item);
                 }
                 return true;
@@ -135,21 +147,24 @@ public class DefaultModel implements GameModel {
 
     @Override
     public boolean checkCombat() {
-        if(myCombat == null) return false;
-        if(myCombat.isOver()) {
+        if (myCombat == null) return false;
+        if (myCombat.isOver()) {
             myCombat = null;
             return false;
         }
         return true;
     }
+
     @Override
     public Combat getMyCombat() {
         return myCombat;
     }
+
     @Override
     public Room[][] getRooms() {
         return myDungeon.getRooms();
     }
+
     @Override
     public Room getRoom(Pair theCoord) {
         return myDungeon.getRoom(theCoord);
@@ -164,15 +179,17 @@ public class DefaultModel implements GameModel {
     @Override
     public boolean gameover() {
         // test if character dead or victory condition
-        if(getHero().isDead()) return true;
+        if (getHero().isDead()) return true;
         return victoryCondition();
     }
+
     @Override
     public boolean victoryCondition() {
         final var hero = getHero();
         final var atExit = myDungeon.getCurrentRoomItems().contains(Item.Exit);
         return !hero.isDead() && hero.hasAllPillars() && atExit && !checkCombat();
     }
+
     /***
      * retrieves and returns the head of the gameEventsQueue;
      * returns null if the queue is empty.
@@ -189,6 +206,7 @@ public class DefaultModel implements GameModel {
         newItems.clear();
         return ret;
     }
+
     @Override
     public void useVisionPot() {
         myDungeon.useVisionPot();

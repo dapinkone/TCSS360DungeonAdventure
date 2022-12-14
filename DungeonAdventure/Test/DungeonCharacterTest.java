@@ -3,16 +3,10 @@ package DungeonAdventure.Test;
 import DungeonAdventure.ActionResultType;
 import DungeonAdventure.DungeonCharacter;
 import DungeonAdventure.RecordQ;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DungeonCharacterTest {
-
-    public static class MockCharacter extends DungeonCharacter {
-        public MockCharacter(String theName, double theHitChance) {
-            super(theName,50, 1,
-                    theHitChance, 10, 20);
-        }
-    }
 
     @Test
     public void attackTestSuccess() {
@@ -39,5 +33,12 @@ public class DungeonCharacterTest {
         assert result != null;
         Assertions.assertEquals(result.actionResultType(), ActionResultType.Miss);
         Assertions.assertEquals(0, result.amount());
+    }
+
+    public static class MockCharacter extends DungeonCharacter {
+        public MockCharacter(String theName, double theHitChance) {
+            super(theName, 50, 1,
+                    theHitChance, 10, 20);
+        }
     }
 }
