@@ -56,20 +56,17 @@ public class MonsterFactory {
         }
 
         String query1 = "INSERT INTO monsters VALUES" +
-                "('Skitter', 70, 5, .8, 10, 20, .4, 10, 20)";
+                "('Skitter', 70, 5, .8, 10, 15, .4, 10, 20)";
         String query2 = "INSERT INTO monsters VALUES" +
-                "('Crawler', 100, 3, .8, 15, 30, .3, 15 ,30)";
+                "('Crawler', 100, 3, .8, 10, 20, .3, 15 ,30)";
         String query3 = "INSERT INTO monsters VALUES" +
-                "('Predator', 200, 2, .6, 20, 40, .1, 20, 40)";
-        String query4 = "INSERT INTO monsters VALUES" +
-                "('Awoken Horror', 330, 2, .6, 30, 40, .1, 30, 40)";
+                "('Predator', 200, 2, .6, 15, 30, .1, 20, 40)";
 
         try {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate( query1 );
             stmt.executeUpdate( query2 );
             stmt.executeUpdate( query3 );
-            stmt.executeUpdate( query4 );
 
         } catch ( SQLException e ) {
             e.printStackTrace();

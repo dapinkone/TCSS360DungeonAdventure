@@ -35,7 +35,7 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
     public void useHealingPot() {
         final var quantity = myInventory.getOrDefault(Item.HealingPotion,0);
         if(quantity == 0) return;
-        int healing = 40; // TODO: randomize healing
+        int healing = 60; // TODO: randomize healing
         heal(healing);
         myInventory.put(Item.HealingPotion, quantity - 1);
         //healingPots--;
