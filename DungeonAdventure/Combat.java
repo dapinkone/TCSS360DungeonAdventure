@@ -40,14 +40,11 @@ public class Combat {
                 return o.speed - this.speed;
             }
         }
-        //int heroSpeed = myHero.getMyAttackSpeed();
+
         List<SpeedNode> speeds = new LinkedList<>();
-        //speeds.add(new SpeedNode(0, heroSpeed));
         int index = 0;
-        //for (Monster monster : myMonsters) {
         for (DungeonCharacter theCombatant : combatants) {
             speeds.add(new SpeedNode(index++, theCombatant.getMyAttackSpeed()));
-            //index++;
         }
         Collections.sort(speeds);
         List<Integer> turnOrderIndexes = new LinkedList<>();
@@ -81,20 +78,11 @@ public class Combat {
             nextTurn = 0;
         }
         return result;
-        //return myTurnOrder.get(nextTurn++ % myTurnOrder.size());
     }
 
     private DungeonCharacter getNextCombatant() {
         return combatants.get(getNextTurn());
     }
-//    /**
-//     * Monster attacks the hero.
-//     * @param theMonster Monster whose turn it is.
-//     * @return result of the turn.
-//     */
-//    public int monsterTurn(Monster theMonster) {
-//        return theMonster.attack(myHero);
-//    }
 
     /**
      * The method for calculating the Hero's turn.
@@ -125,34 +113,7 @@ public class Combat {
      */
     private void heroSpecial(int theTargetIndex) {
         myHero.specialSkill(myMonsters.get(theTargetIndex));
-        /*String heroClass = myHero.getMyClass();
-
-        if (heroClass.equals("Bruiser")) {
-            Monster target = myMonsters.get(theTargetIndex);
-            target.setMyHealth(target.getMyHealth() - result);
-        }
-        if (heroClass.equals("Scout")) {
-            Monster target = myMonsters.get(theTargetIndex);
-            if (result == 1) { //normal
-                result = myHero.attack(target);
-            } if (result == 2) { //crit
-                result = myHero.attack(target); // thief
-                result += myHero.attack(target);
-            }
-        }
-        return result;*/
     }
-
-    /**
-     * Should be called whenever a monster is hurt. Monster tries to heal, or dies
-     * if they are below 0 health.
-     * @return int of how much they heal.
-     */
-//    public int monsterHurt(Monster theMonster) {
-//        if (!theMonster.isDead()) {
-//            return theMonster.tryToHeal();
-//        } else return 0;
-//    }
 
     /**
      * Checks whether the combat is over.
@@ -162,20 +123,16 @@ public class Combat {
     public boolean isOver() {
         if (myHero.isDead()) return true;
         return myMonsters.stream().allMatch(Monster::isDead);
-//        boolean allDead = true;
-//        for (Monster monster : myMonsters) {
-//            if (!monster.isDead()) {
-//                allDead = false;
-//            }
-//        }
-//        return allDead;
     }
 
     public List<Monster> getMonsters() {
         return myMonsters;
     }
 
-    private void progress() { // takes monster turns until it's the hero's turn.
+    /**
+     * Takes monster turns until it's the hero's turn.
+     */
+    private void progress() {
         for (var monster = getNextCombatant(); monster != myHero; monster = getNextCombatant()) {
             // monster's turn to attack.
             monster.attack(myHero);

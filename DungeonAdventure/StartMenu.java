@@ -79,7 +79,7 @@ public class StartMenu extends JFrame {
                     appendText("""
                             >Okay, what's your specialty then?
                              [1] Bruiser     : Crush foes with a heavy blow.
-                             [2] Scout       : Swiftly strike your enemies.
+                             [2] Scout       : Strike with precision and speed.
                              [3] Survivalist : Treat any injury or wound.
                              [TYPE A NUMBER TO SELECT]
                             """);

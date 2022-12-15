@@ -23,7 +23,7 @@ public class Thief extends Hero implements Serializable {
         if (chance > .6) {
             //Crit roll
             type = ActionResultType.CriticalHit;
-            amount = this.myMaxDmg * 2;
+            amount = 2 * random.nextInt(myMinDmg + 10, myMaxDmg + 1);
         } else if (chance > .2) {
             //Normal roll
             type = ActionResultType.Hit;

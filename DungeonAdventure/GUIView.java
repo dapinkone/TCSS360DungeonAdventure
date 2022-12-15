@@ -103,6 +103,13 @@ public class GUIView extends JFrame { //implements GameView {
                 }
                 myButtons.get("LOAD GAME").setEnabled(true);
             }
+            if (myGameOverFlag) {
+                for (Room[] RoomRows : myModel.getRooms()) {
+                    for (Room room : RoomRows) {
+                        room.setVisible();
+                    }
+                }
+            }
             myOptionlog.exitCombat();
 //            update();
         }
@@ -277,8 +284,6 @@ public class GUIView extends JFrame { //implements GameView {
             setBackground(new Color(40, 40, 40));
             setHUD(myModel.getHero().getMyHealth(), 0, 0, 0);
             add(HUD);
-            //TEXT_AREA.setText("....");
-            //appendTextLog("\n");
             JScrollPane scroll = new JScrollPane(TEXT_AREA);
             scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
             add(scroll);
@@ -318,7 +323,7 @@ public class GUIView extends JFrame { //implements GameView {
             final JTextField field = new JTextField(60);
             field.addActionListener(e -> {
                 appendTextLog(field.getText());
-                //field.setText("");
+                field.setText("");
             });
             return field;
         }
@@ -440,25 +445,24 @@ public class GUIView extends JFrame { //implements GameView {
         @Override
         protected void paintComponent(final Graphics g) {
             super.paintComponent(g);
-            //try {
-//              Image explored = ImageIO.read(new File("sprites/explored.png"));
-//                Image tile = ImageIO.read(new File("sprites/tile.png"));
-//                Image player = ImageIO.read(new File("sprites/player.png"));
             for (int i = 0; i < myRows; i++) {
                 for (int j = 0; j < myCols; j++) {
                     drawRoom(myModel.getRooms()[i][j], g);
                 }
             }
             checkRecords();
-//            } catch (final IOException e) {
-  //              System.out.println("Missing sprites");
-    //        }
         }
     }
 
     private final class Optionlog extends JPanel {
         private int myAttackOrSpecial = 1; // attack == 1; special == 2
         private final JPanel MAIN_MENU_PANEL = mainMenuPanel();
+        private final JPanel DIRECTION_PANEL = directionPanel();
+        private final JPanel ITEM_PANEL = itemPanel();
+        private final JPanel COMBAT_PANEL = combatPanel();
+        private final JPanel COMBAT_ITEMS = combatItemPanel();
+        private final JPanel TARGETS = targetPanel();
+
         private Optionlog() {
             setBackground(new Color(40, 40, 40));
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -467,19 +471,25 @@ public class GUIView extends JFrame { //implements GameView {
             add(DIRECTION_PANEL);
             add(ITEM_PANEL);
             add(COMBAT_PANEL);
+            add(COMBAT_ITEMS);
             add(TARGETS);
         }
-        private final JPanel DIRECTION_PANEL = directionPanel();
 
+        /**
+         * Disables all active button panels and replaces it with the combat panel
+         */
         public void enterCombat() {
             MAIN_MENU_PANEL.setVisible(false);
             DIRECTION_PANEL.setVisible(false);
             ITEM_PANEL.setVisible(false);
             TARGETS.setVisible(false);
+            COMBAT_ITEMS.setVisible(false);
             COMBAT_PANEL.setVisible(true);
         }
-        private final JPanel TARGETS = targetPanel();
 
+        /**
+         * Disables the combat panels and returns to the main menu panel
+         */
         public void exitCombat() {
             // if this condition is true, we were in combat(showing combat panel)
             // but we are no longer in combat; we must have won the fight.
@@ -489,8 +499,7 @@ public class GUIView extends JFrame { //implements GameView {
 //                appendTextLog("You won the fight!");
             }
             TARGETS.setVisible(false);
-        }        private final JPanel ITEM_PANEL = itemPanel();
-
+        }
         /***
          * main menu panel
          * @return JPanel with core function buttons
@@ -506,7 +515,6 @@ public class GUIView extends JFrame { //implements GameView {
             buttons[2] = makeButton("HELP");
             buttons[3] = makeButton("SAVE GAME");
             buttons[4] = makeButton("LOAD GAME");
-            //buttons[4] = makeButton("[TEST] START COMBAT");
             for (int i = 0; i < 4; i++) {
                 panel.add(buttons[i]);
             }
@@ -560,7 +568,7 @@ public class GUIView extends JFrame { //implements GameView {
                 GUIView.getInstance(myModel).update();
             });
             return panel;
-        }        private final JPanel COMBAT_PANEL = combatPanel();
+        }
 
         /***
          * creates a JPanel containing buttons for GuiMap navigation
@@ -577,7 +585,7 @@ public class GUIView extends JFrame { //implements GameView {
                     myModel.move(d);
                     for (var item : myModel.checkNewItems()) {
                         appendTextLog("Item Discovered: " + item.name());
-                        if(myModel.getHero().getPillars().size() == 4) {
+                        if(myModel.getHero().getPillars().size() == 4 && item.name().contains("Pillar")) {
                             appendTextLog("You have enough pillars to power the teleporter!");
                         }
                     }
@@ -592,6 +600,11 @@ public class GUIView extends JFrame { //implements GameView {
                                 appendTextLog("You try to power up the teleporter.");
                                 appendTextLog("...But the sound attracts some bugs!");
                             }
+                        } else if (item == Item.Pit) {
+                            appendTextLog("The hazardous terrain wounds you.");
+                            myModel.getHero().takeDamage(10);
+                            appendTextLog("You are scraped for 10 damage.");
+                            checkRecords();
                         } else {
                             appendTextLog("You see a " + item.name()
                                     + " in the room...");
@@ -635,7 +648,7 @@ public class GUIView extends JFrame { //implements GameView {
                 ITEM_PANEL.setVisible(false);
                 Objects.requireNonNull(returnPanel).setVisible(true);
             });
-            buttons[1].addActionListener(e -> { // todo: implement vision pots
+            buttons[1].addActionListener(e -> {
                 myModel.useVisionPot();
                 ITEM_PANEL.setVisible(false);
                 Objects.requireNonNull(returnPanel).setVisible(true);
@@ -647,9 +660,31 @@ public class GUIView extends JFrame { //implements GameView {
             return panel;
         }
 
+        private JPanel combatItemPanel() {
+            final JPanel panel = new JPanel();
+            panel.setBackground(new Color(40, 40, 40));
+            panel.setLayout(new GridLayout(10, 1));
+            final JButton[] buttons = new JButton[5];
+
+            buttons[0] = makeButton("USE HEALING");
+            buttons[1] = makeButton("<- RETURN");
+            for (int i = 0; i < 2; i++) {
+                panel.add(buttons[i]);
+            }
+            buttons[0].addActionListener(e -> {
+                myModel.getHero().useHealingPot();
+                checkRecords();
+                COMBAT_ITEMS.setVisible(false);
+                COMBAT_PANEL.setVisible(true);
+            });
+            buttons[1].addActionListener(e -> {
+                COMBAT_ITEMS.setVisible(false);
+                COMBAT_PANEL.setVisible(true);
+            });
+            return panel;
+        }
+
         private JPanel targetPanel() {
-            // TODO: heroTurn() requires different arguments for special vs attack
-            // TODO: transfer special vs attack selection state to here?
             final JPanel panel = new JPanel();
             panel.setBackground(new Color(40, 40, 40));
             panel.setLayout(new GridLayout(10, 1));
@@ -695,14 +730,19 @@ public class GUIView extends JFrame { //implements GameView {
                 myAttackOrSpecial = 1;
             });
             buttons[1].addActionListener(e -> { // SPECIAL
-                COMBAT_PANEL.setVisible(false);
-                validateTargets();
-                TARGETS.setVisible(true);
-                myAttackOrSpecial = 2;
+                if (myModel.getHero().getMyClass().equals("Survivalist")) {
+                    myModel.getMyCombat().heroTurn(2, 0);
+                    checkRecords();
+                } else {
+                    COMBAT_PANEL.setVisible(false);
+                    validateTargets();
+                    TARGETS.setVisible(true);
+                    myAttackOrSpecial = 2;
+                }
             });
             buttons[2].addActionListener(e -> { // USE ITEM
                 COMBAT_PANEL.setVisible(false);
-                ITEM_PANEL.setVisible(true);
+                COMBAT_ITEMS.setVisible(true);
             });
             buttons[3].addActionListener(e -> { // INFO
                 int i = 0;
