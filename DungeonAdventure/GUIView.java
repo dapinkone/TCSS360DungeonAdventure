@@ -577,7 +577,7 @@ public class GUIView extends JFrame { //implements GameView {
                     myModel.move(d);
                     for (var item : myModel.checkNewItems()) {
                         appendTextLog("Item Discovered: " + item.name());
-                        if(myModel.getHero().getPillars().size() < 4) {
+                        if(myModel.getHero().getPillars().size() == 4) {
                             appendTextLog("You have enough pillars to power the teleporter!");
                         }
                     }
