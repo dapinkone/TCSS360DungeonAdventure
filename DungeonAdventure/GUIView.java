@@ -62,7 +62,8 @@ public class GUIView extends JFrame { //implements GameView {
             final var amt = record.amount();
             final var type = record.actionResultType();
             appendTextLog(
-                    "*" + switch (type) {
+//                    "*" +
+                            switch (type) {
                         case Heal -> src + " healed themselves for "
                                 + amt + " health!";
                         case Hit ->
@@ -72,47 +73,40 @@ public class GUIView extends JFrame { //implements GameView {
                         case CriticalHit ->
                                 src + " got a critical hit! " + amt +
                                         " damage to " + tgt;
-                        case Miss -> src + " swings to hit " + tgt
-                                + " but fumbles and misses.";
-                    } + "*");
+                        case Miss -> src + " attacks " + tgt
+                                + " but misses!";
+                    }
+//                    + "*"
+            );
             if (record.target() == myModel.getHero()) {
                 update();
             }
         }
         if (!myModel.checkCombat()) { // won the fight!
-            Image newScreen = null;
+
             if (myModel.getHero().isDead() && ! myGameOverFlag) {
                 myGameOverFlag = true;
-                appendTextLog("Game Over! You have died.");
-                try {
-                    newScreen = ImageIO.read(new File("sprites/gameover.png"));
-                } catch (final IOException e) {
-                    appendTextLog("Game Over! You have died.");
-                }
+                appendTextLog("You have joined your ancestors below...");
+                appendTextLog("Load a game, or restart to try again.");
                 for(var buttonKey : myButtons.keySet()) {
                     myButtons.get(buttonKey).setEnabled(false);
                 }
                 myButtons.get("LOAD GAME").setEnabled(true);
             } else if (myModel.victoryCondition() && !myGameOverFlag) {
                 myGameOverFlag = true;
-                appendTextLog("Victory! You have escaped!");
-                try {
-                    newScreen = ImageIO.read(new File("sprites/gamewin.png"));
-                } catch (final IOException e) {
-                    appendTextLog("Victory! You have escaped!");
-                }
+                appendTextLog("You successfully powered up the teleporter!");
+                appendTextLog("Everyone escapes with their lives.");
+                appendTextLog("\"Rock and Stone, " + myModel.getHero().getMyName() + "!\"");
+                appendTextLog("Load a game, or restart to try again.");
                 for(var buttonKey : myButtons.keySet()) {
                     myButtons.get(buttonKey).setEnabled(false);
                 }
                 myButtons.get("LOAD GAME").setEnabled(true);
             }
-            if(newScreen != null) {
-                myPov.setMyBackground(newScreen);
-                myPov.repaint();
-            }
             myOptionlog.exitCombat();
-            update();
+//            update();
         }
+        update();
     }
 
     public void appendTextLog(final String theText) {
@@ -253,19 +247,24 @@ public class GUIView extends JFrame { //implements GameView {
         protected void paintComponent(final Graphics g) {
             super.paintComponent(g);
             try {
-                if (myBackground == null) {
+                if (myGameOverFlag && myModel.getHero().isDead()) {
+                    myBackground = ImageIO.read(new File("sprites/gameover.png"));
+                } else if (myGameOverFlag && myModel.victoryCondition()) {
+                    myBackground = ImageIO.read(new File("sprites/gamewin.png"));
+                } else {
                     myBackground = ImageIO.read(new File("sprites/Background.png"));
                 }
             } catch (final IOException e) {
                 e.printStackTrace();
             }
             g.drawImage(myBackground, 0, 0, this);
-            if (myModel.checkCombat()) {
-                drawMonsters(g);
-            } else {
-                drawItems(g);
+            if (!myGameOverFlag) {
+                if (myModel.checkCombat()) {
+                    drawMonsters(g);
+                } else {
+                    drawItems(g);
+                }
             }
-
         }
     }
 
@@ -487,7 +486,7 @@ public class GUIView extends JFrame { //implements GameView {
             if (!myModel.checkCombat() && (COMBAT_PANEL.isVisible() || TARGETS.isVisible())) {
                 COMBAT_PANEL.setVisible(false);
                 MAIN_MENU_PANEL.setVisible(true);
-                //appendTextLog("You won the fight!");
+//                appendTextLog("You won the fight!");
             }
             TARGETS.setVisible(false);
         }        private final JPanel ITEM_PANEL = itemPanel();
@@ -522,9 +521,10 @@ public class GUIView extends JFrame { //implements GameView {
                 ITEM_PANEL.setVisible(true);
             });
             buttons[2].addActionListener(e -> {
-                appendTextLog("Call for help?");
-                appendTextLog("Well too bad, because you're alone down there.");
-                appendTextLog("Get the pillars, get to the teleporter and get out.");
+                appendTextLog("\"Call for help?\"");
+                appendTextLog("\"Well too bad, because you're alone down there.\"");
+                appendTextLog("\"Get the pillars, get to the teleporter and get out.\"");
+                appendTextLog("*beep");
             });
             buttons[3].addActionListener(e -> { // SAVE GAME
                 try {
@@ -576,13 +576,26 @@ public class GUIView extends JFrame { //implements GameView {
                 button.addActionListener(e -> {
                     myModel.move(d);
                     for (var item : myModel.checkNewItems()) {
-                        appendTextLog("Found " + item.name() + "!");
+                        appendTextLog("Item Discovered: " + item.name());
+                        if(myModel.getHero().getPillars().size() < 4) {
+                            appendTextLog("You have enough pillars to power the teleporter!");
+                        }
                     }
                     final var roomItems = myModel.getRoomItems(
                             myModel.getHeroLocation());
                     for(var item : roomItems) {
-                        appendTextLog("You see a " + item.name()
-                                + " in the room...");
+                        if(item == Item.Exit) {
+                            appendTextLog("You see the escape teleporter and the survivors.");
+                            if(myModel.getHero().getPillars().size() < 4) {
+                                appendTextLog("...But you don't have enough pillars to power it.");
+                            } else {
+                                appendTextLog("You try to power up the teleporter.");
+                                appendTextLog("...But the sound attracts some bugs!");
+                            }
+                        } else {
+                            appendTextLog("You see a " + item.name()
+                                    + " in the room...");
+                        }
                     }
                     if (myModel.checkCombat()) {
                         enterCombat();
