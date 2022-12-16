@@ -9,9 +9,13 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
     private final HashMap<Item, Integer> myInventory = new HashMap<>();
     private final String myClass;
 
-    public Hero(String theClass, String theName, int theHealth, int theAttackSpeed, double theHitChance,
-                int theMinDmg, int theMaxDmg,
-                double theDodgeChance) {
+    public Hero(final String theClass,
+                final String theName,
+                final int theHealth,
+                final int theAttackSpeed,
+                final double theHitChance,
+                final int theMinDmg, final int theMaxDmg,
+                final double theDodgeChance) {
 
         super(theName, theHealth, theAttackSpeed, theHitChance, theMinDmg, theMaxDmg);
         myClass = theClass;
@@ -35,7 +39,7 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
     public void useHealingPot() {
         final var quantity = myInventory.getOrDefault(Item.HealingPotion, 0);
         if (quantity == 0) return;
-        int healing = 60; // TODO: randomize healing
+        int healing = 60;
         heal(healing);
         myInventory.put(Item.HealingPotion, quantity - 1);
         //healingPots--;

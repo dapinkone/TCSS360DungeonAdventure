@@ -15,7 +15,7 @@ public class Warrior extends Hero implements Serializable {
      * Currently hits at a 50% chance
      */
     @Override
-    public void specialSkill(DungeonCharacter target) {
+    public void specialSkill(DungeonCharacter theTarget) {
         Random random = new Random();
         int amount = 0;
         ActionResultType resultType = ActionResultType.Miss;
@@ -24,8 +24,8 @@ public class Warrior extends Hero implements Serializable {
             amount = random.nextInt(60, 150) + 1;
             resultType = ActionResultType.CrushingBlow;
         }
-        target.takeDamage(amount);
+        theTarget.takeDamage(amount);
         RecordQ.getInstance().add(
-                new HealthChangeRecord(this, target, amount, resultType));
+                new HealthChangeRecord(this, theTarget, amount, resultType));
     }
 }

@@ -91,7 +91,6 @@ public class DefaultModel implements GameModel {
         final var count = inv.getOrDefault(theItem, 0);
         inv.put(theItem, count + 1);
         newItems.add(theItem);
-        //System.out.println("Picked up: " + theItem); // TODO: remove.
         roomItems.remove(theItem);
         return true;
     }

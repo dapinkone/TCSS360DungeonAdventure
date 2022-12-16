@@ -44,7 +44,7 @@ public final class CLIView implements GameView {
                     final var choice = choiceMenu(fightOptions,
                             "How do you fight?");
                     combat.heroTurn(fightOptions.indexOf(choice) + 1,
-                            0); // TODO: selection of multiple targets?
+                            0);
                 }
                 HealthChangeRecord record;
                 while ((record = recordQ.poll()) != null) {
@@ -103,7 +103,7 @@ public final class CLIView implements GameView {
             try {
                 rows = SCANNER.nextInt();
                 columns = SCANNER.nextInt();
-            } catch (final InputMismatchException e) { // TODO: be more specific.
+            } catch (final InputMismatchException e) {
                 System.out.println("Invalid size.");
             }
         }
@@ -112,8 +112,6 @@ public final class CLIView implements GameView {
 
     public void showDungeon() {
         final StringBuilder sb = new StringBuilder();
-        // TODO: passing Rooms(mutable) is poor form. further refactor?
-
         for (Room[] row : myModel.getRooms()) {
             for (int scanline = 0; scanline < 3; scanline++) {
                 for (Room room : row) {
@@ -138,8 +136,6 @@ public final class CLIView implements GameView {
 
     @Override
     public void showCombat() {
-        // TODO: need a way to get current combat status from model
-        // eg: monsters involved, their health, actions, etc.
     }
 
     @Override
@@ -163,7 +159,6 @@ public final class CLIView implements GameView {
         // middle line
         sb.append(theRoom.getDoor(Direction.WEST) ? ' ' : '|');
 
-        // TODO: should we be able to see monsters here?
         // append specific item representations / hero to center of room
         if (myModel.getHeroLocation().compareTo(theRoom.getMyLocation()) == 0) {
             sb.append('%'); // hero representation
@@ -206,8 +201,8 @@ public final class CLIView implements GameView {
     }
 
     @Override
-    public void showHeroSelect() { // TODO: should we generalize menus?
-        final var options = new String[]{"Survivalist", "Bruiser", "Scout"}; // TODO: available from model?
+    public void showHeroSelect() {
+        final var options = new String[]{"Survivalist", "Bruiser", "Scout"};
         System.out.println("Select a hero(1-" + options.length + "): ");
 
         for (int i = 0; i < options.length; i++) {
@@ -218,12 +213,11 @@ public final class CLIView implements GameView {
         if (SCANNER.hasNextInt()) {
             selection = SCANNER.nextInt();
         }
-        if (selection <= 0 || selection > options.length) { // TODO: fix edge cases such as EOF. test cases?
+        if (selection <= 0 || selection > options.length) {
             System.out.println("Invalid selection detected. Please enter an integer from 1 to " + options.length + ".");
             showHeroSelect();
             return;
         }
-        // TODO: use hero factory?
         myModel.setHero(
                 switch (selection) {
                     case 1 ->

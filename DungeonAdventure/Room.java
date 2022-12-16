@@ -19,9 +19,9 @@ public class Room implements Serializable {
         return myLocation;
     }
 
-    public Boolean getDoor(Direction d) {
+    public Boolean getDoor(Direction theDirection) {
         // returns true if a door is open/present. otherwise it's a locked door/wall.
-        return myDoors.getOrDefault(d, false);
+        return myDoors.getOrDefault(theDirection, false);
     }
 
     public Set<Direction> getDoors() {
@@ -52,8 +52,8 @@ public class Room implements Serializable {
         return isVisible;
     }
 
-    public void setDoor(Direction d) {
-        myDoors.put(d, true);
+    public void setDoor(Direction theDirection) {
+        myDoors.put(theDirection, true);
     }
 
     public List<Monster> getMyMonsters() {

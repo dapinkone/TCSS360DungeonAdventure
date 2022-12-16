@@ -1,7 +1,7 @@
 package DungeonAdventure;
 
 // main program entrypoint
-public class CaveRescue {
+public class DungeonAdventure {
     /***
      * runs the CLIView for CaveRescue game.
      * @param theArgs  command line arguments
@@ -13,12 +13,5 @@ public class CaveRescue {
 //        new CLIView(new DefaultModel()).run();
 
     }
-
-//    private void saveGame() {
-//    }
-//
-//    private void loadGame() {
-//
-//    }
 
 }

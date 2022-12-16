@@ -15,7 +15,7 @@ public class Thief extends Hero implements Serializable {
      * another 40% to attack regularly, and 20% to miss.
      */
     @Override
-    public void specialSkill(DungeonCharacter target) {
+    public void specialSkill(DungeonCharacter theTarget) {
         Random random = new Random();
         double chance = random.nextDouble();
         var type = ActionResultType.Miss;
@@ -29,11 +29,11 @@ public class Thief extends Hero implements Serializable {
             type = ActionResultType.Hit;
             amount = random.nextInt(myMinDmg, myMaxDmg + 1);
         }
-        target.takeDamage(amount);
+        theTarget.takeDamage(amount);
         RecordQ.getInstance().add(
                 new HealthChangeRecord(
                         this,
-                        target,
+                        theTarget,
                         amount,
                         type
                 )

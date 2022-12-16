@@ -42,8 +42,8 @@ public class Monster extends DungeonCharacter {
     }
 
     @Override
-    public void takeDamage(int amount) {
-        setMyHealth(getMyHealth() - amount);
+    public void takeDamage(int theAmount) {
+        setMyHealth(getMyHealth() - theAmount);
         if (!isDead()) tryToHeal();
     }
 

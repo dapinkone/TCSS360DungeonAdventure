@@ -14,24 +14,26 @@ public class GUIView extends JFrame { //implements GameView {
     private static final JFileChooser FILE_CHOOSER = new JFileChooser("./");
     private static GUIView instance = null;
     private final GameModel myModel;
-    private final MY_TEXTLOG myTextlog;
-    private final POV myPov = new POV();
-    private final Optionlog myOptionlog;
-    private final Map<String, JButton> myButtons;
+    private final TextLog myTextLog;
+    private final POV myPov;
+    private final OptionLog myOptionLog;
     private final GuiMap myGuiMap;
+    private final Map<String, JButton> myButtons;
     private boolean myGameOverFlag = false;
     private GUIView(final GameModel theModel) {
         myButtons = new HashMap<>();
         myModel = theModel;
-        myTextlog = new MY_TEXTLOG();
-        myOptionlog = new Optionlog();
+        myPov = new POV();
+        myGuiMap = new GuiMap(theModel.getRooms().length,
+                theModel.getRooms()[0].length);
+        myTextLog = new TextLog();
+        myOptionLog = new OptionLog();
         setTitle("Cave Rescue");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(myPov);
-        add(myGuiMap = new GuiMap(theModel.getRooms().length,
-                theModel.getRooms()[0].length));
-        add(myTextlog);
-        add(myOptionlog);
+        add(myGuiMap);
+        add(myTextLog);
+        add(myOptionLog);
         setLayout(new GridLayout(2, 2));
         setResizable(false);
         setVisible(true);
@@ -87,7 +89,7 @@ public class GUIView extends JFrame { //implements GameView {
         }
         if (!myModel.checkCombat()) { // won the fight!
             checkGameOver();
-            myOptionlog.exitCombat();
+            myOptionLog.exitCombat();
         }
         update();
     }
@@ -131,16 +133,16 @@ public class GUIView extends JFrame { //implements GameView {
      */
     public void appendTextLog(final String theText) {
         //System.out.println(theText);
-        myTextlog.TEXT_AREA.append(" >" + theText + "\n");
-        myTextlog.TEXT_AREA.setCaretPosition(
-                myTextlog.TEXT_AREA.getDocument().getLength());
+        myTextLog.TEXT_AREA.append(" >" + theText + "\n");
+        myTextLog.TEXT_AREA.setCaretPosition(
+                myTextLog.TEXT_AREA.getDocument().getLength());
     }
 
     /**
      * Updates the game's Graphics such as the map, character view, and HUD.
      */
     public void update() {
-        myTextlog.updateHUD();
+        myTextLog.updateHUD();
         // set invalid directions to inactive, and valid to active.
         validateDirections();
         myButtons.get("USE HEALING").setEnabled(
@@ -180,11 +182,11 @@ public class GUIView extends JFrame { //implements GameView {
             }
         }
     }
-    private class POV extends JPanel {
-        private final int WIDTH = 700;
-        private final int HEIGHT = 400;
-        private final Point POS = new Point(300, 160);
-        private final Point OFFSET = new Point(120, 20);
+    private final class POV extends JPanel {
+        private static final int WIDTH = 700;
+        private static final int HEIGHT = 400;
+        private static final Point POSITION = new Point(300, 160);
+        private static final Point OFFSET = new Point(120, 20);
         private Image myBackground;
 
         private POV() {
@@ -195,9 +197,9 @@ public class GUIView extends JFrame { //implements GameView {
 
         /**
          * Takes all the monsters in the current room and draws them onto the character view.
-         * @param g The graphics element.
+         * @param theGraphics The graphics element.
          */
-        private void drawMonsters(final Graphics g) {
+        private void drawMonsters(final Graphics theGraphics) {
             Image skitter = null;
             Image crawler = null;
             Image predator = null;
@@ -217,9 +219,9 @@ public class GUIView extends JFrame { //implements GameView {
                     "Predator", predator);
             for (Monster monster : heroRoom.getMyMonsters()) {
                 if (!monster.isDead()) {
-                    g.drawImage(spriteLookup.get(monster.getMyName()),
-                            POS.x + OFFSET.x * count,
-                            POS.y + OFFSET.y * count,
+                    theGraphics.drawImage(spriteLookup.get(monster.getMyName()),
+                            POSITION.x + OFFSET.x * count,
+                            POSITION.y + OFFSET.y * count,
                             this);
                 }
                 count++;
@@ -228,9 +230,9 @@ public class GUIView extends JFrame { //implements GameView {
 
         /**
          * Draws all the items in the current room for the player to see.
-         * @param g The graphics element.
+         * @param theGraphics The graphics element.
          */
-        private void drawItems(final Graphics g) {
+        private void drawItems(final Graphics theGraphics) {
             Image vpot = null;
             Image hpot = null;
             Image pillar = null;
@@ -250,24 +252,24 @@ public class GUIView extends JFrame { //implements GameView {
             int count = 0;
             for (Item item : heroRoom.getMyItems()) {
                 if (item == Item.Exit) {
-                    g.drawImage(exit,
-                            POS.x + OFFSET.x * count,
-                            POS.y + OFFSET.y * count,
+                    theGraphics.drawImage(exit,
+                            POSITION.x + OFFSET.x * count,
+                            POSITION.y + OFFSET.y * count,
                             this);
                 } else if (item.name().contains("Pillar")) {
-                    g.drawImage(pillar,
-                            POS.x + OFFSET.x * count,
-                            POS.y + OFFSET.y * count,
+                    theGraphics.drawImage(pillar,
+                            POSITION.x + OFFSET.x * count,
+                            POSITION.y + OFFSET.y * count,
                             this);
                 } else if (item == (Item.HealingPotion)) {
-                    g.drawImage(hpot,
-                            POS.x + OFFSET.x * count,
-                            POS.y + OFFSET.y * count,
+                    theGraphics.drawImage(hpot,
+                            POSITION.x + OFFSET.x * count,
+                            POSITION.y + OFFSET.y * count,
                             this);
                 } else if (item == (Item.VisionPotion)) {
-                    g.drawImage(vpot,
-                            POS.x + OFFSET.x * count,
-                            POS.y + OFFSET.y * count,
+                    theGraphics.drawImage(vpot,
+                            POSITION.x + OFFSET.x * count,
+                            POSITION.y + OFFSET.y * count,
                             this);
                 }
                 count++;
@@ -275,8 +277,8 @@ public class GUIView extends JFrame { //implements GameView {
         }
 
         @Override
-        protected void paintComponent(final Graphics g) {
-            super.paintComponent(g);
+        protected void paintComponent(final Graphics theGraphics) {
+            super.paintComponent(theGraphics);
             try {
                 if (myGameOverFlag && myModel.getHero().isDead()) {
                     myBackground = ImageIO.read(new File("sprites/gameover.png"));
@@ -288,22 +290,22 @@ public class GUIView extends JFrame { //implements GameView {
             } catch (final IOException e) {
                 e.printStackTrace();
             }
-            g.drawImage(myBackground, 0, 0, this);
+            theGraphics.drawImage(myBackground, 0, 0, this);
             if (!myGameOverFlag) {
                 if (myModel.checkCombat()) {
-                    drawMonsters(g);
+                    drawMonsters(theGraphics);
                 } else {
-                    drawItems(g);
+                    drawItems(theGraphics);
                 }
             }
         }
     }
 
-    protected final class MY_TEXTLOG extends JPanel {
+    private final class TextLog extends JPanel {
         private final JTextArea TEXT_AREA = getTextArea();
         private final JLabel HUD = new JLabel();
 
-        private MY_TEXTLOG() {
+        private TextLog() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40, 40, 40));
             setHUD(myModel.getHero().getMyHealth(), 0, 0, 0);
@@ -375,13 +377,13 @@ public class GUIView extends JFrame { //implements GameView {
     private final class GuiMap extends JPanel {
         private final int myRows;
         private final int myCols;
-        private final int TILE_SIZE = 100;
-        private final Rectangle VERT_DOOR = new Rectangle(20, 5);
-        private final Rectangle HORI_DOOR = new Rectangle(5, 20);
-        private final Point NORTH_DOOR = new Point(40, 0);
-        private final Point SOUTH_DOOR = new Point(40, TILE_SIZE - VERT_DOOR.height);
-        private final Point WEST_DOOR = new Point(0, 40);
-        private final Point EAST_DOOR = new Point(TILE_SIZE - HORI_DOOR.width, 40);
+        private static final int TILE_SIZE = 100;
+        private static final Rectangle VERT_DOOR = new Rectangle(20, 5);
+        private static final Rectangle HORI_DOOR = new Rectangle(5, 20);
+        private static final Point NORTH_DOOR = new Point(40, 0);
+        private static final Point SOUTH_DOOR = new Point(40, TILE_SIZE - VERT_DOOR.height);
+        private static final Point WEST_DOOR = new Point(0, 40);
+        private static final Point EAST_DOOR = new Point(TILE_SIZE - HORI_DOOR.width, 40);
 
         private GuiMap(final int theRows, final int theCol) {
             setBackground(new Color(40, 40, 40));
@@ -395,9 +397,10 @@ public class GUIView extends JFrame { //implements GameView {
          * @param theRow the row of the room
          * @param theCol the column of the room
          * @param theDirection the direction to draw the door onto
-         * @param g the graphics element
+         * @param theGraphics the graphics element
          */
-        private void drawDoor(final int theRow, final int theCol, final Direction theDirection, final Graphics g) {
+        private void drawDoor(final int theRow, final int theCol,
+                              final Direction theDirection, final Graphics theGraphics) {
             try {
                 final Image hori_door = ImageIO.read(new File("sprites/hori_door.png"));
                 final Image vert_door = ImageIO.read(new File("sprites/vert_door.png"));
@@ -405,13 +408,13 @@ public class GUIView extends JFrame { //implements GameView {
                 int col = theCol * TILE_SIZE;
                 switch (theDirection) {
                     case NORTH ->
-                            g.drawImage(hori_door, row + NORTH_DOOR.x, col + NORTH_DOOR.y, this);
+                            theGraphics.drawImage(hori_door, row + NORTH_DOOR.x, col + NORTH_DOOR.y, this);
                     case SOUTH ->
-                            g.drawImage(hori_door, row + SOUTH_DOOR.x, col + SOUTH_DOOR.y, this);
+                            theGraphics.drawImage(hori_door, row + SOUTH_DOOR.x, col + SOUTH_DOOR.y, this);
                     case EAST ->
-                            g.drawImage(vert_door, row + EAST_DOOR.x, col + EAST_DOOR.y, this);
+                            theGraphics.drawImage(vert_door, row + EAST_DOOR.x, col + EAST_DOOR.y, this);
                     case WEST ->
-                            g.drawImage(vert_door, row + WEST_DOOR.x, col + WEST_DOOR.y, this);
+                            theGraphics.drawImage(vert_door, row + WEST_DOOR.x, col + WEST_DOOR.y, this);
                 }
             } catch (final IOException e) {
                 System.out.println("Missing sprites");
@@ -421,9 +424,9 @@ public class GUIView extends JFrame { //implements GameView {
         /**
          * Draws the elements of a given room onto the map in the proper spot.
          * @param theRoom The given room to draw
-         * @param g the graphics element
+         * @param theGraphics the graphics element
          */
-        private void drawRoom(final Room theRoom, final Graphics g) {
+        private void drawRoom(final Room theRoom, final Graphics theGraphics) {
             final int x = theRoom.getMyLocation().column();
             final int y = theRoom.getMyLocation().row();
             final Room heroRoom = myModel.getRoom(myModel.getHeroLocation());
@@ -439,19 +442,19 @@ public class GUIView extends JFrame { //implements GameView {
                 System.out.println("Missing sprites");
             }
 
-            g.drawImage(tile, x * TILE_SIZE, y * TILE_SIZE, this);
+            theGraphics.drawImage(tile, x * TILE_SIZE, y * TILE_SIZE, this);
 
             if (theRoom.getVisible()) {
-                g.drawImage(explored, x * TILE_SIZE, y * TILE_SIZE, this);
+                theGraphics.drawImage(explored, x * TILE_SIZE, y * TILE_SIZE, this);
                 for (Direction d : theRoom.getDoors()) {
                     if (theRoom.getDoor(d)) {
-                        drawDoor(x, y, d, g);
+                        drawDoor(x, y, d, theGraphics);
                     }
                 }
                 if (heroRoom == theRoom) {
-                    g.drawImage(player, x * TILE_SIZE, y * TILE_SIZE, this);
+                    theGraphics.drawImage(player, x * TILE_SIZE, y * TILE_SIZE, this);
                 } else {
-                    drawItems(theRoom, g);
+                    drawItems(theRoom, theGraphics);
                 }
             }
 
@@ -460,9 +463,9 @@ public class GUIView extends JFrame { //implements GameView {
         /**
          * Takes the stock of a room's items and draws the appropriate sprites onto it.
          * @param theRoom The room to draw.
-         * @param g the graphics element
+         * @param theGraphics the graphics element
          */
-        private void drawItems(final Room theRoom, final Graphics g) {
+        private void drawItems(final Room theRoom, final Graphics theGraphics) {
             Image exit = null;
             Image items = null;
             Image vpot = null;
@@ -482,38 +485,38 @@ public class GUIView extends JFrame { //implements GameView {
             final int x = theRoom.getMyLocation().column();
             final int y = theRoom.getMyLocation().row();
             if (theRoom.getMyItems().contains(Item.Exit)) {
-                g.drawImage(exit, x * TILE_SIZE, y * TILE_SIZE, this);
+                theGraphics.drawImage(exit, x * TILE_SIZE, y * TILE_SIZE, this);
             } else {
                 if (theRoom.getMyItems().size() > 1) {
-                    g.drawImage(items, x * TILE_SIZE, y * TILE_SIZE, this);
+                    theGraphics.drawImage(items, x * TILE_SIZE, y * TILE_SIZE, this);
                 } else {
                     if (theRoom.getMyItems().stream().anyMatch(
                             item -> item.name().contains("Pillar"))) {
-                        g.drawImage(pillar, x * TILE_SIZE, y * TILE_SIZE, this);
+                        theGraphics.drawImage(pillar, x * TILE_SIZE, y * TILE_SIZE, this);
                     } else if (theRoom.getMyItems().contains(Item.HealingPotion)) {
-                        g.drawImage(hpot, x * TILE_SIZE, y * TILE_SIZE, this);
+                        theGraphics.drawImage(hpot, x * TILE_SIZE, y * TILE_SIZE, this);
                     } else if (theRoom.getMyItems().contains(Item.VisionPotion)) {
-                        g.drawImage(vpot, x * TILE_SIZE, y * TILE_SIZE, this);
+                        theGraphics.drawImage(vpot, x * TILE_SIZE, y * TILE_SIZE, this);
                     } else if (theRoom.getMyItems().contains(Item.Pit)) {
-                        g.drawImage(hazard, x * TILE_SIZE, y * TILE_SIZE, this);
+                        theGraphics.drawImage(hazard, x * TILE_SIZE, y * TILE_SIZE, this);
                     }
                 }
             }
         }
 
         @Override
-        protected void paintComponent(final Graphics g) {
-            super.paintComponent(g);
+        protected void paintComponent(final Graphics theGraphics) {
+            super.paintComponent(theGraphics);
             for (int i = 0; i < myRows; i++) {
                 for (int j = 0; j < myCols; j++) {
-                    drawRoom(myModel.getRooms()[i][j], g);
+                    drawRoom(myModel.getRooms()[i][j], theGraphics);
                 }
             }
             checkRecords();
         }
     }
 
-    private final class Optionlog extends JPanel {
+    private final class OptionLog extends JPanel {
         private int myAttackOrSpecial = 1; // attack == 1; special == 2
         private final JPanel MAIN_MENU_PANEL = mainMenuPanel();
         private final JPanel DIRECTION_PANEL = directionPanel();
@@ -522,7 +525,7 @@ public class GUIView extends JFrame { //implements GameView {
         private final JPanel COMBAT_ITEMS = combatItemPanel();
         private final JPanel TARGETS = targetPanel();
 
-        private Optionlog() {
+        private OptionLog() {
             setBackground(new Color(40, 40, 40));
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setLayout(new CardLayout());
@@ -619,7 +622,7 @@ public class GUIView extends JFrame { //implements GameView {
                         myButtons.get(key).setEnabled(true);
                     }
                     myModel.loadGame(FILE_CHOOSER.getSelectedFile());
-                    myTextlog.TEXT_AREA.setText("");
+                    myTextLog.TEXT_AREA.setText("");
                 } catch (final IOException ex) {
                     throw new RuntimeException(ex);
                 }

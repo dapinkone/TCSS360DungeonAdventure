@@ -20,9 +20,8 @@ public abstract class DungeonCharacter implements Serializable {
                             final double theHitChance,
                             final int theMinDmg,
                             final int theMaxDmg) {
-        //TODO: make setters, make sure setters take proper input.
-        myName = theName;
-        myHealth = theHealth;
+        setMyName(theName);
+        setMyHealth(theHealth);
         myMaxHealth = theHealth;
         myAttackSpeed = theAttackSpeed;
         myHitChance = theHitChance;
@@ -64,16 +63,16 @@ public abstract class DungeonCharacter implements Serializable {
         return myName;
     }
 
-    public void setMyName(final String myName) {
-        this.myName = myName;
+    public void setMyName(final String theName) {
+        this.myName = theName;
     }
 
     public int getMyHealth() {
         return myHealth;
     }
 
-    public void setMyHealth(final int myHealth) {
-        this.myHealth = myHealth;
+    public void setMyHealth(final int theHealth) {
+        this.myHealth = theHealth;
     }
 
     public int getMyMaxHealth() {
@@ -88,8 +87,8 @@ public abstract class DungeonCharacter implements Serializable {
         return myDodgeChance;
     }
 
-    public void setMyDodgeChance(final double myBlockChance) {
-        this.myDodgeChance = myBlockChance;
+    public void setMyDodgeChance(final double theDodgeChance) {
+        this.myDodgeChance = theDodgeChance;
     }
 
     /**

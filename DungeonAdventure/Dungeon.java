@@ -217,7 +217,6 @@ public final class Dungeon implements Serializable {
         int row = p.row();
         int col = p.column();
         ArrayList<ChoicePair> choices = new ArrayList<>();
-        // TODO: refactor?
         choices.add(new ChoicePair(new Pair(row - 1, col), Direction.NORTH));
         choices.add(new ChoicePair(new Pair(row + 1, col), Direction.SOUTH));
         choices.add(new ChoicePair(new Pair(row, col - 1), Direction.WEST));
