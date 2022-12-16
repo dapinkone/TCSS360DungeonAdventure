@@ -111,7 +111,6 @@ public class GUIView extends JFrame { //implements GameView {
                 }
             }
             myOptionlog.exitCombat();
-//            update();
         }
         update();
     }
@@ -202,10 +201,6 @@ public class GUIView extends JFrame { //implements GameView {
             }
         }
 
-        public void setMyBackground(Image myBackground) {
-            this.myBackground = myBackground;
-        }
-
         private void drawItems(final Graphics g) {
             Image vpot = null;
             Image hpot = null;
@@ -287,7 +282,7 @@ public class GUIView extends JFrame { //implements GameView {
             JScrollPane scroll = new JScrollPane(TEXT_AREA);
             scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
             add(scroll);
-            add(getTextField());
+//            add(getTextField());
         }
 
         private JTextArea getTextArea(final int rows, final int col) {
