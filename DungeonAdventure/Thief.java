@@ -11,8 +11,8 @@ public class Thief extends Hero implements Serializable {
     }
 
     /**
-     * DungeonAdventure.Thief's skill which lets them surprise attack an enemy, with 40% chance to attack twice, another 40% to attack
-     * regularly, and 20% to miss.
+     * DungeonAdventure.Thief's skill which lets them surprise attack an enemy, with 40% chance to critically attack,
+     * another 40% to attack regularly, and 20% to miss.
      */
     @Override
     public void specialSkill(DungeonCharacter target) {

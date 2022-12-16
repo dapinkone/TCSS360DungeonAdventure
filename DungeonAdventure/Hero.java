@@ -7,10 +7,7 @@ import java.util.List;
 public abstract class Hero extends DungeonCharacter implements Serializable {
 
     private final HashMap<Item, Integer> myInventory = new HashMap<>();
-    //    private int healingPots;
-//    private int visionPots;
     private final String myClass;
-    //   private List<String> pillars = new LinkedList<>();
 
     public Hero(String theClass, String theName, int theHealth, int theAttackSpeed, double theHitChance,
                 int theMinDmg, int theMaxDmg,
@@ -20,7 +17,7 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
         myClass = theClass;
         //Sets dodge chance which is specific to heroes.
         setMyDodgeChance(theDodgeChance);
-        setHealingPots(1);
+        setHealingPots(1); //freebie
     }
 
     /**
@@ -47,6 +44,10 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
                 healing, ActionResultType.Heal));
     }
 
+    /**
+     * Checks if the hero has all the pillars to win.
+     * @return boolean
+     */
     public boolean hasAllPillars() {
         return myInventory.keySet().stream().filter(
                 x -> x.name().contains("Pillar")
@@ -91,6 +92,10 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
         return String.valueOf(string);
     }
 
+    /**
+     * Gets the list of pillars held by the player.
+     * @return List of pillars.
+     */
     public List<Item> getPillars() {
         return myInventory.keySet().stream().filter(
                 item -> item.name().contains("Pillar")

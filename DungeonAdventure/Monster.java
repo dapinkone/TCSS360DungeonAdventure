@@ -26,15 +26,19 @@ public class Monster extends DungeonCharacter {
     /**
      * Calls method if monster for the monster to roll to heal.
      *
-     * @return int 0 if they fail to heal, otherwise return heal amount.
      */
-    public int tryToHeal() {
+    public void tryToHeal() {
         Random random = new Random();
         if (random.nextDouble() <= myHealChance) {
             int result = random.nextInt(myMinHeal + myMaxHeal) + 1;
             heal(result);
-            return result;
-        } else return 0;
+            RecordQ.getInstance().add(
+                    new HealthChangeRecord(
+                            this,
+                            this,
+                            result,
+                            ActionResultType.Heal));
+        }
     }
 
     @Override

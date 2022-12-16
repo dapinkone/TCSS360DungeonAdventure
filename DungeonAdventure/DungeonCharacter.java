@@ -64,7 +64,7 @@ public abstract class DungeonCharacter implements Serializable {
         return myName;
     }
 
-    public void setMyName(String myName) {
+    public void setMyName(final String myName) {
         this.myName = myName;
     }
 
@@ -72,7 +72,7 @@ public abstract class DungeonCharacter implements Serializable {
         return myHealth;
     }
 
-    public void setMyHealth(int myHealth) {
+    public void setMyHealth(final int myHealth) {
         this.myHealth = myHealth;
     }
 
@@ -88,10 +88,14 @@ public abstract class DungeonCharacter implements Serializable {
         return myDodgeChance;
     }
 
-    public void setMyDodgeChance(double myBlockChance) {
+    public void setMyDodgeChance(final double myBlockChance) {
         this.myDodgeChance = myBlockChance;
     }
 
+    /**
+     * Returns a string containing a dungeon character's stats.
+     * @return String
+     */
     public String getStats() {
         StringBuilder string = new StringBuilder();
         string.append("Name: " + myName);
@@ -104,10 +108,18 @@ public abstract class DungeonCharacter implements Serializable {
         return String.valueOf(string);
     }
 
+    /**
+     * Heals the character for a given amount, but not more than their max.
+     * @param amount The amount healed.
+     */
     public void heal(int amount) {
         setMyHealth(Integer.min(getMyHealth() + amount, getMyMaxHealth()));
     }
 
+    /**
+     * Damages a character for a given amount, but they can not fall below 0.
+     * @param amount The amount taken.
+     */
     public void takeDamage(int amount) {
         setMyHealth(Integer.max(0, getMyHealth() - amount));
     }

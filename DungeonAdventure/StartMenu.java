@@ -29,7 +29,7 @@ public class StartMenu extends JFrame {
     }
 
     private static JTextArea textBox() {
-        JTextArea textArea = new JTextArea(12, 60);
+        JTextArea textArea = new JTextArea(14, 60);
         textArea.setBackground(new Color(20, 20, 20));
         textArea.setForeground(Color.GREEN);
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 18));

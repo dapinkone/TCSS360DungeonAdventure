@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-
 public class GUIView extends JFrame { //implements GameView {
     private static final JFileChooser FILE_CHOOSER = new JFileChooser("./");
     private static GUIView instance = null;
@@ -53,6 +52,10 @@ public class GUIView extends JFrame { //implements GameView {
         GUIView.getInstance(model);
     }
 
+    /**
+     * Iterates through the model's record queue to read out the system messages necessary. Also dictates combat
+     * victory conditions for the view and the necessary messages for that.
+     */
     private void checkRecords() {
         final var recordQ = RecordQ.getInstance();
         HealthChangeRecord record;
@@ -83,38 +86,49 @@ public class GUIView extends JFrame { //implements GameView {
             }
         }
         if (!myModel.checkCombat()) { // won the fight!
-
-            if (myModel.getHero().isDead() && ! myGameOverFlag) {
-                myGameOverFlag = true;
-                appendTextLog("You have joined your ancestors below...");
-                appendTextLog("Load a game, or restart to try again.");
-                for(var buttonKey : myButtons.keySet()) {
-                    myButtons.get(buttonKey).setEnabled(false);
-                }
-                myButtons.get("LOAD GAME").setEnabled(true);
-            } else if (myModel.victoryCondition() && !myGameOverFlag) {
-                myGameOverFlag = true;
-                appendTextLog("You successfully powered up the teleporter!");
-                appendTextLog("Everyone escapes with their lives.");
-                appendTextLog("\"Rock and Stone, " + myModel.getHero().getMyName() + "!\"");
-                appendTextLog("Load a game, or restart to try again.");
-                for(var buttonKey : myButtons.keySet()) {
-                    myButtons.get(buttonKey).setEnabled(false);
-                }
-                myButtons.get("LOAD GAME").setEnabled(true);
-            }
-            if (myGameOverFlag) {
-                for (Room[] RoomRows : myModel.getRooms()) {
-                    for (Room room : RoomRows) {
-                        room.setVisible();
-                    }
-                }
-            }
+            checkGameOver();
             myOptionlog.exitCombat();
         }
         update();
     }
 
+    /**
+     * Checks if the player has reached a game over state (victory or death) and provides the appropriate messages,
+     * disables the proper buttons and reveals the map to the user.
+     */
+    private void checkGameOver() {
+        if (myModel.getHero().isDead() && ! myGameOverFlag) {
+            myGameOverFlag = true;
+            appendTextLog("You have joined your ancestors below...");
+            appendTextLog("Load a game, or restart to try again.");
+            for(var buttonKey : myButtons.keySet()) {
+                myButtons.get(buttonKey).setEnabled(false);
+            }
+            myButtons.get("LOAD GAME").setEnabled(true);
+        } else if (myModel.victoryCondition() && !myGameOverFlag) {
+            myGameOverFlag = true;
+            appendTextLog("You successfully powered up the teleporter!");
+            appendTextLog("Everyone escapes with their lives.");
+            appendTextLog("\"Rock and Stone, " + myModel.getHero().getMyName() + "!\"");
+            appendTextLog("Load a game, or restart to try again.");
+            for(var buttonKey : myButtons.keySet()) {
+                myButtons.get(buttonKey).setEnabled(false);
+            }
+            myButtons.get("LOAD GAME").setEnabled(true);
+        }
+        if (myGameOverFlag) {
+            for (Room[] RoomRows : myModel.getRooms()) {
+                for (Room room : RoomRows) {
+                    room.setVisible();
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds text to the game's text log.
+     * @param theText The text to be added.
+     */
     public void appendTextLog(final String theText) {
         //System.out.println(theText);
         myTextlog.TEXT_AREA.append(" >" + theText + "\n");
@@ -122,6 +136,9 @@ public class GUIView extends JFrame { //implements GameView {
                 myTextlog.TEXT_AREA.getDocument().getLength());
     }
 
+    /**
+     * Updates the game's Graphics such as the map, character view, and HUD.
+     */
     public void update() {
         myTextlog.updateHUD();
         // set invalid directions to inactive, and valid to active.
@@ -147,6 +164,10 @@ public class GUIView extends JFrame { //implements GameView {
             );
         }
     }
+
+    /**
+     * disables/enables buttons so that only valid choices are enabled for targeting.
+     */
     private void validateTargets() {
         final var monsters = myModel.getMyCombat().getMonsters();
         for(int i=0; i < 3; i++) {
@@ -172,6 +193,10 @@ public class GUIView extends JFrame { //implements GameView {
             setBorder(new LineBorder(Color.GREEN, 1));
         }
 
+        /**
+         * Takes all the monsters in the current room and draws them onto the character view.
+         * @param g The graphics element.
+         */
         private void drawMonsters(final Graphics g) {
             Image skitter = null;
             Image crawler = null;
@@ -201,6 +226,10 @@ public class GUIView extends JFrame { //implements GameView {
             }
         }
 
+        /**
+         * Draws all the items in the current room for the player to see.
+         * @param g The graphics element.
+         */
         private void drawItems(final Graphics g) {
             Image vpot = null;
             Image hpot = null;
@@ -271,7 +300,7 @@ public class GUIView extends JFrame { //implements GameView {
     }
 
     protected final class MY_TEXTLOG extends JPanel {
-        private final JTextArea TEXT_AREA = getTextArea(12, 60);
+        private final JTextArea TEXT_AREA = getTextArea();
         private final JLabel HUD = new JLabel();
 
         private MY_TEXTLOG() {
@@ -285,8 +314,12 @@ public class GUIView extends JFrame { //implements GameView {
 //            add(getTextField());
         }
 
-        private JTextArea getTextArea(final int rows, final int col) {
-            JTextArea textArea = new JTextArea(rows, col);
+        /**
+         * Helper method to create the main text area.
+         * @return The JTextArea
+         */
+        private JTextArea getTextArea() {
+            JTextArea textArea = new JTextArea(12, 60);
             textArea.setBackground(new Color(20, 20, 20));
             textArea.setForeground(Color.GREEN);
             textArea.setFont(new Font("Monospaced", Font.PLAIN, 18));
@@ -295,6 +328,9 @@ public class GUIView extends JFrame { //implements GameView {
             return textArea;
         }
 
+        /**
+         * Updates the values on the player HUD.
+         */
         public void updateHUD() {
             final Hero hero = myModel.getHero();
             final int health = hero.getMyHealth();
@@ -304,6 +340,13 @@ public class GUIView extends JFrame { //implements GameView {
             setHUD(health, pillars, hpots, vpots);
         }
 
+        /**
+         * Sets the values of the player HUD
+         * @param theHealth Player health.
+         * @param thePillars How many pillars the player owns.
+         * @param theHealthPots The total health pots in inventory.
+         * @param theVisionPots The total vision pots in inventory.
+         */
         private void setHUD(final int theHealth,
                             final  int thePillars,
                             final  int theHealthPots,
@@ -314,6 +357,10 @@ public class GUIView extends JFrame { //implements GameView {
             HUD.setForeground(Color.GREEN);
         }
 
+        /**
+         * Helper method to make a text field beneath the text box.
+         * @return the JTextField
+         */
         private JTextField getTextField() {
             final JTextField field = new JTextField(60);
             field.addActionListener(e -> {
@@ -343,6 +390,13 @@ public class GUIView extends JFrame { //implements GameView {
             myCols = theCol;
         }
 
+        /**
+         * Draws a door onto the room on the map.
+         * @param theRow the row of the room
+         * @param theCol the column of the room
+         * @param theDirection the direction to draw the door onto
+         * @param g the graphics element
+         */
         private void drawDoor(final int theRow, final int theCol, final Direction theDirection, final Graphics g) {
             try {
                 final Image hori_door = ImageIO.read(new File("sprites/hori_door.png"));
@@ -364,6 +418,11 @@ public class GUIView extends JFrame { //implements GameView {
             }
         }
 
+        /**
+         * Draws the elements of a given room onto the map in the proper spot.
+         * @param theRoom The given room to draw
+         * @param g the graphics element
+         */
         private void drawRoom(final Room theRoom, final Graphics g) {
             final int x = theRoom.getMyLocation().column();
             final int y = theRoom.getMyLocation().row();
@@ -398,6 +457,11 @@ public class GUIView extends JFrame { //implements GameView {
 
         }
 
+        /**
+         * Takes the stock of a room's items and draws the appropriate sprites onto it.
+         * @param theRoom The room to draw.
+         * @param g the graphics element
+         */
         private void drawItems(final Room theRoom, final Graphics g) {
             Image exit = null;
             Image items = null;
@@ -580,7 +644,7 @@ public class GUIView extends JFrame { //implements GameView {
                     myModel.move(d);
                     for (var item : myModel.checkNewItems()) {
                         appendTextLog("Item Discovered: " + item.name());
-                        if(myModel.getHero().getPillars().size() == 4 && item.name().contains("Pillar")) {
+                        if(myModel.getHero().hasAllPillars() && item.name().contains("Pillar")) {
                             appendTextLog("You have enough pillars to power the teleporter!");
                         }
                     }
@@ -589,7 +653,7 @@ public class GUIView extends JFrame { //implements GameView {
                     for(var item : roomItems) {
                         if(item == Item.Exit) {
                             appendTextLog("You see the escape teleporter and the survivors.");
-                            if(myModel.getHero().getPillars().size() < 4) {
+                            if(!myModel.getHero().hasAllPillars()) {
                                 appendTextLog("...But you don't have enough pillars to power it.");
                             } else {
                                 appendTextLog("You try to power up the teleporter.");
@@ -621,6 +685,10 @@ public class GUIView extends JFrame { //implements GameView {
             return panel;
         }
 
+        /**
+         * Creates a panel for selection of items.
+         * @return JPanel
+         */
         private JPanel itemPanel() {
             final JPanel panel = new JPanel();
             panel.setBackground(new Color(40, 40, 40));
@@ -655,6 +723,10 @@ public class GUIView extends JFrame { //implements GameView {
             return panel;
         }
 
+        /**
+         * Creates a panel for selection of items exclusive to combat.
+         * @return JPanel
+         */
         private JPanel combatItemPanel() {
             final JPanel panel = new JPanel();
             panel.setBackground(new Color(40, 40, 40));
@@ -679,6 +751,10 @@ public class GUIView extends JFrame { //implements GameView {
             return panel;
         }
 
+        /**
+         * Creates panel for selection of attack target in combat.
+         * @return JPanel
+         */
         private JPanel targetPanel() {
             final JPanel panel = new JPanel();
             panel.setBackground(new Color(40, 40, 40));
@@ -707,6 +783,10 @@ public class GUIView extends JFrame { //implements GameView {
             return panel;
         }
 
+        /**
+         * Creates a panel for selecting what to do in combat.
+         * @return JPanel
+         */
         private JPanel combatPanel() {
             final JPanel panel = new JPanel();
             panel.setBackground(new Color(40, 40, 40));
@@ -758,6 +838,11 @@ public class GUIView extends JFrame { //implements GameView {
             return panel;
         }
 
+        /**
+         * Helper method to make a uniform button.
+         * @param theText The label on the button
+         * @return JButton
+         */
         private JButton makeButton(final String theText) {
             final JButton button = new JButton(theText);
             button.setBackground(Color.black);
@@ -766,15 +851,5 @@ public class GUIView extends JFrame { //implements GameView {
             myButtons.put(theText, button);
             return button;
         }
-
-
-
-
-
-
-
-
-
-
     }
 }

@@ -24,13 +24,14 @@ public final class Dungeon implements Serializable {
         spawnMonsters();
     }
 
+    /**
+     * Spawns a random monster at the given location.
+     * @param location
+     */
     private void spawnMonster(Pair location) {
         final var chance = RANDOM.nextDouble();
         final var mf = MonsterFactory.getInstance();
         Monster monster;
-        /*if(chance > 0.9) {// ver5y unlucky.
-                    newMonster = mf.generateMonster("Awoken Horror");
-                } else */
         if (chance > 0.7) {
             monster = mf.generateMonster("predator");
         } else if (chance > 0.4) {
@@ -41,6 +42,9 @@ public final class Dungeon implements Serializable {
         getRoom(location).addMonster(monster);
     }
 
+    /**
+     * Populates the dungeon with monsters at a given rate.
+     */
     private void spawnMonsters() {
         MonsterFactory mf = MonsterFactory.getInstance();
         // for every room in the maze, maybe add a monster
@@ -60,6 +64,9 @@ public final class Dungeon implements Serializable {
         }
     }
 
+    /**
+     * Spawns the boss fight for the final event
+     */
     public void spawnBossFight() {
         for (var coord : allCoords) { // find exit
             if (getRoom(coord).getMyItems().contains(Item.Exit)) {
@@ -90,6 +97,9 @@ public final class Dungeon implements Serializable {
         }
     }
 
+    /**
+     * Populates the room arraw with empty rooms.
+     */
     private void makeRooms() {
         // we need to generate the Rooms, coordinates, etc
         myRooms = new Room[rows][];
@@ -198,6 +208,11 @@ public final class Dungeon implements Serializable {
         return myRooms[p.row()][p.column()].getDoors();
     }
 
+    /**
+     * Creates a list of ChoicePairs from the given room coordinates.
+     * @param p Pair with the coordinates.
+     * @return ArrayList of Choice Pairs
+     */
     private ArrayList<ChoicePair> borderCoords(Pair p) {
         int row = p.row();
         int col = p.column();
@@ -213,6 +228,9 @@ public final class Dungeon implements Serializable {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Consumes a vision potion to reveal adjacent rooms to the hero.
+     */
     public void useVisionPot() {
         var vpots = myHero.getVisionPots();
 
@@ -223,6 +241,9 @@ public final class Dungeon implements Serializable {
         myHero.setVisionPots(vpots - 1);
     }
 
+    /**
+     * Creates the dungeon maze utilizing depth first search.
+     */
     private void generateMaze() {
         HashSet<Pair> visited = new HashSet<>(); // visited rooms
         Pair current = new Pair(0, 0); // starting position

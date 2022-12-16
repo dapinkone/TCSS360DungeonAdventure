@@ -9,14 +9,16 @@ public class CaveRescue {
     public static void main(final String[] theArgs) {
         // instantiate a model, feed to a view, and run the view.
         // instantiate a view
-        new CLIView(new DefaultModel()).run();
-    }
-
-    private void saveGame() {
-    }
-
-    private void loadGame() {
+        new StartMenu();
+//        new CLIView(new DefaultModel()).run();
 
     }
+
+//    private void saveGame() {
+//    }
+//
+//    private void loadGame() {
+//
+//    }
 
 }
