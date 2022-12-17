@@ -1,4 +1,4 @@
-package DungeonAdventure;
+package dungeon.adventure;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

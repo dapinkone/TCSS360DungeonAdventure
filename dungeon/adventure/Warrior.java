@@ -1,4 +1,4 @@
-package DungeonAdventure;
+package dungeon.adventure;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -11,7 +11,7 @@ public class Warrior extends Hero implements Serializable {
     }
 
     /**
-     * DungeonAdventure.Warrior special skill is Crushing Blow, which does big dmg at a random chance to hit.
+     * dungeon.adventure.Warrior special skill is Crushing Blow, which does big dmg at a random chance to hit.
      * Currently hits at a 50% chance
      */
     @Override

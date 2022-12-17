@@ -1,9 +1,9 @@
-package DungeonAdventure.Test;
+package dungeon.adventure.Test;
 
-import DungeonAdventure.ActionResultType;
-import DungeonAdventure.DungeonCharacter;
-import DungeonAdventure.Hero;
-import DungeonAdventure.RecordQ;
+import dungeon.adventure.ActionResultType;
+import dungeon.adventure.DungeonCharacter;
+import dungeon.adventure.Hero;
+import dungeon.adventure.RecordQ;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

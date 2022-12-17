@@ -1,7 +1,7 @@
-package DungeonAdventure.Test;
+package dungeon.adventure.Test;
 
-import DungeonAdventure.Monster;
-import DungeonAdventure.MonsterFactory;
+import dungeon.adventure.Monster;
+import dungeon.adventure.MonsterFactory;
 import org.junit.jupiter.api.Test;
 
 public class MonsterFactoryTest {

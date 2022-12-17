@@ -1,4 +1,4 @@
-package DungeonAdventure;
+package dungeon.adventure;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -11,7 +11,7 @@ public class Thief extends Hero implements Serializable {
     }
 
     /**
-     * DungeonAdventure.Thief's skill which lets them surprise attack an enemy, with 40% chance to critically attack,
+     * dungeon.adventure.Thief's skill which lets them surprise attack an enemy, with 40% chance to critically attack,
      * another 40% to attack regularly, and 20% to miss.
      */
     @Override

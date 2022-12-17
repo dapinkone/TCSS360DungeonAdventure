@@ -44,7 +44,7 @@ Dungeon
         must ensure maze is traversable.
         populate maze randomly with Monsters, items
     
-DungeonAdventure.DungeonCharacter(Abstract)
+dungeon.adventure.DungeonCharacter(Abstract)
     constructor
     name
     HP
@@ -54,24 +54,24 @@ DungeonAdventure.DungeonCharacter(Abstract)
     attack damage range(min, max)
     attackspeed(minimum 1)
     chanceToHit
-    boolean attack(DungeonAdventure.DungeonCharacter other)
+    boolean attack(dungeon.adventure.DungeonCharacter other)
         if a character hits, rolls and applies damage to other.
         returns true if hits, otherwise false.
 
     toString()
 
-DungeonAdventure.Hero(abstract) is-a DungeonAdventure.DungeonCharacter
+dungeon.adventure.Hero(abstract) is-a dungeon.adventure.DungeonCharacter
     toString()
     move()
     totalHealingPotions, setters/getters
     totalVisionPotions. setters/getters
     Special()   
 
-DungeonAdventure.Warrior is-a DungeonAdventure.Hero
-DungeonAdventure.Priestess is-a DungeonAdventure.Hero
-DungeonAdventure.Thief is-a DungeonAdventure.Hero
+dungeon.adventure.Warrior is-a dungeon.adventure.Hero
+dungeon.adventure.Priestess is-a dungeon.adventure.Hero
+dungeon.adventure.Thief is-a dungeon.adventure.Hero
 
-Monster(abstract?) is-a DungeonAdventure.DungeonCharacter
+Monster(abstract?) is-a dungeon.adventure.DungeonCharacter
     heal()
         monster tries to heal, based on chanceToHeal, etc
     chanceToHeal

@@ -1,4 +1,4 @@
-package DungeonAdventure;
+package dungeon.adventure;
 
 import java.util.ArrayList;
 import java.util.Collections;

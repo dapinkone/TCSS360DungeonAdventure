@@ -1,4 +1,4 @@
-package DungeonAdventure;
+package dungeon.adventure;
 
 // main program entrypoint
 public class DungeonAdventure {

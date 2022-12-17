@@ -1,8 +1,8 @@
-package DungeonAdventure.Test;
+package dungeon.adventure.Test;
 
-import DungeonAdventure.Direction;
-import DungeonAdventure.Dungeon;
-import DungeonAdventure.Room;
+import dungeon.adventure.Direction;
+import dungeon.adventure.Dungeon;
+import dungeon.adventure.Room;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
