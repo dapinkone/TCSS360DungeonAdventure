@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class GUIView extends JFrame { //implements GameView {
+public final class GUIView extends JFrame { //implements GameView {
     private static final JFileChooser FILE_CHOOSER = new JFileChooser("./");
     private static GUIView instance = null;
     private final GameModel myModel;
@@ -19,7 +19,7 @@ public class GUIView extends JFrame { //implements GameView {
     private final OptionLog myOptionLog;
     private final GuiMap myGuiMap;
     private final Map<String, JButton> myButtons;
-    private boolean myGameOverFlag = false;
+    private boolean myGameOverFlag;
     private GUIView(final GameModel theModel) {
         myButtons = new HashMap<>();
         myModel = theModel;
@@ -68,20 +68,19 @@ public class GUIView extends JFrame { //implements GameView {
             final var type = record.actionResultType();
             appendTextLog(
 //                    "*" +
-                            switch (type) {
-                        case Heal -> src + " healed themselves for "
-                                + amt + " health!";
-                        case Hit ->
-                                src + " hit " + tgt + " for " + amt + " damage!";
-                        case CrushingBlow -> src + " dealt " + tgt
-                                + " a crushing blow for " + amt + " damage!";
-                        case CriticalHit ->
-                                src + " got a critical hit! " + amt +
-                                        " damage to " + tgt;
-                        case Miss -> src + " attacks " + tgt
-                                + " but misses!";
-                    }
-//                    + "*"
+                switch (type) {
+                    case Heal -> src + " healed themselves for "
+                            + amt + " health!";
+                    case Hit ->
+                            src + " hit " + tgt + " for " + amt + " damage!";
+                    case CrushingBlow -> src + " dealt " + tgt
+                            + " a crushing blow for " + amt + " damage!";
+                    case CriticalHit ->
+                            src + " got a critical hit! " + amt
+                            + " damage to " + tgt;
+                    case Miss -> src + " attacks " + tgt
+                        + " but misses!";
+                }
             );
             if (record.target() == myModel.getHero()) {
                 update();
@@ -95,7 +94,8 @@ public class GUIView extends JFrame { //implements GameView {
     }
 
     /**
-     * Checks if the player has reached a game over state (victory or death) and provides the appropriate messages,
+     * Checks if the player has reached a game over state (victory or death)
+     * and provides the appropriate messages,
      * disables the proper buttons and reveals the map to the user.
      */
     private void checkGameOver() {
@@ -103,7 +103,7 @@ public class GUIView extends JFrame { //implements GameView {
             myGameOverFlag = true;
             appendTextLog("You have joined your ancestors below...");
             appendTextLog("Load a game, or restart to try again.");
-            for(var buttonKey : myButtons.keySet()) {
+            for (var buttonKey : myButtons.keySet()) {
                 myButtons.get(buttonKey).setEnabled(false);
             }
             myButtons.get("LOAD GAME").setEnabled(true);
@@ -113,14 +113,14 @@ public class GUIView extends JFrame { //implements GameView {
             appendTextLog("Everyone escapes with their lives.");
             appendTextLog("\"Rock and Stone, " + myModel.getHero().getMyName() + "!\"");
             appendTextLog("Load a game, or restart to try again.");
-            for(var buttonKey : myButtons.keySet()) {
+            for (var buttonKey : myButtons.keySet()) {
                 myButtons.get(buttonKey).setEnabled(false);
             }
             myButtons.get("LOAD GAME").setEnabled(true);
         }
         if (myGameOverFlag) {
-            for (Room[] RoomRows : myModel.getRooms()) {
-                for (Room room : RoomRows) {
+            for (Room[] roomRows : myModel.getRooms()) {
+                for (Room room : roomRows) {
                     room.setVisible();
                 }
             }
@@ -133,9 +133,9 @@ public class GUIView extends JFrame { //implements GameView {
      */
     public void appendTextLog(final String theText) {
         //System.out.println(theText);
-        myTextLog.TEXT_AREA.append(" >" + theText + "\n");
-        myTextLog.TEXT_AREA.setCaretPosition(
-                myTextLog.TEXT_AREA.getDocument().getLength());
+        myTextLog.myTextArea.append(" >" + theText + "\n");
+        myTextLog.myTextArea.setCaretPosition(
+                myTextLog.myTextArea.getDocument().getLength());
     }
 
     /**
@@ -172,13 +172,14 @@ public class GUIView extends JFrame { //implements GameView {
      */
     private void validateTargets() {
         final var monsters = myModel.getMyCombat().getMonsters();
-        for(int i=0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             final var button = myButtons.get(Integer.toString(i+1));
-            if(monsters.size() > i) {
+            if (monsters.size() > i) {
                 button.setEnabled(
-                        !monsters.get(i).isDead() && !myModel.getHero().isDead());
+                        !monsters.get(i).isDead()
+                                && !myModel.getHero().isDead());
             } else {
-                myButtons.get(Integer.toString(i+1)).setEnabled(false);
+                myButtons.get(Integer.toString(i + 1)).setEnabled(false);
             }
         }
     }
@@ -237,7 +238,7 @@ public class GUIView extends JFrame { //implements GameView {
             Image hpot = null;
             Image pillar = null;
             Image exit = null;
-            Room heroRoom = myModel.getRooms()
+            final Room heroRoom = myModel.getRooms()
                     [myModel.getHeroLocation().row()]
                     [myModel.getHeroLocation().column()];
             try {
@@ -302,26 +303,25 @@ public class GUIView extends JFrame { //implements GameView {
     }
 
     private final class TextLog extends JPanel {
-        private final JTextArea TEXT_AREA = getTextArea();
-        private final JLabel HUD = new JLabel();
+        private final JTextArea myTextArea = getMyTextArea();
+        private final JLabel myHUD = new JLabel();
 
         private TextLog() {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setBackground(new Color(40, 40, 40));
             setHUD(myModel.getHero().getMyHealth(), 0, 0, 0);
-            add(HUD);
-            JScrollPane scroll = new JScrollPane(TEXT_AREA);
+            add(myHUD);
+            final JScrollPane scroll = new JScrollPane(myTextArea);
             scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
             add(scroll);
-//            add(getTextField());
         }
 
         /**
          * Helper method to create the main text area.
          * @return The JTextArea
          */
-        private JTextArea getTextArea() {
-            JTextArea textArea = new JTextArea(12, 60);
+        private JTextArea getMyTextArea() {
+            final JTextArea textArea = new JTextArea(12, 60);
             textArea.setBackground(new Color(20, 20, 20));
             textArea.setForeground(Color.GREEN);
             textArea.setFont(new Font("Monospaced", Font.PLAIN, 18));
@@ -353,10 +353,11 @@ public class GUIView extends JFrame { //implements GameView {
                             final  int thePillars,
                             final  int theHealthPots,
                             final  int theVisionPots) {
-            HUD.setText("Health: " + theHealth + " Pillars: " + thePillars
-                    + "/4 H.Pots: " + theHealthPots + " V.Pots: " + theVisionPots);
-            HUD.setFont(new Font("Monospaced", Font.PLAIN, 24));
-            HUD.setForeground(Color.GREEN);
+            myHUD.setText("Health: " + theHealth + " Pillars: " + thePillars
+                    + "/4 H.Pots: " + theHealthPots + " V.Pots: "
+                    + theVisionPots);
+            myHUD.setFont(new Font("Monospaced", Font.PLAIN, 24));
+            myHUD.setForeground(Color.GREEN);
         }
 
         /**
@@ -402,19 +403,30 @@ public class GUIView extends JFrame { //implements GameView {
         private void drawDoor(final int theRow, final int theCol,
                               final Direction theDirection, final Graphics theGraphics) {
             try {
-                final Image hori_door = ImageIO.read(new File("sprites/hori_door.png"));
-                final Image vert_door = ImageIO.read(new File("sprites/vert_door.png"));
-                int row = theRow * TILE_SIZE;
-                int col = theCol * TILE_SIZE;
+                final Image horiDoor = ImageIO.read(new File("sprites/hori_door.png"));
+                final Image vertDoor = ImageIO.read(new File("sprites/vert_door.png"));
+                final int row = theRow * TILE_SIZE;
+                final int col = theCol * TILE_SIZE;
                 switch (theDirection) {
                     case NORTH ->
-                            theGraphics.drawImage(hori_door, row + NORTH_DOOR.x, col + NORTH_DOOR.y, this);
+                            theGraphics.drawImage(horiDoor,
+                                    row + NORTH_DOOR.x, col + NORTH_DOOR.y,
+                                    this);
                     case SOUTH ->
-                            theGraphics.drawImage(hori_door, row + SOUTH_DOOR.x, col + SOUTH_DOOR.y, this);
+                            theGraphics.drawImage(horiDoor,
+                                    row + SOUTH_DOOR.x, col + SOUTH_DOOR.y,
+                                    this);
                     case EAST ->
-                            theGraphics.drawImage(vert_door, row + EAST_DOOR.x, col + EAST_DOOR.y, this);
+                            theGraphics.drawImage(vertDoor,
+                                    row + EAST_DOOR.x, col + EAST_DOOR.y,
+                                    this);
                     case WEST ->
-                            theGraphics.drawImage(vert_door, row + WEST_DOOR.x, col + WEST_DOOR.y, this);
+                            theGraphics.drawImage(vertDoor,
+                                    row + WEST_DOOR.x, col + WEST_DOOR.y,
+                                    this);
+                    default ->
+                            throw new IllegalStateException("Unexpected value: "
+                                    + theDirection);
                 }
             } catch (final IOException e) {
                 System.out.println("Missing sprites");
@@ -442,17 +454,20 @@ public class GUIView extends JFrame { //implements GameView {
                 System.out.println("Missing sprites");
             }
 
-            theGraphics.drawImage(tile, x * TILE_SIZE, y * TILE_SIZE, this);
+            theGraphics.drawImage(tile, x * TILE_SIZE,
+                    y * TILE_SIZE, this);
 
             if (theRoom.getVisible()) {
-                theGraphics.drawImage(explored, x * TILE_SIZE, y * TILE_SIZE, this);
+                theGraphics.drawImage(explored, x * TILE_SIZE,
+                        y * TILE_SIZE, this);
                 for (Direction d : theRoom.getDoors()) {
                     if (theRoom.getDoor(d)) {
                         drawDoor(x, y, d, theGraphics);
                     }
                 }
                 if (heroRoom == theRoom) {
-                    theGraphics.drawImage(player, x * TILE_SIZE, y * TILE_SIZE, this);
+                    theGraphics.drawImage(player, x * TILE_SIZE,
+                            y * TILE_SIZE, this);
                 } else {
                     drawItems(theRoom, theGraphics);
                 }
@@ -484,21 +499,28 @@ public class GUIView extends JFrame { //implements GameView {
             }
             final int x = theRoom.getMyLocation().column();
             final int y = theRoom.getMyLocation().row();
-            if (theRoom.getMyItems().contains(Item.Exit)) {
-                theGraphics.drawImage(exit, x * TILE_SIZE, y * TILE_SIZE, this);
+            final var roomItems = theRoom.getMyItems();
+            if (roomItems.contains(Item.Exit)) {
+                theGraphics.drawImage(exit, x * TILE_SIZE,
+                        y * TILE_SIZE,this);
             } else {
-                if (theRoom.getMyItems().size() > 1) {
-                    theGraphics.drawImage(items, x * TILE_SIZE, y * TILE_SIZE, this);
+                if (roomItems.size() > 1) {
+                    theGraphics.drawImage(items, x * TILE_SIZE,
+                            y * TILE_SIZE,this);
                 } else {
-                    if (theRoom.getMyItems().stream().anyMatch(
+                    if (roomItems.stream().anyMatch(
                             item -> item.name().contains("Pillar"))) {
-                        theGraphics.drawImage(pillar, x * TILE_SIZE, y * TILE_SIZE, this);
-                    } else if (theRoom.getMyItems().contains(Item.HealingPotion)) {
-                        theGraphics.drawImage(hpot, x * TILE_SIZE, y * TILE_SIZE, this);
-                    } else if (theRoom.getMyItems().contains(Item.VisionPotion)) {
-                        theGraphics.drawImage(vpot, x * TILE_SIZE, y * TILE_SIZE, this);
-                    } else if (theRoom.getMyItems().contains(Item.Pit)) {
-                        theGraphics.drawImage(hazard, x * TILE_SIZE, y * TILE_SIZE, this);
+                        theGraphics.drawImage(pillar, x * TILE_SIZE,
+                                y * TILE_SIZE, this);
+                    } else if (roomItems.contains(Item.HealingPotion)) {
+                        theGraphics.drawImage(hpot, x * TILE_SIZE,
+                                y * TILE_SIZE, this);
+                    } else if (roomItems.contains(Item.VisionPotion)) {
+                        theGraphics.drawImage(vpot, x * TILE_SIZE,
+                                y * TILE_SIZE, this);
+                    } else if (roomItems.contains(Item.Pit)) {
+                        theGraphics.drawImage(hazard, x * TILE_SIZE,
+                                y * TILE_SIZE, this);
                     }
                 }
             }
@@ -518,35 +540,35 @@ public class GUIView extends JFrame { //implements GameView {
 
     private final class OptionLog extends JPanel {
         private int myAttackOrSpecial = 1; // attack == 1; special == 2
-        private final JPanel MAIN_MENU_PANEL = mainMenuPanel();
-        private final JPanel DIRECTION_PANEL = directionPanel();
-        private final JPanel ITEM_PANEL = itemPanel();
-        private final JPanel COMBAT_PANEL = combatPanel();
-        private final JPanel COMBAT_ITEMS = combatItemPanel();
-        private final JPanel TARGETS = targetPanel();
+        private final JPanel myMainMenuPanel = mainMenuPanel();
+        private final JPanel myDirectionPanel = directionPanel();
+        private final JPanel myItemPanel = itemPanel();
+        private final JPanel myCombatPanel = combatPanel();
+        private final JPanel myCombatItemPanel = combatItemPanel();
+        private final JPanel myTargetPanel = targetPanel();
 
         private OptionLog() {
             setBackground(new Color(40, 40, 40));
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setLayout(new CardLayout());
-            add(MAIN_MENU_PANEL);
-            add(DIRECTION_PANEL);
-            add(ITEM_PANEL);
-            add(COMBAT_PANEL);
-            add(COMBAT_ITEMS);
-            add(TARGETS);
+            add(myMainMenuPanel);
+            add(myDirectionPanel);
+            add(myItemPanel);
+            add(myCombatPanel);
+            add(myCombatItemPanel);
+            add(myTargetPanel);
         }
 
         /**
          * Disables all active button panels and replaces it with the combat panel
          */
         public void enterCombat() {
-            MAIN_MENU_PANEL.setVisible(false);
-            DIRECTION_PANEL.setVisible(false);
-            ITEM_PANEL.setVisible(false);
-            TARGETS.setVisible(false);
-            COMBAT_ITEMS.setVisible(false);
-            COMBAT_PANEL.setVisible(true);
+            myMainMenuPanel.setVisible(false);
+            myDirectionPanel.setVisible(false);
+            myItemPanel.setVisible(false);
+            myTargetPanel.setVisible(false);
+            myCombatItemPanel.setVisible(false);
+            myCombatPanel.setVisible(true);
         }
 
         /**
@@ -555,12 +577,13 @@ public class GUIView extends JFrame { //implements GameView {
         public void exitCombat() {
             // if this condition is true, we were in combat(showing combat panel)
             // but we are no longer in combat; we must have won the fight.
-            if (!myModel.checkCombat() && (COMBAT_PANEL.isVisible() || TARGETS.isVisible())) {
-                COMBAT_PANEL.setVisible(false);
-                MAIN_MENU_PANEL.setVisible(true);
+            if (!myModel.checkCombat() && (myCombatPanel.isVisible()
+                    || myTargetPanel.isVisible())) {
+                myCombatPanel.setVisible(false);
+                myMainMenuPanel.setVisible(true);
 //                appendTextLog("You won the fight!");
             }
-            TARGETS.setVisible(false);
+            myTargetPanel.setVisible(false);
         }
         /***
          * main menu panel
@@ -582,13 +605,13 @@ public class GUIView extends JFrame { //implements GameView {
             }
             panel.add(buttons[4]);
             buttons[0].addActionListener(e -> {
-                MAIN_MENU_PANEL.setVisible(false);
-                DIRECTION_PANEL.setVisible(true);
+                myMainMenuPanel.setVisible(false);
+                myDirectionPanel.setVisible(true);
                 validateDirections();
             });
             buttons[1].addActionListener(e -> {
-                MAIN_MENU_PANEL.setVisible(false);
-                ITEM_PANEL.setVisible(true);
+                myMainMenuPanel.setVisible(false);
+                myItemPanel.setVisible(true);
             });
             buttons[2].addActionListener(e -> {
                 appendTextLog("\"Call for help?\"");
@@ -622,7 +645,7 @@ public class GUIView extends JFrame { //implements GameView {
                         myButtons.get(key).setEnabled(true);
                     }
                     myModel.loadGame(FILE_CHOOSER.getSelectedFile());
-                    myTextLog.TEXT_AREA.setText("");
+                    myTextLog.myTextArea.setText("");
                 } catch (final IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -681,8 +704,8 @@ public class GUIView extends JFrame { //implements GameView {
             }
             final JButton returnButton = makeButton("<- RETURN");
             returnButton.addActionListener(e -> {
-                MAIN_MENU_PANEL.setVisible(true);
-                DIRECTION_PANEL.setVisible(false);
+                myMainMenuPanel.setVisible(true);
+                myDirectionPanel.setVisible(false);
             });
             panel.add(returnButton);
             return panel;
@@ -701,9 +724,9 @@ public class GUIView extends JFrame { //implements GameView {
             buttons[0] = makeButton("USE HEALING");
             buttons[1] = makeButton("USE VISION");
             buttons[2] = makeButton("<- RETURN");
-            var returnToMain = MAIN_MENU_PANEL;
+            var returnToMain = myMainMenuPanel;
             if (myModel.checkCombat())
-                returnToMain = COMBAT_PANEL;
+                returnToMain = myCombatPanel;
             final var returnPanel = returnToMain;
             for (int i = 0; i < 3; i++) {
                 panel.add(buttons[i]);
@@ -711,16 +734,16 @@ public class GUIView extends JFrame { //implements GameView {
             buttons[0].addActionListener(e -> {
                 myModel.getHero().useHealingPot();
                 checkRecords();
-                ITEM_PANEL.setVisible(false);
+                myItemPanel.setVisible(false);
                 Objects.requireNonNull(returnPanel).setVisible(true);
             });
             buttons[1].addActionListener(e -> {
                 myModel.useVisionPot();
-                ITEM_PANEL.setVisible(false);
+                myItemPanel.setVisible(false);
                 Objects.requireNonNull(returnPanel).setVisible(true);
             });
             buttons[2].addActionListener(e -> {
-                ITEM_PANEL.setVisible(false);
+                myItemPanel.setVisible(false);
                 Objects.requireNonNull(returnPanel).setVisible(true);
             });
             return panel;
@@ -744,12 +767,12 @@ public class GUIView extends JFrame { //implements GameView {
             buttons[0].addActionListener(e -> {
                 myModel.getHero().useHealingPot();
                 checkRecords();
-                COMBAT_ITEMS.setVisible(false);
-                COMBAT_PANEL.setVisible(true);
+                myCombatItemPanel.setVisible(false);
+                myCombatPanel.setVisible(true);
             });
             buttons[1].addActionListener(e -> {
-                COMBAT_ITEMS.setVisible(false);
-                COMBAT_PANEL.setVisible(true);
+                myCombatItemPanel.setVisible(false);
+                myCombatPanel.setVisible(true);
             });
             return panel;
         }
@@ -770,16 +793,16 @@ public class GUIView extends JFrame { //implements GameView {
                 buttons[i].addActionListener(e -> {
                     myModel.getMyCombat().heroTurn(myAttackOrSpecial, finalI);
                     checkRecords();
-                    TARGETS.setVisible(false);
-                    COMBAT_PANEL.setVisible(true);
+                    myTargetPanel.setVisible(false);
+                    myCombatPanel.setVisible(true);
                 });
                 panel.add(buttons[i]);
             }
 
             buttons[3] = makeButton("<- RETURN");
             buttons[3].addActionListener(e -> {
-                TARGETS.setVisible(false);
-                COMBAT_PANEL.setVisible(true);
+                myTargetPanel.setVisible(false);
+                myCombatPanel.setVisible(true);
             });
 
             panel.add(buttons[3]);
@@ -802,9 +825,9 @@ public class GUIView extends JFrame { //implements GameView {
             buttons[3] = makeButton("INFO");
 
             buttons[0].addActionListener(e -> { // ATTACK
-                COMBAT_PANEL.setVisible(false);
+                myCombatPanel.setVisible(false);
                 validateTargets();
-                TARGETS.setVisible(true);
+                myTargetPanel.setVisible(true);
                 myAttackOrSpecial = 1;
             });
             buttons[1].addActionListener(e -> { // SPECIAL
@@ -812,15 +835,15 @@ public class GUIView extends JFrame { //implements GameView {
                     myModel.getMyCombat().heroTurn(2, 0);
                     checkRecords();
                 } else {
-                    COMBAT_PANEL.setVisible(false);
+                    myCombatPanel.setVisible(false);
                     validateTargets();
-                    TARGETS.setVisible(true);
+                    myTargetPanel.setVisible(true);
                     myAttackOrSpecial = 2;
                 }
             });
             buttons[2].addActionListener(e -> { // USE ITEM
-                COMBAT_PANEL.setVisible(false);
-                COMBAT_ITEMS.setVisible(true);
+                myCombatPanel.setVisible(false);
+                myCombatItemPanel.setVisible(true);
             });
             buttons[3].addActionListener(e -> { // INFO
                 int i = 0;

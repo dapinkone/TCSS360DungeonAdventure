@@ -5,17 +5,16 @@ import java.util.Map;
 
 public enum Direction implements Serializable {
     NORTH, SOUTH, EAST, WEST;
-    private static final Map<Direction, Direction> invertMap = Map.of(
+    private static final Map<Direction, Direction> INVERT_MAP = Map.of(
             NORTH, SOUTH,
             SOUTH, NORTH,
             EAST, WEST,
             WEST, EAST
     );
-
+    /***
+     @return the inversion of a given direction.
+     */
     public Direction invert() {
-        /*
-         returns the inversion of a given direction.
-         */
-        return invertMap.get(this);
+        return INVERT_MAP.get(this);
     }
 }

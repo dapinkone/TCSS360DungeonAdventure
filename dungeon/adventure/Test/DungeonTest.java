@@ -10,7 +10,8 @@ public class DungeonTest {
     @Test
     public void testRightNumberOfRooms() {
         // verifying that the constructor for Dungeon creates the requested # of rooms.
-        final int maxWidth = 40, maxHeight = 40;
+        final int maxWidth = 40;
+        final int maxHeight = 40;
 
         for (int height = 1; height < maxHeight; height++) {
             for (int width = 1; width < maxWidth; width++) {

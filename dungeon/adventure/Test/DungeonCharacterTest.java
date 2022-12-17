@@ -17,7 +17,7 @@ public class DungeonCharacterTest {
         assert result != null;
         // verify hit
         Assertions.assertEquals(result.actionResultType(), ActionResultType.Hit);
-        Assertions.assertEquals( // damage done
+        Assertions.assertEquals(// damage done
                 result.amount(),
                 test2.getMyMaxHealth() - test2.getMyHealth());
         Assertions.assertEquals(result.target(), test2); // attacked
@@ -36,7 +36,7 @@ public class DungeonCharacterTest {
     }
 
     public static class MockCharacter extends AbstractDungeonCharacter {
-        public MockCharacter(String theName, double theHitChance) {
+        public MockCharacter(final String theName,final double theHitChance) {
             super(theName, 50, 1,
                     theHitChance, 10, 20);
         }
