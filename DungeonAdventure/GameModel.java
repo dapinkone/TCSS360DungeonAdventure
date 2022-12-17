@@ -7,61 +7,153 @@ import java.util.List;
 import java.util.Set;
 
 public interface GameModel {
+    /***
+     * Returns the instance of RecordQ the game model is using.
+     * @return RecordQ
+     */
     RecordQ getMyRecordQ();
 
     /***
-     * encapsulates all the functionality/interactions required to play the game.
+     * Encapsulates all the functionality and
+     * interactions required to play the game.
+     * @param theRows The height of the maze/dungeon.
+     * @param theCols The width of the maze/dungeon.
      */
-    void newDungeon(int rows, int cols);
+    void newDungeon(int theRows, int theCols);
 
-    void saveGame(File selectedFile) throws IOException;
+    /***
+     * saveGame() saves game state(dungeon object) to the selected file.
+     * @param theSelectedFile file object destination.
+     * @throws IOException Some permissions/IO issue happened?
+     */
+    void saveGame(File theSelectedFile) throws IOException;
 
-    void loadGame(File selectedFile) throws IOException;
+    /***
+     * loadGame() loads a serialized Dungeon object from a given File object.
+     * @param theSelectedFile file object source.
+     * @throws IOException Throws if deserialization or read fails.
+     */
+    void loadGame(File theSelectedFile) throws IOException;
 
-    // data that the view needs access to display/play the game
-
+    /***
+     * Builds a new game state.
+     * @param theRows The height of the dungeon/maze.
+     * @param theCols The width of the dungeon/maze.
+     */
     void newGame(int theRows, int theCols);
 
+    // data that the view needs access to display/play the game:
+
+    /***
+     * Uses a vision pot to show adjacent rooms.
+     */
     void useVisionPot();
 
+    /***
+     * Our intrepid hero.
+     * @return Hero
+     */
     Hero getHero();
 
+    /***
+     * Sets the Hero in the model, so we can do a hero selection screen.
+     * @param theHero Our intrepid hero.
+     */
     void setHero(Hero theHero); // needed so we can do a hero select screen
 
+    /***
+     * The hero's current location in the dungeon.
+     * @return Pair location.
+     */
     Pair getHeroLocation(); // hero's position in the dungeon maze.
 
-    List<Item> getRoomItems(Pair p); // view needs to see items to know how to display
+    /***
+     * Returns the items in a given room location so the view can render.
+     * @param theLocation Pair of row, column
+     * @return List of items found at theLocation.
+     */
+    List<Item> getRoomItems(Pair theLocation);
 
-    Set<Direction> getRoomDoors(Pair p); // view needs to see doors/openings to display, and for player options
+    /***
+     * View needs to see doors/openings to display, and for player navitation.
+     * @param theLocation The location to be queried.
+     * @return Set of Direction objects which have open/passable doors.
+     */
+    Set<Direction> getRoomDoors(Pair theLocation);
 
+    /***
+     * Picks up theItem in the current room.
+     * @param theItem Desired item.
+     */
     // player actions:
-    boolean pickupItem(Item theItem); // pickup an item in the current room, return success/failure.
+    void pickupItem(Item theItem);
 
-    boolean useItem(Item theItem); // use an item that's in the hero's inventory.
+    /***
+     * Use a given inventory item, and return success/failure.
+     * @param theItem Item to be used.
+     * @return success or failure of attempt.
+     */
+    boolean useItem(Item theItem);
 
-    boolean move(Direction theDirection); // move the hero in a given direction. returns success/failure.
+    /***
+     * Move the hero in a given Direction within the dungeon. May fail if
+     * hero is in combat, or desired Direction is not free of obstruction.
+     * @param theDirection direction of movement.
+     * @return success or failure of movement.
+     */
+    boolean move(Direction theDirection);
 
-    boolean checkCombat(); //returns true if we've run into a combat encounter in the current room?
+    /***
+     * Is the hero currently in combat?
+     * @return true for yes. false for no.
+     */
+    boolean checkCombat();
 
+    /***
+     * Combat object encapsulates combat/turn ordering.
+     * @return Combat object.
+     */
     Combat getMyCombat();
 
     /***
-     * returns reference to monsters in the current combat encounter.
-     * @return list of monsters
+     * Used to get more detail about specific rooms in the dungeon structure.
+     * @return Room[][] dungeon rooms.
      */
-    //List<Monster> combatStats();
-
     Room[][] getRooms();
 
+    /***
+     * Gets a specific room by location.
+     * @param theCoord location pair.
+     * @return Room object from the dungeon.
+     */
     Room getRoom(Pair theCoord);
 
-    void spawnBossFight();
 
-    boolean gameover();
+    //void spawnBossFight();
 
+    /***
+     * Checks if the game is over(hero is dead, or victorious)
+     * @return true/false for game condition.
+     */
+    boolean gameOver();
+
+    /***
+     * Checks victory condition.
+     * @return true if Hero is not dead, has all pillars, and stands alone,
+     * outside combat, at the exit.
+     */
     boolean victoryCondition();
 
+    /***
+     * Used to get the next record from the RecordQ for rendering code.
+     * @return HealthChangeRecord
+     */
     HealthChangeRecord nextGameRecord();
 
+    /***
+     * Records and returns the items which have been auto-picked-up upon the
+     * hero's entry into the room.
+     * @return List of Items
+     */
     ArrayList<Item> checkNewItems();
 }

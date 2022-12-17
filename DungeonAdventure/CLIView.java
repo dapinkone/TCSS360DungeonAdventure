@@ -1,12 +1,14 @@
 package DungeonAdventure;
-
-
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-/*** CLIView implements a console  view for the dungeon adventure GameModel. */
+/*** CLIView implements a console  view for the dungeon adventure GameModel.
+ * @author Peter Iriarte (Peter.iriarte24@gmail.com)
+ * @author Brian Nguyen
+ * @version 0.1
+ */
 public final class CLIView implements GameView {
     /*** Only one scanner object is needed in CLIView. */
     static final Scanner SCANNER = new Scanner(System.in);
@@ -26,7 +28,7 @@ public final class CLIView implements GameView {
         showSizeSelect(); // how large is the dungeon?
         // difficulty? (might adjust spawn rates?)
         showHeroSelect();
-        while (!myModel.gameover()) {
+        while (!myModel.gameOver()) {
             showDungeon();
             myModel.move(movementMenu());
             // check for combat
@@ -67,7 +69,8 @@ public final class CLIView implements GameView {
             if (!newItems.isEmpty()) {
                 System.out.println("New items found:" + newItems);
             }
-            final var roomItems = myModel.getRoomItems(myModel.getHeroLocation());
+            final var roomItems = myModel.getRoomItems(
+                    myModel.getHeroLocation());
 
             if (!roomItems.isEmpty()) {
                 System.out.println("You see something in the room....:");
@@ -102,12 +105,15 @@ public final class CLIView implements GameView {
     }
 
     private Direction movementMenu() {
-        final var options = new ArrayList<>(myModel.getRoomDoors(myModel.getHeroLocation()));
-        return choiceMenu(options, "What direction would you like to go?");
+        final var options = new ArrayList<>(
+                myModel.getRoomDoors(myModel.getHeroLocation()));
+        return choiceMenu(options,
+                "What direction would you like to go?");
     }
 
     private void showSizeSelect() {
-        System.out.println("Please enter two integers for the desired game size:");
+        System.out.println(
+                "Please enter two integers for the desired game size:");
         int rows = 0;
         int columns = 0;
         while (rows <= 0 || columns <= 0) {
@@ -190,7 +196,7 @@ public final class CLIView implements GameView {
             sb.append('.'); // "empty"
         }
         final String eastSide;
-        if(theRoom.getDoor(Direction.EAST)) {
+        if (theRoom.getDoor(Direction.EAST)) {
             eastSide = " \n";
         } else {
             eastSide = "|\n";
@@ -263,7 +269,8 @@ public final class CLIView implements GameView {
         }
         int choiceIndex;
         do {
-            System.out.println(theDescription + "(1-" + theOptions.size() + ")");
+            System.out.println(theDescription + "(1-" + theOptions.size()
+                    + ")");
             int i = 1;
             for (T option : theOptions) {
                 System.out.println(i++ + ". " + option.toString());

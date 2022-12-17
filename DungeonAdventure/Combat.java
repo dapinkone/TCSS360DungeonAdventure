@@ -31,7 +31,7 @@ public class Combat {
      */
     private List<Integer> turnOrdering() {
         final class SpeedNode implements Comparable<SpeedNode> {
-            final private int myIndex;
+            private final int myIndex;
             private int mySpeed;
 
             private SpeedNode(final int theIndex, final int theSpeed) {
@@ -51,7 +51,7 @@ public class Combat {
             speeds.add(new SpeedNode(index++, combatant.getMyAttackSpeed()));
         }
         Collections.sort(speeds);
-        List<Integer> turnOrderIndexes = new LinkedList<>();
+        final List<Integer> turnOrderIndexes = new LinkedList<>();
         final int min = speeds.get(speeds.size() - 1).mySpeed;
 
         //combat loop
@@ -113,7 +113,7 @@ public class Combat {
      *
      * @param theTargetIndex the target of the special move should there be one
      */
-    private void heroSpecial(int theTargetIndex) {
+    private void heroSpecial(final int theTargetIndex) {
         myHero.specialSkill(myMonsters.get(theTargetIndex));
     }
 

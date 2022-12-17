@@ -11,6 +11,6 @@ public enum ActionResultType {
     CriticalHit,
     /*** Source has healed itself. */
     Heal,
-    /*** Source has dealt a crushing blow against target. */
+    /*** Source has dealt a crushing blow against target.  */
     CrushingBlow
 }
