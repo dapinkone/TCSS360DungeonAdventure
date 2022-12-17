@@ -1,11 +1,19 @@
 package DungeonAdventure;
 
-import java.io.IOException;
-import java.util.*;
 
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+/*** CLIView implements a console  view for the dungeon adventure GameModel. */
 public final class CLIView implements GameView {
+    /*** Only one scanner object is needed in CLIView. */
     static final Scanner SCANNER = new Scanner(System.in);
-    final GameModel myModel;
+    /*** The model utilized should not need to be changed over the life of the
+     * view.
+     */
+    private final GameModel myModel;
 
     public CLIView(final GameModel theModel) {
         myModel = theModel;
@@ -38,9 +46,11 @@ public final class CLIView implements GameView {
                     for (var monster : monsters) {
                         System.out.println(monster.getStats() + "\n");
                     }
-                    System.out.println("Your stats:\n" + myModel.getHero() + "\n");
-                    // show fight options (attack / special skill / use health pot)
-                    final var fightOptions = List.of("Attack", "Special skill", "Use Health Tonic");
+                    System.out.println("Your stats:\n" + myModel.getHero()
+                            + "\n");
+                    // show fight options (attack/special skill/use health pot)
+                    final var fightOptions = List.of(
+                            "Attack", "Special skill", "Use Health Tonic");
                     final var choice = choiceMenu(fightOptions,
                             "How do you fight?");
                     combat.heroTurn(fightOptions.indexOf(choice) + 1,
@@ -98,7 +108,8 @@ public final class CLIView implements GameView {
 
     private void showSizeSelect() {
         System.out.println("Please enter two integers for the desired game size:");
-        int rows = 0, columns = 0;
+        int rows = 0;
+        int columns = 0;
         while (rows <= 0 || columns <= 0) {
             try {
                 rows = SCANNER.nextInt();
@@ -115,7 +126,7 @@ public final class CLIView implements GameView {
         for (Room[] row : myModel.getRooms()) {
             for (int scanline = 0; scanline < 3; scanline++) {
                 for (Room room : row) {
-                    String s = roomAsASCII(room).split("\n")[scanline];
+                    final String s = roomAsASCII(room).split("\n")[scanline];
                     sb.append(s);
                 }
                 sb.append('\n');
@@ -157,7 +168,13 @@ public final class CLIView implements GameView {
             sb.append("---\n");
         }
         // middle line
-        sb.append(theRoom.getDoor(Direction.WEST) ? ' ' : '|');
+        final String middleLine;
+        if (theRoom.getDoor(Direction.WEST)) {
+            middleLine = " ";
+        } else {
+            middleLine = "|";
+        }
+        sb.append(middleLine);
 
         // append specific item representations / hero to center of room
         if (myModel.getHeroLocation().compareTo(theRoom.getMyLocation()) == 0) {
@@ -168,23 +185,17 @@ public final class CLIView implements GameView {
             sb.append("M"); // stack of multiple items is displayed as M
         } else if (theRoom.getMyItems().size() == 1) {
             final var item = theRoom.getMyItems().get(0);
-            sb.append(
-                switch (item) {
-                    case PillarAbstraction -> "A";
-                    case PillarEncapsulation -> "E";
-                    case PillarInheritance -> "I";
-                    case PillarPolymorphism -> "P";
-                    case Pit -> "X";
-                    case Entrance -> "i";
-                    case Exit -> "O";
-                    case HealingPotion -> "H";
-                    case VisionPotion -> "V";
-                }
-            );
+            sb.append(itemToASCII(item));
         } else {
             sb.append('.'); // "empty"
         }
-        sb.append(theRoom.getDoor(Direction.EAST) ? " \n" : "|\n");
+        final String eastSide;
+        if(theRoom.getDoor(Direction.EAST)) {
+            eastSide = " \n";
+        } else {
+            eastSide = "|\n";
+        }
+        sb.append(eastSide);
 
         // bottom line
         if (theRoom.getDoor(Direction.SOUTH)) {
@@ -194,7 +205,19 @@ public final class CLIView implements GameView {
         }
         return sb.toString();
     }
-
+    private String itemToASCII(final Item theItem) {
+        return switch (theItem) {
+            case PillarAbstraction -> "A";
+            case PillarEncapsulation -> "E";
+            case PillarInheritance -> "I";
+            case PillarPolymorphism -> "P";
+            case Pit -> "X";
+            case Entrance -> "i";
+            case Exit -> "O";
+            case HealingPotion -> "H";
+            case VisionPotion -> "V";
+        };
+    }
     @Override
     public void showIntro() {
 
@@ -214,31 +237,35 @@ public final class CLIView implements GameView {
             selection = SCANNER.nextInt();
         }
         if (selection <= 0 || selection > options.length) {
-            System.out.println("Invalid selection detected. Please enter an integer from 1 to " + options.length + ".");
+            System.out.println("Invalid selection detected. Please enter an "
+                    + "integer from 1 to " + options.length + ".");
             showHeroSelect();
             return;
         }
         myModel.setHero(
-                switch (selection) {
-                    case 1 ->
-                            new Priestess(options[selection - 1]); // Survivalist
-                    case 2 -> new Warrior(options[selection - 1]); // Bruiser
-                    case 3 -> new Thief(options[selection - 1]); // Scout
-                    default ->
-                            throw new IllegalStateException("Unexpected value: " + selection);
-                });
+            switch (selection) {
+                case 1 ->
+                    new Priestess(options[selection - 1]); // Survivalist
+                case 2 -> new Warrior(options[selection - 1]); // Bruiser
+                case 3 -> new Thief(options[selection - 1]); // Scout
+                default ->
+                    throw new IllegalStateException("Unexpected value: "
+                            + selection);
+            });
         System.out.println("Hero " + options[selection - 1] + " selected.");
     }
 
-    private <T> T choiceMenu(final List<T> options, final String description) throws NoSuchElementException {
-        if (options == null || options.isEmpty()) {
+    private <T> T choiceMenu(final List<T> theOptions,
+                             final String theDescription
+    ) throws NoSuchElementException {
+        if (theOptions == null || theOptions.isEmpty()) {
             throw new NoSuchElementException();
         }
         int choiceIndex;
         do {
-            System.out.println(description + "(1-" + options.size() + ")");
+            System.out.println(theDescription + "(1-" + theOptions.size() + ")");
             int i = 1;
-            for (T option : options) {
+            for (T option : theOptions) {
                 System.out.println(i++ + ". " + option.toString());
             }
             choiceIndex = SCANNER.nextInt();
@@ -247,8 +274,8 @@ public final class CLIView implements GameView {
                 hero.setHealingPots(31337);
                 hero.setMyHealth(10000);
             }
-        } while (choiceIndex < 1 || choiceIndex > options.size());
-        return options.get(choiceIndex - 1);
+        } while (choiceIndex < 1 || choiceIndex > theOptions.size());
+        return theOptions.get(choiceIndex - 1);
     }
 
     @Override
