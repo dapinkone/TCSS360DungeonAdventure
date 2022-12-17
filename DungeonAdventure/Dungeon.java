@@ -1,23 +1,60 @@
 package DungeonAdventure;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Random;
+import java.util.Set;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public final class Dungeon implements Serializable {
-    public static final Random RANDOM = new Random();
-    final private int rows;
-    final private int columns;
-    final private HashSet<Pair> allCoords = new HashSet<>();
     /***
-     * Data structure that holds information about the dungeon, or the "board" on which we play the game
+     * Random object used for item & room generation.
+     */
+    public static final Random RANDOM = new Random();
+    /***
+     * The height of the dungeon.
+     */
+    private final int myRows;
+    /***
+     * The width of the dungeon.
+     */
+    private final int myColumns;
+    /***
+     * Listing of all valid coordinate pairs in the dungeon's range.
+     * Simplify bounds checking at the cost of some RAM.
+     */
+    private final Set<Pair> myAllCoords = new HashSet<>();
+    /***
+     * Data structure that holds information about the dungeon rooms,
+     * or the "board" on which we play the game.
      */
     private Room[][] myRooms;
+    /***
+     * Our intrepid hero, as given by setHero().
+     */
     private Hero myHero;
+    /***
+     * Hero's current location in the dungeon.
+     */
     private Pair myHeroLocation = new Pair(0, 0);
-    public Dungeon(int rows, int columns) {
-        this.rows = rows;
-        this.columns = columns;
+
+    /***
+     * Main worker of Dungeon.java, constructs rooms, generates the maze doors,
+     * monsters, items, etc.
+     * @param theRows Dungeon Height.
+     * @param theColumns Dungeon width.
+     */
+    public Dungeon(final int theRows, final int theColumns) {
+        this.myRows = theRows;
+        this.myColumns = theColumns;
         makeRooms();
         generateMaze();
         spawnItems();
@@ -25,13 +62,13 @@ public final class Dungeon implements Serializable {
     }
 
     /**
-     * Spawns a random monster at the given location.
-     * @param location
+     * Spawns a random monster at the given theLocation.
+     * @param theLocation Pair theLocation in the dungeon.
      */
-    private void spawnMonster(Pair location) {
+    private void spawnMonster(final Pair theLocation) {
         final var chance = RANDOM.nextDouble();
         final var mf = MonsterFactory.getInstance();
-        Monster monster;
+        final Monster monster;
         if (chance > 0.7) {
             monster = mf.generateMonster("predator");
         } else if (chance > 0.4) {
@@ -39,36 +76,37 @@ public final class Dungeon implements Serializable {
         } else {
             monster = mf.generateMonster("Skitter");
         }
-        getRoom(location).addMonster(monster);
+        getRoom(theLocation).addMonster(monster);
     }
 
     /**
      * Populates the dungeon with monsters at a given rate.
      */
     private void spawnMonsters() {
-        MonsterFactory mf = MonsterFactory.getInstance();
         // for every room in the maze, maybe add a monster
-        for (var coord : allCoords) {
+        for (var coord : myAllCoords) {
             final var room = getRoom(coord);
             // don't want to start the game in combat.
-            if (room.getMyItems().contains(Item.Entrance)) continue;
+            if (room.getMyItems().contains(Item.Entrance)) {
+                continue;
+            }
 
             if (RANDOM.nextDouble() > 0.8) { // 20% chance to see a monster at all
                 spawnMonster(coord);
             }
             if (getRoom(coord).getMyItems().stream().anyMatch(
                     // double monsters in pillar or exit rooms.
-                    e -> (e.name().contains("Pillar")))) {
+                    e -> e.name().contains("Pillar"))) {
                 spawnMonster(coord);
             }
         }
     }
 
     /**
-     * Spawns the boss fight for the final event
+     * Spawns the boss fight for the final event.
      */
     public void spawnBossFight() {
-        for (var coord : allCoords) { // find exit
+        for (var coord : myAllCoords) { // find exit
             if (getRoom(coord).getMyItems().contains(Item.Exit)) {
                 spawnMonster(coord);
                 spawnMonster(coord);
@@ -77,21 +115,35 @@ public final class Dungeon implements Serializable {
         }
     }
 
+    /***
+     * @return myColumns, the number of columns in the dungeon.
+     */
     public int getColumns() {
-        return columns;
+        return myColumns;
     }
 
+    /***
+     * @return myRows, the number of rows in the dungeon.
+     */
     public int getRows() {
-        return rows;
+        return myRows;
     }
 
+    /***
+     * The hero's current location in the dungeon.
+     * @return Pair of (row, column)
+     */
     public Pair getMyHeroLocation() {
         return myHeroLocation;
     }
 
-    public void setMyHeroLocation(Pair theHeroLocation) {
+    /***
+     * Sets the hero's location, used to move the hero.
+     * @param theHeroLocation new location.
+     */
+    public void setMyHeroLocation(final Pair theHeroLocation) {
         // if coordinate is valid
-        if (allCoords.contains(theHeroLocation)) {
+        if (myAllCoords.contains(theHeroLocation)) {
             myHeroLocation = theHeroLocation;
             getRoom(myHeroLocation).setVisible();
         }
@@ -102,20 +154,24 @@ public final class Dungeon implements Serializable {
      */
     private void makeRooms() {
         // we need to generate the Rooms, coordinates, etc
-        myRooms = new Room[rows][];
-        for (int row = 0; row < rows; row++) {
-            Room[] rowArr = new Room[columns];
-            for (int col = 0; col < columns; col++) {
-                Pair roomLocation = new Pair(row, col);
-                allCoords.add(roomLocation);
-                Room newRoom = new Room(roomLocation);
+        myRooms = new Room[myRows][];
+        for (int row = 0; row < myRows; row++) {
+            final Room[] rowArr = new Room[myColumns];
+            for (int col = 0; col < myColumns; col++) {
+                final Pair roomLocation = new Pair(row, col);
+                myAllCoords.add(roomLocation);
+                final Room newRoom = new Room(roomLocation);
                 rowArr[col] = newRoom;
             }
             myRooms[row] = rowArr;
         }
     }
-
-    public Room getRoom(Pair theLocation) {
+    /***
+     * Gets a specific room by location.
+     * @param theLocation location pair.
+     * @return Room object from the dungeon.
+     */
+    public Room getRoom(final Pair theLocation) {
         return myRooms[theLocation.row()][theLocation.column()];
     }
 
@@ -125,28 +181,37 @@ public final class Dungeon implements Serializable {
      * to hard-coded required frequencies, with some hard upper limits.
      */
     private void spawnItems() {
-        /***
-         * myItemRates determines the chance of each item that should spawn in the
+        /*
+         * itemRates determines the chance of each item that should spawn in the
          * dungeon, as well as any upper bounds on the # that can spawn.
          */
-        final Map<Item, ItemRecord> myItemRates = new HashMap<>();
+        final Map<Item, ItemRecord> itemRates = new HashMap<>();
         // is there a cleaner way to do this?
         // exit, entrance, as well as pillars 100% must spawn,
         // and must spawn exactly once.
-        myItemRates.put(Item.Exit, new ItemRecord(1.0, 1));
-        myItemRates.put(Item.Entrance, new ItemRecord(1.0, 1));
-        myItemRates.put(Item.PillarAbstraction, new ItemRecord(1.0, 1));
-        myItemRates.put(Item.PillarInheritance, new ItemRecord(1.0, 1));
-        myItemRates.put(Item.PillarEncapsulation, new ItemRecord(1.0, 1));
-        myItemRates.put(Item.PillarPolymorphism, new ItemRecord(1.0, 1));
+        itemRates.put(Item.Exit,
+                new ItemRecord(1.0, 1));
+        itemRates.put(Item.Entrance,
+                new ItemRecord(1.0, 1));
+        itemRates.put(Item.PillarAbstraction,
+                new ItemRecord(1.0, 1));
+        itemRates.put(Item.PillarInheritance,
+                new ItemRecord(1.0, 1));
+        itemRates.put(Item.PillarEncapsulation,
+                new ItemRecord(1.0, 1));
+        itemRates.put(Item.PillarPolymorphism,
+                new ItemRecord(1.0, 1));
         // Healing potions, vision potions and pits are a bit less common.
         // we'll go 20% chance, with no upper limit.
-        myItemRates.put(Item.HealingPotion, new ItemRecord(0.2, Integer.MAX_VALUE));
-        myItemRates.put(Item.VisionPotion, new ItemRecord(0.1, Integer.MAX_VALUE));
-        myItemRates.put(Item.Pit, new ItemRecord(0.1, Integer.MAX_VALUE));
+        itemRates.put(Item.HealingPotion,
+                new ItemRecord(0.2, Integer.MAX_VALUE));
+        itemRates.put(Item.VisionPotion,
+                new ItemRecord(0.1, Integer.MAX_VALUE));
+        itemRates.put(Item.Pit,
+                new ItemRecord(0.1, Integer.MAX_VALUE));
         //
         //
-        final var shuffledCoords = new ArrayList<>(allCoords);
+        final var shuffledCoords = new ArrayList<>(myAllCoords);
         Collections.shuffle(shuffledCoords);
 
         Room choice;
@@ -154,7 +219,7 @@ public final class Dungeon implements Serializable {
         for (var coord : shuffledCoords) {
             choice = getRoom(coord);
             for (Item i : Item.values()) {
-                final ItemRecord rec = myItemRates.get(i);
+                final ItemRecord rec = itemRates.get(i);
                 if (rec == null) {
                     throw new NoSuchElementException("Item " + i + "unknown.");
                 }
@@ -168,7 +233,8 @@ public final class Dungeon implements Serializable {
                     // these(entrance/exit/pillars) are only one to a room
                     continue ROOM;
                 }
-                if (rec.getMyMaxOccurrence() > 0 && RANDOM.nextDouble() <= rec.getMyDropChance()) {
+                if (rec.getMyMaxOccurrence() > 0
+                        && RANDOM.nextDouble() <= rec.getMyDropChance()) {
                     choice.addToMyItems(i);
                     rec.decrement();
                 }
@@ -176,64 +242,87 @@ public final class Dungeon implements Serializable {
         }
         // ensure the required items have been placed.
         for (Item i : Item.values()) {
-            final ItemRecord rec = myItemRates.get(i);
+            final ItemRecord rec = itemRates.get(i);
             if (rec.getMyDropChance() == 1 && rec.getMyMaxOccurrence() > 0) {
                 throw new IllegalArgumentException(
                         "Maze size not large enough for items.");
             }
         }
     }
-
+    /***
+     * Used to get more detail about specific rooms in the dungeon structure.
+     * @return Room[][] dungeon rooms.
+     */
     public Room[][] getRooms() {
         return myRooms;
     }
-
+    /***
+     * Our intrepid hero.
+     * @return Hero
+     */
     public Hero getHero() {
         return myHero;
     }
-
+    /***
+     * Sets the Hero in the model, so we can do a hero selection screen.
+     * @param theHero Our intrepid hero.
+     */
     public void setHero(final Hero theHero) {
         this.myHero = theHero;
     }
 
+    /***
+     * @return List of Items which are left in the current room.
+     */
     public List<Item> getCurrentRoomItems() {
         return getRoom(myHeroLocation).getMyItems();
     }
 
+    /***
+     * Returns set of doors /walls in the current room which are passable.
+     * @return Set of Directions
+     */
     public Set<Direction> getCurrentRoomDoors() {
         return getRoomDoors(myHeroLocation);
     }
 
-    public Set<Direction> getRoomDoors(Pair p) {
-        return myRooms[p.row()][p.column()].getDoors();
+    /***
+     * returns the doors for a given room.
+     * @param theLocation the room's location
+     * @return Set of doors.
+     */
+    public Set<Direction> getRoomDoors(final Pair theLocation) {
+        return myRooms[theLocation.row()][theLocation.column()].getDoors();
     }
 
     /**
      * Creates a list of ChoicePairs from the given room coordinates.
-     * @param p Pair with the coordinates.
+     * @param theLocation Pair with the coordinates.
      * @return ArrayList of Choice Pairs
      */
-    private ArrayList<ChoicePair> borderCoords(Pair p) {
-        int row = p.row();
-        int col = p.column();
-        ArrayList<ChoicePair> choices = new ArrayList<>();
+    private ArrayList<ChoicePair> borderCoords(final Pair theLocation) {
+        final int row = theLocation.row();
+        final int col = theLocation.column();
+        final ArrayList<ChoicePair> choices = new ArrayList<>();
         choices.add(new ChoicePair(new Pair(row - 1, col), Direction.NORTH));
         choices.add(new ChoicePair(new Pair(row + 1, col), Direction.SOUTH));
         choices.add(new ChoicePair(new Pair(row, col - 1), Direction.WEST));
         choices.add(new ChoicePair(new Pair(row, col + 1), Direction.EAST));
         // returns choices that are in-bounds. This could be further optimized.
-        return (ArrayList<ChoicePair>) choices.stream()
-                .filter(c -> allCoords.contains(c.destination))
-                .collect(Collectors.toList());
+        return (ArrayList<ChoicePair>) choices.stream().filter(
+                c -> myAllCoords.contains(c.destination)).collect(
+                        Collectors.toList());
     }
 
     /**
      * Consumes a vision potion to reveal adjacent rooms to the hero.
      */
     public void useVisionPot() {
-        var vpots = myHero.getVisionPots();
+        final var vpots = myHero.getVisionPots();
 
-        if (vpots <= 0) return;
+        if (vpots <= 0) {
+            return;
+        }
         for (var choice : borderCoords(myHeroLocation)) {
             getRoom(choice.destination).setVisible();
         }
@@ -244,14 +333,15 @@ public final class Dungeon implements Serializable {
      * Creates the dungeon maze utilizing depth first search.
      */
     private void generateMaze() {
-        HashSet<Pair> visited = new HashSet<>(); // visited rooms
+        final Set<Pair> visited = new HashSet<>(); // visited rooms
         Pair current = new Pair(0, 0); // starting position
-        int row, col;
+        int row;
+        int col;
         Direction lastDoor = null;
-        Stack<Pair> walkStack = new Stack<>(); // history of our path
+        final Stack<Pair> walkStack = new Stack<>(); // history of our path
 
         // start walking through the maze with a modified DFS
-        while (visited.size() != allCoords.size()) {
+        while (visited.size() != myAllCoords.size()) {
             visited.add(current);
             row = current.row();
             col = current.column();
@@ -262,23 +352,25 @@ public final class Dungeon implements Serializable {
             }
 
             // choose a next cell that hasn't been visited
-            List<ChoicePair> choices = (
-                    borderCoords(current).stream().filter(c -> !visited.contains(c.destination)).toList());
-            // if we have no choices from here, we go back through the history stack
+            final List<ChoicePair> choices = borderCoords(
+                    current).stream().filter(
+                            c -> !visited.contains(c.destination)).toList();
+            // if we have no choices from here,
+            // we go back through the history stack
             if (choices.isEmpty() && !walkStack.isEmpty()) {
                 current = walkStack.pop();
                 lastDoor = null; // jumping into a room we've entered before.
                 continue;
             }
-            if (choices.isEmpty() && walkStack.isEmpty()) {
+            if (choices.isEmpty() /*&& walkStack.isEmpty()*/) {
                 break; // no choices and no history. we must be finished.
             }
             walkStack.push(current);
             // random choice from the choices list
-            int choiceIndex = RANDOM.nextInt(choices.size());
-            ChoicePair nextChoice = choices.get(choiceIndex);
-            Direction nextDoor = nextChoice.door;
-            Pair destination = nextChoice.destination;
+            final int choiceIndex = RANDOM.nextInt(choices.size());
+            final ChoicePair nextChoice = choices.get(choiceIndex);
+            final Direction nextDoor = nextChoice.door;
+            final Pair destination = nextChoice.destination;
             myRooms[row][col].setDoor(nextDoor);
             lastDoor = nextDoor;
             current = destination;
@@ -287,22 +379,27 @@ public final class Dungeon implements Serializable {
 
     @Override
     public String toString() {
-        String sb = "Dungeon{" + "myRooms=" + Arrays.stream(myRooms)
-                .map(Arrays::toString)
-                .collect(Collectors.joining("\n")) +
-                ", rows=" + rows +
-                ", columns=" + columns +
-                ", myHero=" + myHero +
-                ", myHeroLocation=" + myHeroLocation +
-                '}';
-        return sb;
+        return "Dungeon{" + "myRooms=" + Arrays.stream(myRooms).map(
+                Arrays::toString).collect(
+                        Collectors.joining("\n"))
+                + ", rows=" + myRows
+                + ", columns=" + myColumns
+                + ", myHero=" + myHero
+                + ", myHeroLocation=" + myHeroLocation
+                + '}';
     }
 
     private static final class ItemRecord {
+        /***
+         * Percentage chance to see the item in any one dungeon space.
+         */
         private final Double myDropChance;
+        /***
+         * The number of the item which is admissible is in the dungeon.
+         */
         private Integer myMaxOccurrence;
 
-        ItemRecord(Double theChance, Integer theMaxOccurrence) {
+        ItemRecord(final Double theChance, final Integer theMaxOccurrence) {
             myDropChance = theChance;
             myMaxOccurrence = theMaxOccurrence;
         }

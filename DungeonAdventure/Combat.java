@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class Combat {
+public final class Combat {
     private final List<Monster> myMonsters;
     private final Hero myHero;
     private final List<Integer> myTurnOrder;

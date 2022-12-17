@@ -1,15 +1,16 @@
 package DungeonAdventure;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class DefaultModel implements GameModel {
-    /***
-     * If true, permits player to run from combat.
-     */
-    private final boolean cheatCanFleeCombat = false;
     /***
      * Queue of health change records for communication of events between model
      * and view.
@@ -28,6 +29,9 @@ public class DefaultModel implements GameModel {
      */
     private Combat myCombat;
 
+    /***
+     * builds a default GameModel, awaits data given by setters.
+     */
     public DefaultModel() {
 
     }
@@ -125,7 +129,7 @@ public class DefaultModel implements GameModel {
         return myDungeon.getCurrentRoomItems();
     }
     /***
-     * View needs to see doors/openings to display, and for player navitation.
+     * View needs to see doors/openings to display, and for player navigation.
      * @param theLocation The location to be queried.
      * @return Set of Direction objects which have open/passable doors.
      */
@@ -168,6 +172,10 @@ public class DefaultModel implements GameModel {
      */
     @Override
     public boolean move(final Direction theDirection) {
+        /*
+         * If true, permits player to run from combat.
+         */
+        boolean cheatCanFleeCombat = false;
         if (checkCombat() && !cheatCanFleeCombat) {
             return false; // currently in combat. can't move.
         }
@@ -210,6 +218,7 @@ public class DefaultModel implements GameModel {
      * Gives a new location coordinate relative to the given position.
      * @param theDirection the given relative direction.
      * @param theLoc the given location.
+     * @return new location Pair
      */
     private Pair newLocationFrom(final Direction theDirection,
                                  final Pair theLoc) {
@@ -273,13 +282,15 @@ public class DefaultModel implements GameModel {
         myDungeon.spawnBossFight();
     }
     /***
-     * Checks if the game is over(hero is dead, or victorious)
+     * Checks if the game is over(hero is dead, or victorious).
      * @return true/false for game condition.
      */
     @Override
     public boolean gameOver() {
         // test if character dead or victory condition
-        if (getHero().isDead()) return true;
+        if (getHero().isDead()) {
+            return true;
+        }
         return victoryCondition();
     }
 
@@ -292,7 +303,10 @@ public class DefaultModel implements GameModel {
     public boolean victoryCondition() {
         final var hero = getHero();
         final var atExit = myDungeon.getCurrentRoomItems().contains(Item.Exit);
-        return !hero.isDead() && hero.hasAllPillars() && atExit && !checkCombat();
+        return !hero.isDead()
+                && hero.hasAllPillars()
+                && atExit
+                && !checkCombat();
     }
 
     /***
