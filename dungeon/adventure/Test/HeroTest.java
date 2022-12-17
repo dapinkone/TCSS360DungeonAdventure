@@ -1,7 +1,7 @@
 package dungeon.adventure.Test;
 
+import dungeon.adventure.AbstractDungeonCharacter;
 import dungeon.adventure.ActionResultType;
-import dungeon.adventure.DungeonCharacter;
 import dungeon.adventure.Hero;
 import dungeon.adventure.RecordQ;
 import org.junit.jupiter.api.Assertions;
@@ -41,7 +41,7 @@ public class HeroTest {
         }
 
         @Override
-        public void specialSkill(DungeonCharacter target) {
+        public void specialSkill(AbstractDungeonCharacter target) {
 
         }
     }

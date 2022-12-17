@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class Hero extends DungeonCharacter implements Serializable {
+public abstract class Hero extends AbstractDungeonCharacter implements Serializable {
 
     private final HashMap<Item, Integer> myInventory = new HashMap<>();
     private final String myClass;
@@ -27,7 +27,7 @@ public abstract class Hero extends DungeonCharacter implements Serializable {
     /**
      * Class's special skill to be initialized in child classes.
      */
-    public abstract void specialSkill(DungeonCharacter target);
+    public abstract void specialSkill(AbstractDungeonCharacter target);
 
     public HashMap<Item, Integer> getMyInventory() {
         return myInventory;

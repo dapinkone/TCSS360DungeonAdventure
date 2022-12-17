@@ -10,7 +10,7 @@ public final class Combat {
     private final List<Monster> myMonsters;
     private final Hero myHero;
     private final List<Integer> myTurnOrder;
-    private final List<DungeonCharacter> myCombatants = new ArrayList<>();
+    private final List<AbstractDungeonCharacter> myCombatants = new ArrayList<>();
     private int myNextTurn;
 
     public Combat(final List<Monster> theMonsters, final Hero theHero) {
@@ -47,7 +47,7 @@ public final class Combat {
 
         final List<SpeedNode> speeds = new LinkedList<>();
         int index = 0;
-        for (DungeonCharacter combatant : myCombatants) {
+        for (AbstractDungeonCharacter combatant : myCombatants) {
             speeds.add(new SpeedNode(index++, combatant.getMyAttackSpeed()));
         }
         Collections.sort(speeds);
@@ -84,7 +84,7 @@ public final class Combat {
         return result;
     }
 
-    private DungeonCharacter getNextCombatant() {
+    private AbstractDungeonCharacter getNextCombatant() {
         return myCombatants.get(getNextTurn());
     }
 

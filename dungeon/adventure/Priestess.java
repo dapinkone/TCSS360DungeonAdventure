@@ -15,7 +15,7 @@ public class Priestess extends Hero implements Serializable {
      * multiple party members are added to the functionality then the code should be changed.
      */
     @Override
-    public void specialSkill(DungeonCharacter theTarget) { // kinda breaks contract?
+    public void specialSkill(AbstractDungeonCharacter theTarget) { // kinda breaks contract?
         Random random = new Random();
         int healing = random.nextInt(10, 50) + 1;
         heal(healing);

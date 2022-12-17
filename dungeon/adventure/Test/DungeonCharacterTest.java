@@ -1,7 +1,7 @@
 package dungeon.adventure.Test;
 
 import dungeon.adventure.ActionResultType;
-import dungeon.adventure.DungeonCharacter;
+import dungeon.adventure.AbstractDungeonCharacter;
 import dungeon.adventure.RecordQ;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ public class DungeonCharacterTest {
         Assertions.assertEquals(0, result.amount());
     }
 
-    public static class MockCharacter extends DungeonCharacter {
+    public static class MockCharacter extends AbstractDungeonCharacter {
         public MockCharacter(String theName, double theHitChance) {
             super(theName, 50, 1,
                     theHitChance, 10, 20);

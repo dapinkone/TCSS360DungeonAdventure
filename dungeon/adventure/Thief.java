@@ -15,7 +15,7 @@ public class Thief extends Hero implements Serializable {
      * another 40% to attack regularly, and 20% to miss.
      */
     @Override
-    public void specialSkill(DungeonCharacter theTarget) {
+    public void specialSkill(AbstractDungeonCharacter theTarget) {
         Random random = new Random();
         double chance = random.nextDouble();
         var type = ActionResultType.Miss;

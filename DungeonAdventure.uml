@@ -27,7 +27,7 @@
     <node x="682.0" y="2614.5">dungeon.adventure.GUIView.MY_TEXTLOG</node>
     <node x="901.0" y="3288.0">dungeon.adventure.StartMenu</node>
     <node x="1014.5" y="1003.0">dungeon.adventure.Hero</node>
-    <node x="918.5" y="-69.0">dungeon.adventure.DungeonCharacter</node>
+    <node x="918.5" y="-69.0">dungeon.adventure.AbstractDungeonCharacter</node>
     <node x="-204.5" y="3382.0">DungeonAdventure.Test</node>
     <node x="1429.0" y="1121.0">dungeon.adventure.Dungeon.ChoicePair</node>
     <node x="130.5" y="1094.0">dungeon.adventure.MonsterFactory</node>
@@ -197,7 +197,7 @@
       <point x="668.6666666666667" y="2079.0" />
       <point x="-57.33333333333333" y="58.5" />
     </edge>
-    <edge source="dungeon.adventure.Hero" target="dungeon.adventure.DungeonCharacter" relationship="GENERALIZATION">
+    <edge source="dungeon.adventure.Hero" target="dungeon.adventure.AbstractDungeonCharacter" relationship="GENERALIZATION">
       <point x="0.0" y="-176.0" />
       <point x="100.0" y="228.0" />
     </edge>
@@ -207,7 +207,7 @@
       <point x="886.0" y="919.0" />
       <point x="60.0" y="71.0" />
     </edge>
-    <edge source="dungeon.adventure.Combat" target="dungeon.adventure.DungeonCharacter" relationship="TO_MANY">
+    <edge source="dungeon.adventure.Combat" target="dungeon.adventure.AbstractDungeonCharacter" relationship="TO_MANY">
       <point x="0.0" y="-150.0" />
       <point x="266.0" y="1579.0" />
       <point x="-94.0" y="1579.0" />
@@ -272,13 +272,13 @@
       <point x="771.5" y="779.0" />
       <point x="-54.5" y="71.0" />
     </edge>
-    <edge source="dungeon.adventure.HealthChangeRecord" target="dungeon.adventure.DungeonCharacter" relationship="TO_ONE">
+    <edge source="dungeon.adventure.HealthChangeRecord" target="dungeon.adventure.AbstractDungeonCharacter" relationship="TO_ONE">
       <point x="-120.0" y="84.0" />
       <point x="1526.0" y="-121.0" />
       <point x="1006.0" y="-121.0" />
       <point x="-100.0" y="-228.0" />
     </edge>
-    <edge source="dungeon.adventure.Monster" target="dungeon.adventure.DungeonCharacter" relationship="GENERALIZATION">
+    <edge source="dungeon.adventure.Monster" target="dungeon.adventure.AbstractDungeonCharacter" relationship="GENERALIZATION">
       <point x="0.0" y="-58.0" />
       <point x="86.0" y="459.0" />
       <point x="1206.0" y="459.0" />
@@ -386,7 +386,7 @@
       <point x="986.0" y="1399.0" />
       <point x="-20.0" y="-306.0" />
     </edge>
-    <edge source="dungeon.adventure.DungeonCharacter" target="dungeon.adventure.HealthChangeRecord" relationship="CREATE">
+    <edge source="dungeon.adventure.AbstractDungeonCharacter" target="dungeon.adventure.HealthChangeRecord" relationship="CREATE">
       <point x="100.0" y="-228.0" />
       <point x="1206.0" y="-101.0" />
       <point x="1766.0" y="-101.0" />

@@ -15,7 +15,7 @@ public class Warrior extends Hero implements Serializable {
      * Currently hits at a 50% chance
      */
     @Override
-    public void specialSkill(DungeonCharacter theTarget) {
+    public void specialSkill(AbstractDungeonCharacter theTarget) {
         Random random = new Random();
         int amount = 0;
         ActionResultType resultType = ActionResultType.Miss;

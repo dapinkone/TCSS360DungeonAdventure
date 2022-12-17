@@ -3,7 +3,7 @@ package dungeon.adventure;
 import java.io.Serializable;
 import java.util.Random;
 
-public abstract class DungeonCharacter implements Serializable {
+public abstract class AbstractDungeonCharacter implements Serializable {
     private static final Random RANDOM = new Random();
     final int myMinDmg;
     final int myMaxDmg;
@@ -14,12 +14,12 @@ public abstract class DungeonCharacter implements Serializable {
     private int myHealth;
     private double myDodgeChance = 0;
 
-    public DungeonCharacter(final String theName,
-                            final int theHealth,
-                            final int theAttackSpeed,
-                            final double theHitChance,
-                            final int theMinDmg,
-                            final int theMaxDmg) {
+    public AbstractDungeonCharacter(final String theName,
+                                    final int theHealth,
+                                    final int theAttackSpeed,
+                                    final double theHitChance,
+                                    final int theMinDmg,
+                                    final int theMaxDmg) {
         setMyName(theName);
         setMyHealth(theHealth);
         myMaxHealth = theHealth;
@@ -37,7 +37,7 @@ public abstract class DungeonCharacter implements Serializable {
      * @param theTarget the target to attack
      * @return The damage, or 0 if missed or -1 if dodged by a hero.
      */
-    public void attack(final DungeonCharacter theTarget) {
+    public void attack(final AbstractDungeonCharacter theTarget) {
         if (isDead()) return;
         int amount = 0;
         // if "dodged" / "blocked" or "miss", it's of type miss.
